@@ -1,0 +1,96 @@
+﻿@{
+    //ViewBag.Title = "Logon";
+}
+
+@{
+//    ViewBag.Title = "Index";
+}
+@*<style type="text/css">
+    .layput-table
+    {
+        padding: 0 5px;
+    }
+</style>
+<style type="text/css">
+    .number-align
+    {
+        text-align: right;
+    }
+</style>*@
+<script src='@Url.Content("~/Scripts/extjs/ext-all.js")' type="text/javascript"></script>
+<script type="text/javascript">
+    Ext.Loader.setConfig({ enabled: true });
+    Ext.Loader.setPath('Ext.ux', '@Url.Content("~/Scripts/extjs/ux")');
+
+
+    //var currentUser = '@ViewBag.CurrentUser';
+    //var CurrentUserRole = '@ViewBag.CurrentUserRole';
+    //var actionLogoff = "@Url.Action("Logoff", "Account")";
+
+    window.ContentPath = '@Url.Content("~/Content/")';
+
+    window.logon = '@Url.Action("LoginAction","Account")';
+
+    //register
+    window.register = '@Url.Action("Register","Account")';
+
+    //get allroles
+    window.GenComboboxRole = '@Url.Action("GetRoles","Account")';
+    //Change role
+    window.changeRole = '@Url.Action("UpdateUserRole","Account")';
+    //Change password
+    window.changePassword = '@Url.Action("ResetPassword","Account")';
+    //Disable User
+    window.disableUser = '@Url.Action("DisableUser","Account")';
+
+    window.gridData = '@Url.Action("GetUserAll", "Account")';
+    
+</script>
+<script src="@Url.Content("~/app/view/users/usermodels.js")" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href='@Url.Content("~/Scripts/extjs/resources/css/ext-all.css")' />
+<!-- maybe not use -->
+<!-- 
+<script src="@Url.Content("~/app/view/users/words-en.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/users/ConfWindow.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/users/ProfWindow.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/users/CommWindow.js")" type="text/javascript"></script>
+-->
+
+<script src="@Url.Content("~/app/view/users/LogonWindow.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    Ext.Loader.setConfig({ enabled: true });
+    Ext.Loader.setPath('Ext.ux', '@Url.Content("~/Scripts/extjs/ux")');
+    Ext.require(['*']);
+
+    Ext.onReady(function () {
+        Ext.QuickTips.init();
+
+        var logonForm = new LogonForm({ id: 'logonfrom', region: 'north' });
+
+
+        //var inAdmin = "@ViewBag.InAdminRole";
+
+        var tabItems = [];
+
+        tabItems.push(logonForm);
+
+        var viewport = Ext.create('Ext.Viewport', {
+            id: 'viewport',
+            layout: 'border',
+            region: 'center',
+            items: [
+                    {
+                        //region: 'center',
+                        //border: false,
+                        margins: '200 0 0 450',
+                        items: tabItems
+                    }
+            ]
+
+        });
+
+        viewport.center();
+    });
+
+</script>
