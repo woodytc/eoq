@@ -201,7 +201,7 @@
                                                 Ext.MessageBox.show({
                                                     msg: 'Please wait generate items...', width: 300, closable: false
                                                 });
-
+                                                // create popup windows 
                                                 var quickConfWindow = new EditUserManagemantWindow(
                                                     {
                                                         listeners: {

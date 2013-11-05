@@ -44,7 +44,7 @@
                 {
                     iconCls: 'icon-save',
                     id: prefix + 'Save',
-                    text: 'Save', {
+                    text: 'Save',
                     iconCls: 'icon-cancel',
                     id: prefix + 'Cancel',
                     text: 'Cancel',
@@ -58,7 +58,7 @@
     } // end initComponent
 });
 
-GenerationWindow.prototype.isValid = function () {
+UserManagemantWindow.prototype.isValid = function () {
     for (var i = 0; i < this.items.length; i++) {
         for (var j = 0; j < this.items.items[i].items.length; j++) {
             if (this.items.items[i].items.items[j].xtype == "fieldset") {
@@ -84,16 +84,12 @@ GenerationWindow.prototype.isValid = function () {
     return true;
 }
 
-GenerationWindow.prototype.getValue = function () {
+UserManagemantWindow.prototype.getValue = function () {
     var record = {};
     var prefix = this.prefix;
 
     record.Id = Ext.getCmp(prefix + 'gen-id').getValue();
     record.Code = Ext.getCmp(this.prefix + 'algorithmFields').hide();
-    //            Name: '',
-    //            EffectiveDateSt: this.getEffectiveDateSt(),
-    //            EffectiveTimeSt: this.getEffectiveTimeSt(),
-    //                CreatedDateSt
     record.Note = Ext.getCmp(prefix + 'Note').getValue();
     record.HardwareVersionMajor = Ext.getCmp(prefix + 'HardwareVersionMajor').getValue();
     record.HardwareVersionMinor = Ext.getCmp(prefix + 'HardwareVersionMinor').getValue();

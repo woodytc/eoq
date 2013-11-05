@@ -34,6 +34,74 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.1.3.42154, Culture=neutral, PublicKeyToken=3a9cab8f8d22bfb7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=2.5.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Log4Net, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Common.Logging.Log4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate, Version=1.2.0.712, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="HibernatingRhinos.Profiler.Appender, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0774796e73ebf640, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\HibernatingRhinos.Profiler.Appender.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4mongo-net, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\log4mongo-net.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=1.7.0.4714, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=1.7.0.4714, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle, Version=3.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq, Version=1.13.41.2, Culture=neutral, PublicKeyToken=cab60358ab4081ea, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Remotion.Data.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data.NHibernate30, Version=1.3.1.40711, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Spring.Data.NHibernate30.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages" />
@@ -68,11 +136,22 @@
     <Compile Include="helper\JSONHelper.cs" />
     <Compile Include="helper\JsonResults.cs" />
     <Compile Include="helper\MemberMessage.cs" />
+    <Compile Include="Infrastucture\EOQDI.cs" />
+    <Compile Include="Infrastucture\NinjectDependencyResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\controller\DeviceCommunicationController.js" />
+    <Content Include="app\model\admin\departmentData.js" />
+    <Content Include="app\model\admin\materialData.js" />
+    <Content Include="app\model\admin\unitdata.js" />
     <Content Include="app\model\BinRawData.js" />
     <Content Include="app\model\DailyBasis.js" />
     <Content Include="app\model\Device.js" />
@@ -94,6 +173,8 @@
     <Content Include="app\store\JourneySummaryStore.js" />
     <Content Include="app\store\RequestAckCommandStore.js" />
     <Content Include="app\view\admin\AdminManagemantForm.js" />
+    <Content Include="app\view\admin\CellEdit.js" />
+    <Content Include="app\view\admin\Copy of UnitForm.js" />
     <Content Include="app\view\admin\CustomerForm.js" />
     <Content Include="app\view\admin\DepartmentFrom.js" />
     <Content Include="app\view\admin\MeterialForm.js" />
@@ -120,6 +201,11 @@
     <Content Include="app\view\users\UserManagemantForm.js" />
     <Content Include="app\view\users\UserManagemantWindow.js" />
     <Content Include="app\view\users\usermodels.js" />
+    <Content Include="app\view\windowsadmin\EditEmployeeWindow.js" />
+    <Content Include="app\view\windowsadmin\EditDepartmentWindow.js" />
+    <Content Include="app\view\windowsadmin\EditUnitWindow.js" />
+    <Content Include="app\view\windowsadmin\EditMaterialWindow.js" />
+    <Content Include="app\view\windowsadmin\UserManagemantWindow.js" />
     <Content Include="Content\fatcow-hosting-icons-2000\16x16\bug_go.png" />
     <Content Include="Content\fatcow-hosting-icons-2000\16x16\car.png" />
     <Content Include="Content\fatcow-hosting-icons-2000\16x16\ladybird.png" />
@@ -766,6 +852,7 @@
     <Content Include="lib\FluentNHibernate.dll" />
     <Content Include="lib\FluentNHibernate.pdb" />
     <Content Include="lib\FluentNHibernate.XML" />
+    <Content Include="lib\HibernatingRhinos.Profiler.Appender.dll" />
     <Content Include="lib\Iesi.Collections.dll" />
     <Content Include="lib\Iesi.Collections.pdb" />
     <Content Include="lib\Iesi.Collections.xml" />
@@ -2508,7 +2595,9 @@
     <Content Include="Scripts\touch\sencha-touch-all.js" />
     <Content Include="Scripts\touch\sencha-touch-debug.js" />
     <Content Include="Scripts\touch\sencha-touch.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -2557,6 +2646,10 @@
     <None Include="Content\map-icons-collection-2.0\icons\.DS_Store" />
     <None Include="Content\map-icons-collection-2.0\icons\Thumbs.db" />
     <None Include="Content\themes\base\images\Thumbs.db" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Scripts\extjs\resources\sass\.sass-cache\084835bc2350a7b91122620a8540fd51fddebd95\_contrast.scssc" />
     <None Include="Scripts\extjs\resources\sass\.sass-cache\17246b5853e6411bd51edb7f917476a1e02878ed\_boundlist.scssc" />
     <None Include="Scripts\extjs\resources\sass\.sass-cache\17246b5853e6411bd51edb7f917476a1e02878ed\_btn-group.scssc" />
@@ -2971,6 +3064,16 @@
     <None Include="Scripts\touch\resources\themes\templates\project\manifest.rb" />
     <None Include="Scripts\touch\resources\themes\templates\project\sencha-touch.scss" />
     <Content Include="Views\Account\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\eoq.domain\Eoq.Domain.csproj">
+      <Project>{839F5D90-FAD8-45F9-A3AD-8C6F668E704A}</Project>
+      <Name>Eoq.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Eoq.Mappings.FluentNh\Eoq.Mappings.FluentNh.csproj">
+      <Project>{FDDA6510-4ADE-4E6E-9F69-B7C191934B31}</Project>
+      <Name>Eoq.Mappings.FluentNh</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

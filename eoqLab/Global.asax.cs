@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using eoqLab.Infrastucture;
 
 namespace eoqLab
 {
@@ -24,7 +25,7 @@ namespace eoqLab
             routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
+                new { controller = "Admin", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
 
         }
@@ -35,6 +36,9 @@ namespace eoqLab
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            //inject eoq
+            EOQDI.Initialize();
         }
     }
 }

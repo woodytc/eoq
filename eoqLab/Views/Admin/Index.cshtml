@@ -16,7 +16,8 @@
 <script src='@Url.Content("~/Scripts/extjs/ext-all.js")' type="text/javascript"></script>
 
 <!-- include CSS -->
-<link rel="stylesheet" type="text/css" href='@Url.Content("~/Scripts/extjs/resources/css/ext-all.css")' />
+@*<link rel="stylesheet" type="text/css" href='@Url.Content("~/Scripts/extjs/resources/css/ext-all.css")' />*@
+<link rel="stylesheet" type="text/css" href='@Url.Content("~/Scripts/extjs/resources/css/ext-all-access.css")' />
 <link rel="stylesheet" type="text/css" href='@Url.Content("~/Content/Site.css")' />
 <link rel="stylesheet" type="text/css" href='@Url.Content("~/Content/icons.css")' />
 
@@ -40,35 +41,69 @@
     window.changePassword = '@Url.Action("ResetPassword","Account")';
     //Disable User
     window.disableUser = '@Url.Action("DisableUser","Account")';
+    //Grid Data
     window.gridData = '@Url.Action("GetUserAll", "Account")';
+    
+    window.gridUnitData = '@Url.Action("GridUnit", "Admin")';
+    window.gridDepartmentData ='@Url.Action("GridDepartment", "Admin")';
+    window.gridCustomer ='@Url.Action("GridEmployee", "Admin")';
+    //variable store
+    window.unitData = '@Url.Action("GetUnit", "Admin")';
+
+    //Insert Meterial
+    window.create = '@Url.Action("CreateMaterial", "Admin")';
+    window.createUnit = '@Url.Action("CreateUnit", "Admin")';
+    window.createDepartment = '@Url.Action("CreateDepartment", "Admin")';
+    window.createCustomer = '@Url.Action("CreateEmployee", "Admin")'
+    //Update
+    window.updateMaterial = '@Url.Action("UpdateMaterial", "Admin")';
+    window.updateUnit = '@Url.Action("UpdateUnit", "Admin")';
+    window.updateDepartment = '@Url.Action("UpdateDepartment", "Admin")';
+    window.updateCustomer = '@Url.Action("UpdateEmployee", "Admin")';
+    //delete
+    window.MaterailDelete = '@Url.Action("DeleteMaterial", "Admin")';
+    window.UnitDelete = '@Url.Action("DeleteUnit", "Admin")';
+    window.DepartmentDelete = '@Url.Action("DeleteDepartment", "Admin")';
+    window.CustomerDelete = '@Url.Action("DeleteEmployee", "Admin")';
+
+    //CommboBox
+    window.departCombobox = '@Url.Action("DepartComboBox", "Admin")';
+
     //----------------------------------------------------------------------------
 </script>
 <script src="@Url.Content("~/app/view/users/usermodels.js")" type="text/javascript"></script>
-
-<!-- maybe not use -->
-<!-- 
-<script src="@Url.Content("~/app/view/users/words-en.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/app/view/users/ConfWindow.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/app/view/users/ProfWindow.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/app/view/users/CommWindow.js")" type="text/javascript"></script>
--->
 
 <!-- include tab panel-->
 <script src="@Url.Content("~/app/view/users/EditUserManagemantWindow.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/users/UserManagemantForm.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/users/UserManagemantWindow.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/AdminManagemantForm.js")" type="text/javascript"></script>
+
+<!--windows tab!-->
 <script src="@Url.Content("~/app/view/admin/UnitForm.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/CustomerForm.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/MeterialForm.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/SupplierFrom.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/DepartmentFrom.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/admin/DepartmentFrom.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/admin/CellEdit.js")" type="text/javascript"></script>
 
+<!--adminwindows-->
+<script src="@Url.Content("~/app/model/admin/unitdata.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/model/admin/materialData.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/model/admin/departmentData.js")" type="text/javascript"></script>
+
+<script src="@Url.Content("~/app/view/windowsadmin/EditMaterialWindow.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/windowsadmin/EditUnitWindow.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/windowsadmin/EditDepartmentWindow.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/windowsadmin/EditEmployeeWindow.js")" type="text/javascript"></script>
 <!-- start main app -->
 <script type="text/javascript">
     Ext.Loader.setConfig({ enabled: true });
     Ext.Loader.setPath('Ext.ux', '@Url.Content("~/Scripts/extjs/ux")');
     Ext.require(['*']);
+
+    
 
     Ext.QuickTips.init();
 
@@ -79,6 +114,8 @@
             }
         };
 
+        //Data Grid 
+        window.gridMeterial = '@Url.Action("GridEoq","Admin")';
         //
         var userstore = new Ext.data.Store({
             //fields: ['UserName', 'Email', 'Roles'],
@@ -96,17 +133,54 @@
                 simpleSortMode: true
             }
         });
+        //Material
+        var materialStore = new Ext.data.Store({
+            //fields: ['UserName', 'Email', 'Roles'],
+            model: 'MaterialViewModel',
+            pageSize: 15,
+            //autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                url: window.gridData,
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    totalProperty: 'total'
+                },
+                simpleSortMode: true
+            }
+        });
 
+
+        //store unit 
+        var unitstore = new Ext.data.Store({
+            //fields: ['UserName', 'Email', 'Roles'],
+            model: 'UnitViewModel',
+            //pageSize: 15,
+            autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                url: window.unitData,
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    totalProperty: 'total'
+                },
+                simpleSortMode: true
+            }
+        });
+        
+         
         var userManagementForm = new UserManagementForm({ id: 'usermanagementform', region: 'north', store: userstore });
 
         //new class tab
         var adminManagementForm = new AdminManagementForm({ id: 'adminmanagementform', region: 'north' });
-        var unitForm = new UnitForm({ id: 'unitform', region: 'north' });
+        var unitForm = new UnitForm({ id: 'unitform', region: 'north'});
+        var meterialForm = new MeterialForm({ id: 'meterialform', region: 'north', store: materialStore });
         var customerForm = new CustomerForm({ id: 'customerform', region: 'north' });
-        var meterialForm = new MeterialForm({ id: 'meterialform', region: 'north' });
         var supplierFrom = new SupplierFrom({ id: 'suupplierform', region: 'north' });
         var departmentFrom = new DepartmentFrom({ id: 'suupplierform', region: 'north' });
-        
+        var celledit = new CellEdit({ id: 'celleditfrom', region: 'north' });
         //userManagementForm.setStore(userstore);
 
         var inAdmin = "adminTest"; //"@ViewBag.InAdminRole";
@@ -114,12 +188,17 @@
         var tabItems = [];
         //add tab
         tabItems.push(userManagementForm);
-        tabItems.push(adminManagementForm);
-        tabItems.push(customerForm);
-        tabItems.push(departmentFrom);
-        tabItems.push(supplierFrom);
         tabItems.push(unitForm);
+        tabItems.push(departmentFrom);
+        tabItems.push(customerForm);
+        //tabItems.push(adminManagementForm);
         tabItems.push(meterialForm);
+        
+        //tabItems.push(departmentFrom);
+        //tabItems.push(supplierFrom);
+        
+        tabItems.push(celledit);
+        
 
         /*
         *    start viewport [app.js]
