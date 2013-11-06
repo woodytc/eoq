@@ -153,6 +153,7 @@
     <Content Include="app\model\admin\materialData.js" />
     <Content Include="app\model\admin\unitdata.js" />
     <Content Include="app\model\BinRawData.js" />
+    <Content Include="app\model\common\stockModel.js" />
     <Content Include="app\model\DailyBasis.js" />
     <Content Include="app\model\Device.js" />
     <Content Include="app\model\DeviceEventAlert.js" />
@@ -174,7 +175,7 @@
     <Content Include="app\store\RequestAckCommandStore.js" />
     <Content Include="app\view\admin\AdminManagemantForm.js" />
     <Content Include="app\view\admin\CellEdit.js" />
-    <Content Include="app\view\admin\Copy of UnitForm.js" />
+    <Content Include="app\view\admin\test1.js" />
     <Content Include="app\view\admin\CustomerForm.js" />
     <Content Include="app\view\admin\DepartmentFrom.js" />
     <Content Include="app\view\admin\MeterialForm.js" />
@@ -201,6 +202,7 @@
     <Content Include="app\view\users\UserManagemantForm.js" />
     <Content Include="app\view\users\UserManagemantWindow.js" />
     <Content Include="app\view\users\usermodels.js" />
+    <Content Include="app\view\windowsadmin\ImportWindow.js" />
     <Content Include="app\view\windowsadmin\EditEmployeeWindow.js" />
     <Content Include="app\view\windowsadmin\EditDepartmentWindow.js" />
     <Content Include="app\view\windowsadmin\EditUnitWindow.js" />

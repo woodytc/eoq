@@ -1,64 +1,114 @@
-﻿Ext.define('TestFrom', {
+﻿Ext.define('Test1', {
      extend: 'Ext.Panel',
 
     constructor: function (config) {
         var me = this;
-        var prefix = "UnitForm-";
+        var prefix = "Test1-";
         me.prefix = prefix;
         
         Ext.apply(this, {
             iconCls: 'icon-tabs',
+            xtype: 'fiom',
             title: 'Import',
             layout: 'border',
             autoScroll: true,
             border: true,
             items: [
-                    {
-                        //Header                
-                        xtype: 'panel',
-                        title: 'Test',
-                        bodyStyle: 'padding:5px 5px 0',
-                        region: 'north',
-                        border: true,
-                        defaults: { xtype: 'container', flex: 1, layout: 'anchor' },
-                        buttonAlign: 'center',
-                        layout: 'hbox',
-                        items: [
-                                {   // column 1
-                                    defaults: { labelWidth: 500 },
-                                    defaultType: 'textfield',
-                                    margins: '10 5 0 20',
-                                    fieldDefaults: { labelAlign: 'right' },
-                                    labelStyle: 'text-align: right',
-                                    items: [
-                                            { id: me.prefix + 'unitName', name: 'unitName', fieldLabel: 'หน่วย',labelStyle: 'text-align: right', emptyText: '[ซิ้น,อัน,กล่อง]', anchor: '-600'}
-                                    ]
-                                }
-                        ]//end main item in header
-                        , buttons: [ //buttons
-                                    {
-                                    iconCls: 'icon-find',
-                                    id: me.prefix + 'user-search-btn-Search',
-                                    text: 'Search',
-                                    //Handler event btn search click
-                                    handler: function (btn, evt) {
-                                        //get value from textbox and combobox
-                                        
-                                        me.unitName = Ext.getCmp(me.prefix + 'unitName').getValue();
-                                        
-                                        me.search(window.gridUnitData, me.unitName);
-                                    } // end handler
-                                },
-                                {
-                                    iconCls: 'icon-reload',
-                                    id: me.prefix + 'user-btn-Reset',
-                                    text: 'Reset',
-                                    handler: function (btn, evt) {
-                                        Ext.getCmp(me.prefix + 'unitName').setValue('');
-                                    } // end handler
-                                }
-                          ] // end buttons Header
-                    }//end Header
+                      {
+            activeRecord: null,
+            iconCls: 'icon-user',
+            frame: true,
+            title: 'User -- All fields are required',
+            defaultType: 'textfield',
+            bodyPadding: 5,
+            fieldDefaults: {
+                anchor: '100%',
+                labelAlign: 'right'
+            },
+            items: [{
+                fieldLabel: 'Email',
+                name: 'email',
+                allowBlank: false,
+                vtype: 'email'
+            }, {
+                fieldLabel: 'First',
+                name: 'first',
+                allowBlank: false
+            }, {
+                fieldLabel: 'Last',
+                name: 'last',
+                allowBlank: false
+            }],
+            dockedItems: [{
+                xtype: 'toolbar',
+                dock: 'bottom',
+                ui: 'footer',
+                items: ['->', {
+                    iconCls: 'icon-save',
+                    itemId: 'save',
+                    text: 'Save',
+                    disabled: true,
+                    scope: this,
+                    handler: this.onSave
+                }, {
+                    iconCls: 'icon-user-add',
+                    text: 'Create',
+                    scope: this,
+                    handler: this.onCreate
+                }, {
+                    iconCls: 'icon-reset',
+                    text: 'Reset',
+                    scope: this,
+                    handler: this.onReset
+                }]
+            }]
+        }
+//                    {
+//                        //Header                
+//                        xtype: 'panel',
+//                        title: 'Test',
+//                        bodyStyle: 'padding:5px 5px 0',
+//                        region: 'north',
+//                        border: true,
+//                        defaults: { xtype: 'container', flex: 1, layout: 'anchor' },
+//                        buttonAlign: 'center',
+//                        layout: 'hbox',
+//                        items: [
+//                                {   // column 1
+//                                    defaults: { labelWidth: 500 },
+//                                    defaultType: 'textfield',
+//                                    margins: '10 5 0 20',
+//                                    fieldDefaults: { labelAlign: 'right' },
+//                                    labelStyle: 'text-align: right',
+//                                    items: [
+//                                            { id: me.prefix + 'unitName', name: 'unitName', fieldLabel: 'หน่วย',labelStyle: 'text-align: right', emptyText: '[ซิ้น,อัน,กล่อง]', anchor: '-600'}
+//                                    ]
+//                                }
+//                        ]//end main item in header
+//                        , buttons: [ //buttons
+//                                    {
+//                                    iconCls: 'icon-find',
+//                                    id: me.prefix + 'user-search-btn-Search',
+//                                    text: 'Search',
+//                                    //Handler event btn search click
+//                                    handler: function (btn, evt) {
+//                                        //get value from textbox and combobox
+//                                        
+//                                        me.unitName = Ext.getCmp(me.prefix + 'unitName').getValue();
+//                                        
+//                                        me.search(window.gridUnitData, me.unitName);
+//                                    } // end handler
+//                                },
+//                                {
+//                                    iconCls: 'icon-reload',
+//                                    id: me.prefix + 'user-btn-Reset',
+//                                    text: 'Reset',
+//                                    handler: function (btn, evt) {
+//                                        Ext.getCmp(me.prefix + 'unitName').setValue('');
+//                                    } // end handler
+//                                }
+//                          ] // end buttons Header
+//                    }//end Header
             
                 , {
                     xtype: 'grid',
@@ -168,13 +218,13 @@
                                     msg: 'Please wait generate items...', width: 300, closable: false
                                     });
                                     //create new poppu
-                                    var quickConfWindow = new EditUnitWindow(
+                                    var quickConfWindow = new ImportWindow(
                                     {
                                         listeners: {
                                                         close: function (panel, eOpts) {
                                                         if (panel.intend === 'save-success') {
                                                             console.log('insave success');
-                                                            me.search(window.gridUnitData,me.username);
+                                                        //    me.search(window.gridUnitData,me.username);
                                                         }
                                                     }
                                         },
@@ -195,20 +245,20 @@
             ]//end item
         }); //end apply
         //me.gridStore.setpro
-        UnitForm.superclass.constructor.apply(this, arguments);
+        Test1.superclass.constructor.apply(this, arguments);
     } // end constructor
 });
 
 //fn update
-UnitForm.prototype.popUpEditItem = function (dataview, record, parent, mode) {
+Test1.prototype.popUpEditItem = function (dataview, record, parent, mode) {
     var id = record.get('ID');
     var unitName = record.get("UnitName");
-    UnitForm.prototype.popUpEditUnit(id, unitName);
+    Test1.prototype.popUpEditUnit(id, unitName);
 };
 
 //fn search
-UnitForm.prototype.search = function (url, unitName) {
-    var prefix = 'UnitForm-';
+Test1.prototype.search = function (url, unitName) {
+    var prefix = 'Test1-';
 
     var quickStore = Ext.getStore(prefix + 'gridStore');
     quickStore.proxy.url = url;
@@ -219,7 +269,7 @@ UnitForm.prototype.search = function (url, unitName) {
 };
 
 //popup window updatefrom
-UnitForm.prototype.popUpEditUnit = function (id, unitName) {
+Test1.prototype.popUpEditUnit = function (id, unitName) {
     var prefix = 'updateUnit-';
     var url = window.updateUnit;
     var required = '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>';
@@ -260,7 +310,7 @@ UnitForm.prototype.popUpEditUnit = function (id, unitName) {
                     success: function (response) {
                         var text = response.responseText;
                         Ext.MessageBox.alert('Change role successfull !!');
-                        UnitForm.prototype.search(window.gridUnitData, "");
+                        Test1.prototype.search(window.gridUnitData, "");
                     }
                 });
 
@@ -285,7 +335,7 @@ UnitForm.prototype.popUpEditUnit = function (id, unitName) {
 
 
 //delete Unit
-UnitForm.prototype.deleteUnit = function (dataview, reconds, type) {
+Test1.prototype.deleteUnit = function (dataview, reconds, type) {
     var UnitIds = [];
     for (var i = 0; i < reconds.length; i++) {
         var id = reconds[i].get('ID');
@@ -315,7 +365,7 @@ UnitForm.prototype.deleteUnit = function (dataview, reconds, type) {
             me.url = window.gridUnitData
             if (result.success) {
                 Ext.MessageBox.alert('Status', result.message);
-                UnitForm.prototype.search(me.url,"");
+                Test1.prototype.search(me.url,"");
             }
             else {
                 Ext.MessageBox.alert('Status', "Error: " + result.message);

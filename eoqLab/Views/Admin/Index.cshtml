@@ -86,7 +86,8 @@
 <script src="@Url.Content("~/app/view/admin/SupplierFrom.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/DepartmentFrom.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/DepartmentFrom.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/app/view/admin/CellEdit.js")" type="text/javascript"></script>
+@*<script src="@Url.Content("~/app/view/admin/CellEdit.js")" type="text/javascript"></script>*@
+<script src="@Url.Content("~/app/view/admin/test1.js")" type="text/javascript"></script>
 
 <!--adminwindows-->
 <script src="@Url.Content("~/app/model/admin/unitdata.js")" type="text/javascript"></script>
@@ -96,7 +97,9 @@
 <script src="@Url.Content("~/app/view/windowsadmin/EditMaterialWindow.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/windowsadmin/EditUnitWindow.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/windowsadmin/EditDepartmentWindow.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/app/view/windowsadmin/EditEmployeeWindow.js")" type="text/javascript"></script>
+
+<script src="@Url.Content("~/app/view/windowsadmin/ImportWindow.js")" type="text/javascript"></script>
+
 <!-- start main app -->
 <script type="text/javascript">
     Ext.Loader.setConfig({ enabled: true });
@@ -180,7 +183,8 @@
         var customerForm = new CustomerForm({ id: 'customerform', region: 'north' });
         var supplierFrom = new SupplierFrom({ id: 'suupplierform', region: 'north' });
         var departmentFrom = new DepartmentFrom({ id: 'suupplierform', region: 'north' });
-        var celledit = new CellEdit({ id: 'celleditfrom', region: 'north' });
+        //var celledit = new CellEdit({ id: 'celleditfrom', region: 'north' });
+        var test1 = new Test1({ id: 'test1', region: 'north' });
         //userManagementForm.setStore(userstore);
 
         var inAdmin = "adminTest"; //"@ViewBag.InAdminRole";
@@ -196,8 +200,9 @@
         
         //tabItems.push(departmentFrom);
         //tabItems.push(supplierFrom);
-        
-        tabItems.push(celledit);
+
+        //tabItems.push(celledit);
+        tabItems.push(test1);
         
 
         /*
