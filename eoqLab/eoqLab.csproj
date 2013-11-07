@@ -206,6 +206,9 @@
     <Content Include="app\view\users\UserManagemantForm.js" />
     <Content Include="app\view\users\UserManagemantWindow.js" />
     <Content Include="app\view\users\usermodels.js" />
+    <Content Include="app\view\windowsadmin\EditBrandWindow.js" />
+    <Content Include="app\view\windowsadmin\EditSizesWindow.js" />
+    <Content Include="app\view\windowsadmin\EditColorWindow.js" />
     <Content Include="app\view\windowsadmin\ImportWindow.js" />
     <Content Include="app\view\windowsadmin\EditEmployeeWindow.js" />
     <Content Include="app\view\windowsadmin\EditDepartmentWindow.js" />

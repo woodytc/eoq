@@ -421,6 +421,12 @@ namespace eoqLab.Controllers
             return Json(new { items = unit, total = unit.Count() }, JsonRequestBehavior.AllowGet);
         }
 
+        private JsonResult SearchColorAll(string name)
+        {
+            var result =from c in ColorRepository.GetAll() where c.Name.Contains(name) select c; 
+            return Json(new { items = result, total = result.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
         private JsonResult SearchColor(string departName)
         {
             //var unit = (from u in ColorRepository.GetAll() where u.DepartName.Contains(departName) select u).ToList<Color>();
@@ -502,11 +508,10 @@ namespace eoqLab.Controllers
             return Json(new { items = unit, total = unit.Count() }, JsonRequestBehavior.AllowGet);
         }
 
-        private JsonResult SearchSizes(string departName)
+        private JsonResult SearchSizes(string name)
         {
-            //var unit = (from u in SizesRepository.GetAll() where u.DepartName.Contains(departName) select u).ToList<Sizes>();
-            //return Json(new { items = unit, total = unit.Count }, JsonRequestBehavior.AllowGet);
-            return null;
+            var result = from s in SizesRepository.GetAll() where s.Name.Contains(name) select s;
+            return Json(new { items = result, total = result.Count() }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
@@ -564,16 +569,16 @@ namespace eoqLab.Controllers
             }
         }
 
-        public JsonResult GridBrand(string EmpName = "", int DepartID = 0)
+        public JsonResult GridBrand(string name = "")
         {
 
-            if (string.IsNullOrEmpty(EmpName))
+            if (string.IsNullOrEmpty(name))
             {
                 return this.SearchBrandAll();
             }
             else
             {
-                return this.SearchBrand(EmpName);
+                return this.SearchBrandAll(name);
             }
         }
 
@@ -583,11 +588,10 @@ namespace eoqLab.Controllers
             return Json(new { items = unit, total = unit.Count() }, JsonRequestBehavior.AllowGet);
         }
 
-        private JsonResult SearchBrand(string departName)
+        private JsonResult SearchBrandAll(string name)
         {
-            //var unit = (from u in BrandRepository.GetAll() where u.DepartName.Contains(departName) select u).ToList<Brand>();
-            //return Json(new { items = unit, total = unit.Count }, JsonRequestBehavior.AllowGet);
-            return null;
+            var result = from b in BrandRepository.GetAll() where b.Name.Contains(name) select b;
+            return Json(new { items = result, total = result.Count() }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

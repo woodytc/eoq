@@ -64,7 +64,8 @@
                                         //get value from textbox and combobox
                                         
                                         me.name = Ext.getCmp(me.prefix + 'Name').getValue();
-                                        
+                                       alert(me.name);
+                                        console.log(me.name);
                                         me.search(window.gridBrandData, me.name);
                                     } // end handler
                                 }, {
@@ -72,7 +73,7 @@
                                     id: me.prefix + 'user-btn-Reset',
                                     text: 'Reset',
                                     handler: function (btn, evt) {
-                                        Ext.getCmp(me.prefix + 'name').setValue('');
+                                        Ext.getCmp(me.prefix + 'Name').setValue('');
                                     } // end handler
                                 }
                           ] // end buttons Header
@@ -189,6 +190,9 @@ BrandForm.prototype.popUpEditItem = function (dataview, record, parent, mode) {
 //fn search
 BrandForm.prototype.search = function (url, name) {
     var prefix = 'BrandForm-';
+    
+    console.log(url);
+    console.log(name);
 
     var quickStore = Ext.getStore(prefix + 'gridStore');
     quickStore.proxy.url = url;
