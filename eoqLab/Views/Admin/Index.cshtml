@@ -69,9 +69,26 @@
     //CommboBox
     window.departCombobox = '@Url.Action("DepartComboBox", "Admin")';
 
+    //Common
+    //color
+    window.createCustomer = '@Url.Action("CreateColor", "Admin")'
+    window.updateMaterial = '@Url.Action("UpdateColor", "Admin")';
+    window.UnitDelete = '@Url.Action("DeleteColor", "Admin")';
+    //brand
+    window.createCustomer = '@Url.Action("CreateBrand", "Admin")'
+    window.updateMaterial = '@Url.Action("UpdateBrand", "Admin")';
+    window.UnitDelete = '@Url.Action("DeleteBrand", "Admin")';
+    //size
+    window.createCustomer = '@Url.Action("CreateSizes", "Admin")'
+    window.updateMaterial = '@Url.Action("UpdateSizes", "Admin")';
+    window.UnitDelete = '@Url.Action("DeleteSizes", "Admin")';
+
     //----------------------------------------------------------------------------
 </script>
 <script src="@Url.Content("~/app/view/users/usermodels.js")" type="text/javascript"></script>
+<!--Common Model -->
+<script src="@Url.Content("~/app/model/common/CommonModel.js")" type="text/javascript"></script>
+
 
 <!-- include tab panel-->
 <script src="@Url.Content("~/app/view/users/EditUserManagemantWindow.js")" type="text/javascript"></script>
@@ -86,6 +103,11 @@
 <script src="@Url.Content("~/app/view/admin/SupplierFrom.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/DepartmentFrom.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/DepartmentFrom.js")" type="text/javascript"></script>
+<!-- Common Tab-->
+<script src="@Url.Content("~/app/view/admin/BrandForm.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/admin/ColorForm.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/admin/SizesForm.js")" type="text/javascript"></script>
+
 @*<script src="@Url.Content("~/app/view/admin/CellEdit.js")" type="text/javascript"></script>*@
 <script src="@Url.Content("~/app/view/admin/test1.js")" type="text/javascript"></script>
 
@@ -93,7 +115,6 @@
 <script src="@Url.Content("~/app/model/admin/unitdata.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/model/admin/materialData.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/model/admin/departmentData.js")" type="text/javascript"></script>
-
 <script src="@Url.Content("~/app/view/windowsadmin/EditMaterialWindow.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/windowsadmin/EditUnitWindow.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/windowsadmin/EditDepartmentWindow.js")" type="text/javascript"></script>
@@ -189,10 +210,19 @@
 
         var inAdmin = "adminTest"; //"@ViewBag.InAdminRole";
 
+        //Tab Common
+        var color = new ColorForm({ id: 'colorform', region: 'north' });
+        var sizes = new SizesForm({ id: 'sizesform', region: 'north' });
+        var brand = new BrandForm({ id: 'brandform', region: 'north' });
+
+
         var tabItems = [];
         //add tab
         tabItems.push(userManagementForm);
         tabItems.push(unitForm);
+        tabItems.push(color);
+        tabItems.push(sizes);
+        tabItems.push(brand);
         tabItems.push(departmentFrom);
         tabItems.push(customerForm);
         //tabItems.push(adminManagementForm);

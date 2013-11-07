@@ -76,6 +76,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Map\BranchMap.cs" />
+    <Compile Include="Map\ColorMap.cs" />
+    <Compile Include="Map\SizesMap.cs" />
     <Compile Include="Map\UnitMap.cs" />
     <Compile Include="Map\DepartmentMap.cs" />
     <Compile Include="Map\EmployeeMailMap.cs" />
@@ -94,6 +97,9 @@
     <Compile Include="Map\WithdrawMap.cs" />
     <Compile Include="NhRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\ColorRepository.cs" />
+    <Compile Include="Repository\SizesRepository.cs" />
+    <Compile Include="Repository\BrandRepository.cs" />
     <Compile Include="Repository\UnitRepository.cs" />
     <Compile Include="Repository\IEOQRepository.cs" />
     <Compile Include="Repository\WithdrawRepository.cs" />

@@ -95,7 +95,22 @@ namespace eoqLab.Infrastucture
             kernel.Bind<IUnitRepository>()
                 .To<UnitRepository>()
                 .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
-              
+
+            //Coloer
+            kernel.Bind<IColorRepository>()
+                .To<ColorRepository>()
+                .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
+
+            //Brand
+            kernel.Bind<IBrandRepository>()
+                .To<BrandRepository>()
+                .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
+
+            //Size
+            kernel.Bind<ISizesRepository>()
+                .To<SizesRepository>()
+                .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
+  
             //StartProcess();
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }

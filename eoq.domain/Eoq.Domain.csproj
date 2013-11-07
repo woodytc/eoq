@@ -72,6 +72,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Branch.cs" />
+    <Compile Include="Domain\Brand.cs" />
+    <Compile Include="Domain\Color.cs" />
+    <Compile Include="Domain\Sizes.cs" />
     <Compile Include="Domain\Unit.cs" />
     <Compile Include="Domain\Department.cs" />
     <Compile Include="Domain\EmployeeMailL.cs" />

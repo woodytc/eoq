@@ -18,7 +18,10 @@ namespace eoqLab.Controllers
         public IEmployeeRepository EmployeeRepository { get; set; }
         public IEmployeePhoneRepository EmployeePhoneRepository { get; set; }
         public IEmployeeMailRepository EmployeeMailRepository { get; set; }
-        
+        //common
+        public IColorRepository ColorRepository { get; set; }
+        public IBrandRepository BrandRepository { get; set; }
+        public ISizesRepository SizesRepository { get; set; }
         public AdminController(IEOQRepository eoqRepository
             ,IMaterialRepository materialRepository
             ,IUnitRepository unit
@@ -26,6 +29,9 @@ namespace eoqLab.Controllers
             ,IEmployeeRepository employeeRepository
             ,IEmployeePhoneRepository employeePhoneRepository
             ,IEmployeeMailRepository employeeEmailRepository
+            ,IColorRepository colorRepository
+            ,IBrandRepository brandRepository
+            ,ISizesRepository sizesRepository
             )
         {
             EOQRepository = eoqRepository;
@@ -35,7 +41,10 @@ namespace eoqLab.Controllers
             EmployeeRepository = employeeRepository;
             EmployeePhoneRepository = employeePhoneRepository;
             EmployeeMailRepository = employeeEmailRepository;
-
+            //common
+            this.ColorRepository = colorRepository;
+            this.BrandRepository = brandRepository;
+            this.SizesRepository = sizesRepository;
         }
 
   
@@ -340,6 +349,249 @@ namespace eoqLab.Controllers
 
         #endregion
 
+        #region Color
+        [HttpPost]
+        public JsonResult CreateColor(Color enitity)
+        {
+            try
+            {
+                Color enititys = new Color();
+                // enitity.DepartName = departName;
+                ColorRepository.Save(enitity);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateColor(string departName, int departID)
+        {
+            try
+            {
+                Color enitity = new Color();
+
+
+                //insert
+                ColorRepository.Update(enitity);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult DeleteColor(List<int> ids)
+        {
+            try
+            {
+                for (int i = 0; i < ids.Count; i++)
+                {
+                    Color entity = new Color();
+                    entity.Id = ids[i];
+                    ColorRepository.Delete(entity);
+                }
+                return Json(new { success = true, message = "Delete Successful" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "This unit can not be delete because there are others from using." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult GridColor(string EmpName = "", int DepartID = 0)
+        {
+
+            if (string.IsNullOrEmpty(EmpName))
+            {
+                return this.SearchColorAll();
+            }
+            else
+            {
+                return this.SearchColor(EmpName);
+            }
+        }
+
+        private JsonResult SearchColorAll()
+        {
+            var unit = ColorRepository.GetAll();
+            return Json(new { items = unit, total = unit.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+        private JsonResult SearchColor(string departName)
+        {
+            //var unit = (from u in ColorRepository.GetAll() where u.DepartName.Contains(departName) select u).ToList<Color>();
+            //return Json(new { items = unit, total = unit.Count }, JsonRequestBehavior.AllowGet);
+            return null;
+        }
+
+        #endregion
+
+        #region Sizes
+        [HttpPost]
+        public JsonResult CreateSizes(Sizes enitity)
+        {
+            try
+            {
+                Color enititys = new Color();
+                // enitity.DepartName = departName;
+                SizesRepository.Save(enitity);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateSizes(string departName, int departID)
+        {
+            try
+            {
+                Sizes enitity = new Sizes();
+
+
+                //insert
+                SizesRepository.Update(enitity);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult DeleteSizes(List<int> ids)
+        {
+            try
+            {
+                for (int i = 0; i < ids.Count; i++)
+                {
+                    Sizes entity = new Sizes();
+                    entity.Id = ids[i];
+                    SizesRepository.Delete(entity);
+                }
+                return Json(new { success = true, message = "Delete Successful" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "This unit can not be delete because there are others from using." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult GridSizes(string EmpName = "", int DepartID = 0)
+        {
+
+            if (string.IsNullOrEmpty(EmpName))
+            {
+                return this.SearchSizesAll();
+            }
+            else
+            {
+                return this.SearchSizes(EmpName);
+            }
+        }
+
+        private JsonResult SearchSizesAll()
+        {
+            var unit = SizesRepository.GetAll();
+            return Json(new { items = unit, total = unit.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+        private JsonResult SearchSizes(string departName)
+        {
+            //var unit = (from u in SizesRepository.GetAll() where u.DepartName.Contains(departName) select u).ToList<Sizes>();
+            //return Json(new { items = unit, total = unit.Count }, JsonRequestBehavior.AllowGet);
+            return null;
+        }
+
+        #endregion
+
+        #region Brand
+        [HttpPost]
+        public JsonResult CreateBrand(Brand enitity)
+        {
+            try
+            {
+                Color enititys = new Color();
+                // enitity.DepartName = departName;
+                BrandRepository.Save(enitity);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateBrand(string departName, int departID)
+        {
+            try
+            {
+                Brand enitity = new Brand();
+
+
+                //insert
+                BrandRepository.Update(enitity);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult DeleteBrand(List<int> ids)
+        {
+            try
+            {
+                for (int i = 0; i < ids.Count; i++)
+                {
+                    Brand entity = new Brand();
+                    entity.ID = ids[i];
+                    BrandRepository.Delete(entity);
+                }
+                return Json(new { success = true, message = "Delete Successful" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "This unit can not be delete because there are others from using." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult GridBrand(string EmpName = "", int DepartID = 0)
+        {
+
+            if (string.IsNullOrEmpty(EmpName))
+            {
+                return this.SearchBrandAll();
+            }
+            else
+            {
+                return this.SearchBrand(EmpName);
+            }
+        }
+
+        private JsonResult SearchBrandAll()
+        {
+            var unit = BrandRepository.GetAll();
+            return Json(new { items = unit, total = unit.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+        private JsonResult SearchBrand(string departName)
+        {
+            //var unit = (from u in BrandRepository.GetAll() where u.DepartName.Contains(departName) select u).ToList<Brand>();
+            //return Json(new { items = unit, total = unit.Count }, JsonRequestBehavior.AllowGet);
+            return null;
+        }
+
+        #endregion
+
         #region CommboBox
         public JsonResult DepartComboBox()
         {
@@ -427,6 +679,44 @@ namespace eoqLab.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult GetColor()
+        {
+            var results = ColorRepository.GetAll();
+            Color un = new Color();
+            un.Id = -1;
+            un.Name = "Please Select";
+            results.Add(un);
+
+            return Json(
+                new { items = results, total = results.Count, success = true },
+                JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetBrand()
+        {
+            var results = BrandRepository.GetAll();
+            Brand un = new Brand();
+            un.Id = -1;
+            un.Name = "Please Select";
+            results.Add(un);
+
+            return Json(
+                new { items = results, total = results.Count, success = true },
+                JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetSizes()
+        {
+            var results = SizesRepository.GetAll();
+            Sizes un = new Sizes();
+            un.Id = -1;
+            un.Name = "Please Select";
+            results.Add(un);
+
+            return Json(
+                new { items = results, total = results.Count, success = true },
+                JsonRequestBehavior.AllowGet);
+        }
 
         private void EoqManage(EOQ eoqEntity,string type){
            if (type == "insert" || type == "update")

@@ -153,6 +153,7 @@
     <Content Include="app\model\admin\materialData.js" />
     <Content Include="app\model\admin\unitdata.js" />
     <Content Include="app\model\BinRawData.js" />
+    <Content Include="app\model\common\CommonModel.js" />
     <Content Include="app\model\common\stockModel.js" />
     <Content Include="app\model\DailyBasis.js" />
     <Content Include="app\model\Device.js" />
@@ -175,6 +176,9 @@
     <Content Include="app\store\RequestAckCommandStore.js" />
     <Content Include="app\view\admin\AdminManagemantForm.js" />
     <Content Include="app\view\admin\CellEdit.js" />
+    <Content Include="app\view\admin\ColorForm.js" />
+    <Content Include="app\view\admin\BrandForm.js" />
+    <Content Include="app\view\admin\SizesForm.js" />
     <Content Include="app\view\admin\test1.js" />
     <Content Include="app\view\admin\CustomerForm.js" />
     <Content Include="app\view\admin\DepartmentFrom.js" />

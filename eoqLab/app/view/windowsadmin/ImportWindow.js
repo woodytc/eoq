@@ -142,7 +142,22 @@
                 renderer: Ext.util.Format.dateRenderer('m/d/Y'),
                 summaryRenderer: Ext.util.Format.dateRenderer('m/d/Y'),
                 field: {
-                    xtype: 'datefield'
+                    xtype: 'numberfield',
+                    allowBlank: false,
+
+                }
+            },
+             {
+                header: 'Due Date',
+                width: 130,
+                sortable: true,
+                dataIndex: 'due',
+                summaryType: 'max',
+                renderer: Ext.util.Format.dateRenderer('m/d/Y'),
+                summaryRenderer: Ext.util.Format.dateRenderer('m/d/Y'),
+                field: {
+                    xtype: 'datefield',
+                    allowBlank: false
                 }
             }, {
                 header: 'Estimate',
