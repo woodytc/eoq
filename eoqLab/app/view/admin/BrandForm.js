@@ -61,11 +61,7 @@
                                     text: 'Search',
                                     //Handler event btn search click
                                     handler: function (btn, evt) {
-                                        //get value from textbox and combobox
-                                        
                                         me.name = Ext.getCmp(me.prefix + 'Name').getValue();
-                                       alert(me.name);
-                                        console.log(me.name);
                                         me.search(window.gridBrandData, me.name);
                                     } // end handler
                                 }, {
@@ -89,7 +85,7 @@
             store: me.gridStore,
             selModel: Ext.create('Ext.selection.CheckboxModel'),
             columns: [
-            { text: 'รหัส', dataIndex: 'ID', width: 250, sortable: false, align: 'center' },
+            { text: 'รหัส', dataIndex: 'Id', width: 250, sortable: false, align: 'center' },
             { text: 'ยี่ห้อ', dataIndex: 'Name', width: 250, sortable: false, align: 'center' }//,
             //{ text: 'จำนวนนับ', dataIndex: 'unit', width: 250, sortable: false, align: 'center' },
             ],
@@ -182,7 +178,7 @@
 
 //fn update
 BrandForm.prototype.popUpEditItem = function (dataview, record, parent, mode) {
-    var id = record.get('ID');
+    var id = record.get('Id');
     var name = record.get("Name");
     BrandForm.prototype.popUpEditBrand(id, name);
 };
@@ -238,8 +234,8 @@ BrandForm.prototype.popUpEditBrand = function (id, name) {
                     method: 'post',
                     url: url,
                     params: {
-                                ID: Ext.getCmp(prefix + 'ID').getValue(),
-                                name: Ext.getCmp(prefix + 'name').getValue(),
+                                Id: Ext.getCmp(prefix + 'ID').getValue(),
+                                Name: Ext.getCmp(prefix + 'name').getValue(),
                             },
                     success: function (response) {
                         var text = response.responseText;
@@ -272,11 +268,11 @@ BrandForm.prototype.popUpEditBrand = function (id, name) {
 BrandForm.prototype.deleteBrand = function (dataview, reconds, type) {
     var BrandIds = [];
     for (var i = 0; i < reconds.length; i++) {
-        var id = reconds[i].get('ID');
+        var id = reconds[i].get('Id');
         console.log(id);
         BrandIds.push(id);
     }
-    var method = window.BrandDelete;
+    var method = window.deleteBrand;
     
     Ext.MessageBox.show({
         msg: 'Please wait update status items...',

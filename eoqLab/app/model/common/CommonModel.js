@@ -1,5 +1,5 @@
 ﻿Ext.define('CommonViewModel', {
     extend: 'Ext.data.Model',
-    fields: ['ID', 'Name'],
-    idProperty: 'ID'
+    fields: ['Id', 'Name'],
+    idProperty: 'Id'
 });

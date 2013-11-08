@@ -72,7 +72,7 @@
                                     id: me.prefix + 'user-btn-Reset',
                                     text: 'Reset',
                                     handler: function (btn, evt) {
-                                        Ext.getCmp(me.prefix + 'name').setValue('');
+                                        Ext.getCmp(me.prefix + 'Name').setValue('');
                                     } // end handler
                                 }
                           ] // end buttons Header
@@ -88,7 +88,7 @@
             store: me.gridStore,
             selModel: Ext.create('Ext.selection.CheckboxModel'),
             columns: [
-            { text: 'รหัส', dataIndex: 'ID', width: 250, sortable: false, align: 'center' },
+            { text: 'รหัส', dataIndex: 'Id', width: 250, sortable: false, align: 'center' },
             { text: 'ขนาด', dataIndex: 'Name', width: 250, sortable: false, align: 'center' }//,
             //{ text: 'จำนวนนับ', dataIndex: 'unit', width: 250, sortable: false, align: 'center' },
             ],
@@ -181,7 +181,7 @@
 
 //fn update
 SizesForm.prototype.popUpEditItem = function (dataview, record, parent, mode) {
-    var id = record.get('ID');
+    var id = record.get('Id');
     var name = record.get("Name");
     SizesForm.prototype.popUpEditSizes(id, name);
 };
@@ -201,7 +201,7 @@ SizesForm.prototype.search = function (url, name) {
 //popup window updatefrom
 SizesForm.prototype.popUpEditSizes = function (id, name) {
     var prefix = 'updateSizes-';
-    var url = window.updateSizes;
+    var url = window.updateSize;
     var required = '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>';
     
     var win = new Ext.Window({
@@ -221,9 +221,9 @@ SizesForm.prototype.popUpEditSizes = function (id, name) {
         //layout: { type: 'table', columns: 1 },
         defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
         items: [
-                { id: prefix + 'ID', name: 'ID', fieldLabel: 'รหัส', labelStyle: 'text-align: right'
+                { id: prefix + 'ID', name: 'Id', fieldLabel: 'รหัส', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false,readOnly:true},
-                { id: prefix + 'name', name: 'name', fieldLabel: 'สี่', labelStyle: 'text-align: right'
+                { id: prefix + 'name', name: 'Name', fieldLabel: 'สี่', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false }
                 ],
         buttons: [{
@@ -234,8 +234,8 @@ SizesForm.prototype.popUpEditSizes = function (id, name) {
                     method: 'post',
                     url: url,
                     params: {
-                                ID: Ext.getCmp(prefix + 'ID').getValue(),
-                                name: Ext.getCmp(prefix + 'name').getValue(),
+                                Id: Ext.getCmp(prefix + 'ID').getValue(),
+                                Name: Ext.getCmp(prefix + 'name').getValue(),
                             },
                     success: function (response) {
                         var text = response.responseText;
@@ -268,11 +268,10 @@ SizesForm.prototype.popUpEditSizes = function (id, name) {
 SizesForm.prototype.deleteSizes = function (dataview, reconds, type) {
     var SizesIds = [];
     for (var i = 0; i < reconds.length; i++) {
-        var id = reconds[i].get('ID');
-        console.log(id);
+        var id = reconds[i].get('Id');
         SizesIds.push(id);
     }
-    var method = window.SizesDelete;
+    var method = window.deleteSize;
     
     Ext.MessageBox.show({
         msg: 'Please wait update status items...',

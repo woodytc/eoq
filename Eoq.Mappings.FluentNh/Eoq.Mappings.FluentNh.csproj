@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Map\BranchMap.cs" />
+    <Compile Include="Map\BrandMap.cs" />
     <Compile Include="Map\ColorMap.cs" />
     <Compile Include="Map\SizesMap.cs" />
     <Compile Include="Map\UnitMap.cs" />

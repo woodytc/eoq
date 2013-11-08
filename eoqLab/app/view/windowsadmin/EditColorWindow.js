@@ -18,8 +18,8 @@
             layout: { type: 'table', columns: 1 },
             defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
             items: [
-                { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'ยี่ห้อ', afterLabelTextTpl: required, labelStyle: 'text-align: right'
-                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false, emptyText: '[ยี่ห้อ]'
+                { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'สี่', afterLabelTextTpl: required, labelStyle: 'text-align: right'
+                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false, emptyText: '[ขาว,แดง]'
                 }
             ]
         };

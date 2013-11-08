@@ -19,7 +19,7 @@
             defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
             items: [
                 { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'ยี่ห้อ', afterLabelTextTpl: required, labelStyle: 'text-align: right'
-                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false, emptyText: '[ยี่ห้อ]'
+                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false, emptyText: '[นิ้ว,เซนติเมตร]'
                 }
             ]
         };
@@ -61,10 +61,10 @@
 
                         form.submit({
                             //url from
-                            url: window.createSizes,
+                            url: window.createSize,
                             timeout: 999999,
                             params: {
-                                SizesName: Ext.getCmp(prefix + 'Name').getValue()
+                                Name: Ext.getCmp(prefix + 'Name').getValue()
                             },
                             success: function (formPanel, action) {
                                 var data = Ext.decode(action.response.responseText);

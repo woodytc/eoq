@@ -63,16 +63,16 @@
                                     handler: function (btn, evt) {
                                         //get value from textbox and combobox
                                         
-                                        me.name = Ext.getCmp(me.prefix + 'Name').getValue();
+                                        me.Name = Ext.getCmp(me.prefix + 'Name').getValue();
                                         
-                                        me.search(window.gridColorData, me.name);
+                                        me.search(window.gridColorData, me.Name);
                                     } // end handler
                                 }, {
                                     iconCls: 'icon-reload',
                                     id: me.prefix + 'user-btn-Reset',
                                     text: 'Reset',
                                     handler: function (btn, evt) {
-                                        Ext.getCmp(me.prefix + 'name').setValue('');
+                                        Ext.getCmp(me.prefix + 'Name').setValue('');
                                     } // end handler
                                 }
                           ] // end buttons Header
@@ -88,8 +88,8 @@
             store: me.gridStore,
             selModel: Ext.create('Ext.selection.CheckboxModel'),
             columns: [
-            { text: 'รหัส', dataIndex: 'ID', width: 250, sortable: false, align: 'center' },
-            { text: 'สี่', dataIndex: 'ColorName', width: 250, sortable: false, align: 'center' }//,
+            { text: 'รหัส', dataIndex: 'Id', width: 250, sortable: false, align: 'center' },
+            { text: 'สี่', dataIndex: 'Name', width: 250, sortable: false, align: 'center' }//,
             //{ text: 'จำนวนนับ', dataIndex: 'unit', width: 250, sortable: false, align: 'center' },
             ],
 
@@ -181,8 +181,8 @@
 
 //fn update
 ColorForm.prototype.popUpEditItem = function (dataview, record, parent, mode) {
-    var id = record.get('ID');
-    var name = record.get("ColorName");
+    var id = record.get('Id');
+    var name = record.get("Name");
     ColorForm.prototype.popUpEditColor(id, name);
 };
 
@@ -192,7 +192,7 @@ ColorForm.prototype.search = function (url, name) {
 
     var quickStore = Ext.getStore(prefix + 'gridStore');
     quickStore.proxy.url = url;
-    quickStore.getProxy().extraParams.name = name;    
+    quickStore.getProxy().extraParams.Name = name;    
     var pagingToolbar = Ext.getCmp(prefix + 'PagingToolbar');
     pagingToolbar.moveFirst();
  
@@ -268,11 +268,11 @@ ColorForm.prototype.popUpEditColor = function (id, name) {
 ColorForm.prototype.deleteColor = function (dataview, reconds, type) {
     var ColorIds = [];
     for (var i = 0; i < reconds.length; i++) {
-        var id = reconds[i].get('ID');
-        console.log(id);
+        var id = reconds[i].get('Id');
+        //console.log(id);
         ColorIds.push(id);
     }
-    var method = window.ColorDelete;
+    var method = window.deleteColor;
     
     Ext.MessageBox.show({
         msg: 'Please wait update status items...',

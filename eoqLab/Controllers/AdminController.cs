@@ -351,13 +351,13 @@ namespace eoqLab.Controllers
 
         #region Color
         [HttpPost]
-        public JsonResult CreateColor(Color enitity)
+        public JsonResult CreateColor(String Name)
         {
             try
             {
                 Color enititys = new Color();
-                // enitity.DepartName = departName;
-                ColorRepository.Save(enitity);
+                enititys.Name = Name;
+                ColorRepository.Save(enititys);
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -367,13 +367,14 @@ namespace eoqLab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateColor(string departName, int departID)
+        public JsonResult UpdateColor(string Name, int Id)
         {
             try
             {
                 Color enitity = new Color();
 
-
+                enitity.Id = Id;
+                enitity.Name = Name;
                 //insert
                 ColorRepository.Update(enitity);
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
@@ -402,16 +403,16 @@ namespace eoqLab.Controllers
             }
         }
 
-        public JsonResult GridColor(string EmpName = "", int DepartID = 0)
+        public JsonResult GridColor(string Name = "")
         {
 
-            if (string.IsNullOrEmpty(EmpName))
+            if (string.IsNullOrEmpty(Name))
             {
                 return this.SearchColorAll();
             }
             else
             {
-                return this.SearchColor(EmpName);
+                return this.SearchColor(Name);
             }
         }
 
@@ -427,24 +428,23 @@ namespace eoqLab.Controllers
             return Json(new { items = result, total = result.Count() }, JsonRequestBehavior.AllowGet);
         }
 
-        private JsonResult SearchColor(string departName)
+        private JsonResult SearchColor(string Name)
         {
-            //var unit = (from u in ColorRepository.GetAll() where u.DepartName.Contains(departName) select u).ToList<Color>();
-            //return Json(new { items = unit, total = unit.Count }, JsonRequestBehavior.AllowGet);
-            return null;
+            var result = (from c in ColorRepository.GetAll() where c.Name.Contains(Name) select c ).ToList<Color>();
+            return Json(new { items = result, total = result.Count }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion
 
         #region Sizes
         [HttpPost]
-        public JsonResult CreateSizes(Sizes enitity)
+        public JsonResult CreateSizes(string Name)
         {
             try
             {
-                Color enititys = new Color();
-                // enitity.DepartName = departName;
-                SizesRepository.Save(enitity);
+                Sizes enititys = new Sizes();
+                 enititys.Name = Name;
+                SizesRepository.Save(enititys);
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -454,15 +454,15 @@ namespace eoqLab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateSizes(string departName, int departID)
+        public JsonResult UpdateSizes(string Name, int Id)
         {
             try
             {
                 Sizes enitity = new Sizes();
-
-
-                //insert
+                enitity.Id = Id;
+                enitity.Name = Name;
                 SizesRepository.Update(enitity);
+                
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -489,16 +489,16 @@ namespace eoqLab.Controllers
             }
         }
 
-        public JsonResult GridSizes(string EmpName = "", int DepartID = 0)
+        public JsonResult GridSizes(string Name = "")
         {
 
-            if (string.IsNullOrEmpty(EmpName))
+            if (string.IsNullOrEmpty(Name))
             {
                 return this.SearchSizesAll();
             }
             else
             {
-                return this.SearchSizes(EmpName);
+                return this.SearchSizes(Name);
             }
         }
 
@@ -518,13 +518,13 @@ namespace eoqLab.Controllers
 
         #region Brand
         [HttpPost]
-        public JsonResult CreateBrand(Brand enitity)
+        public JsonResult CreateBrand(string Name)
         {
             try
             {
-                Color enititys = new Color();
-                // enitity.DepartName = departName;
-                BrandRepository.Save(enitity);
+                Brand enititys = new Brand();
+                enititys.Name = Name;
+                BrandRepository.Save(enititys);
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -534,14 +534,14 @@ namespace eoqLab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateBrand(string departName, int departID)
+        public JsonResult UpdateBrand(string Name, int Id)
         {
             try
             {
                 Brand enitity = new Brand();
-
-
-                //insert
+                enitity.Id = Id;
+                enitity.Name = Name;
+                //update
                 BrandRepository.Update(enitity);
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -558,7 +558,7 @@ namespace eoqLab.Controllers
                 for (int i = 0; i < ids.Count; i++)
                 {
                     Brand entity = new Brand();
-                    entity.ID = ids[i];
+                    entity.Id = ids[i];
                     BrandRepository.Delete(entity);
                 }
                 return Json(new { success = true, message = "Delete Successful" }, JsonRequestBehavior.AllowGet);
