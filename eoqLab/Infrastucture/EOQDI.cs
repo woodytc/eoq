@@ -105,6 +105,11 @@ namespace eoqLab.Infrastucture
             kernel.Bind<IBrandRepository>()
                 .To<BrandRepository>()
                 .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
+            
+            //Brand
+            kernel.Bind<ICatelogyRepository>()
+                .To<CatelogyRepository>()
+                .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
 
             //Size
             kernel.Bind<ISizesRepository>()

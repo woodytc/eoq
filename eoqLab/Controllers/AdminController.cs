@@ -22,6 +22,7 @@ namespace eoqLab.Controllers
         public IColorRepository ColorRepository { get; set; }
         public IBrandRepository BrandRepository { get; set; }
         public ISizesRepository SizesRepository { get; set; }
+        public ICatelogyRepository CatelogyRepository { get; set; }
         public AdminController(IEOQRepository eoqRepository
             ,IMaterialRepository materialRepository
             ,IUnitRepository unit
@@ -32,6 +33,7 @@ namespace eoqLab.Controllers
             ,IColorRepository colorRepository
             ,IBrandRepository brandRepository
             ,ISizesRepository sizesRepository
+            ,ICatelogyRepository catelogyRepository
             )
         {
             EOQRepository = eoqRepository;
@@ -45,6 +47,8 @@ namespace eoqLab.Controllers
             this.ColorRepository = colorRepository;
             this.BrandRepository = brandRepository;
             this.SizesRepository = sizesRepository;
+            this.CatelogyRepository = catelogyRepository;
+           
         }
 
   
@@ -591,6 +595,86 @@ namespace eoqLab.Controllers
         private JsonResult SearchBrandAll(string name)
         {
             var result = from b in BrandRepository.GetAll() where b.Name.Contains(name) select b;
+            return Json(new { items = result, total = result.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
+        #region Catelogy
+        [HttpPost]
+        public JsonResult CreateCatelogy(string Name)
+        {
+            try
+            {
+                Catelogy enititys = new Catelogy();
+                enititys.Name = Name;
+                CatelogyRepository.Save(enititys);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateCatelogy(string Name, int Id)
+        {
+            try
+            {
+                Catelogy enitity = new Catelogy();
+                enitity.Id = Id;
+                enitity.Name = Name;
+                //update
+                CatelogyRepository.Update(enitity);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult DeleteCatelogy(List<int> ids)
+        {
+            try
+            {
+                for (int i = 0; i < ids.Count; i++)
+                {
+                    Catelogy entity = new Catelogy();
+                    entity.Id = ids[i];
+                    CatelogyRepository.Delete(entity);
+                }
+                return Json(new { success = true, message = "Delete Successful" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "This unit can not be delete because there are others from using." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult GridCatelogy(string name = "")
+        {
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return this.SearchCatelogyAll();
+            }
+            else
+            {
+                return this.SearchCatelogyAll(name);
+            }
+        }
+
+        private JsonResult SearchCatelogyAll()
+        {
+            var unit = CatelogyRepository.GetAll();
+            return Json(new { items = unit, total = unit.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+        private JsonResult SearchCatelogyAll(string name)
+        {
+            var result = from b in CatelogyRepository.GetAll() where b.Name.Contains(name) select b;
             return Json(new { items = result, total = result.Count() }, JsonRequestBehavior.AllowGet);
         }
 

@@ -75,11 +75,19 @@
     window.updateColor = '@Url.Action("UpdateColor", "Admin")';
     window.deleteColor = '@Url.Action("DeleteColor", "Admin")';
     window.gridColorData = '@Url.Action("GridColor", "Admin")';
+    
     //brand
     window.createBrand = '@Url.Action("CreateBrand", "Admin")'
     window.updateBrand = '@Url.Action("UpdateBrand", "Admin")';
     window.deleteBrand = '@Url.Action("DeleteBrand", "Admin")';
     window.gridBrandData = '@Url.Action("GridBrand", "Admin")';
+
+    //Catelogy
+    window.createCatelogy = '@Url.Action("CreateCatelogy", "Admin")'
+    window.updateCatelogy = '@Url.Action("UpdateCatelogy", "Admin")';
+    window.deleteCatelogy = '@Url.Action("DeleteCatelogy", "Admin")';
+    window.gridCatelogyData = '@Url.Action("GridCatelogy", "Admin")';
+
     //size
     window.createSize = '@Url.Action("CreateSizes", "Admin")'
     window.updateSize = '@Url.Action("UpdateSizes", "Admin")';
@@ -110,6 +118,7 @@
 <script src="@Url.Content("~/app/view/admin/BrandForm.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/ColorForm.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/admin/SizesForm.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/admin/CatelogyForm.js")" type="text/javascript"></script>
 
 @*<script src="@Url.Content("~/app/view/admin/CellEdit.js")" type="text/javascript"></script>*@
 <script src="@Url.Content("~/app/view/admin/test1.js")" type="text/javascript"></script>
@@ -125,6 +134,7 @@
 <script src="@Url.Content("~/app/view/windowsadmin/EditBrandWindow.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/windowsadmin/EditColorWindow.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/windowsadmin/EditSizesWindow.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/windowsadmin/EditCatelogyWindow.js")" type="text/javascript"></script>
 
 <script src="@Url.Content("~/app/view/windowsadmin/ImportWindow.js")" type="text/javascript"></script>
 
@@ -212,7 +222,7 @@
         var supplierFrom = new SupplierFrom({ id: 'suupplierform', region: 'north' });
         var departmentFrom = new DepartmentFrom({ id: 'suupplierform', region: 'north' });
         //var celledit = new CellEdit({ id: 'celleditfrom', region: 'north' });
-        var test1 = new Test1({ id: 'test1', region: 'north' });
+        //var test1 = new TestFrom({ id: 'TestFrom', region: 'north' });
         //userManagementForm.setStore(userstore);
 
         var inAdmin = "adminTest"; //"@ViewBag.InAdminRole";
@@ -221,6 +231,7 @@
         var color = new ColorForm({ id: 'colorform', region: 'north' });
         var sizes = new SizesForm({ id: 'sizesform', region: 'north' });
         var brand = new BrandForm({ id: 'brandform', region: 'north' });
+        var catelogy = new CatelogyForm({ id: 'catelogyform', region: 'north' });
 
 
         var tabItems = [];
@@ -230,16 +241,17 @@
         tabItems.push(color);
         tabItems.push(sizes);
         tabItems.push(brand);
-        tabItems.push(departmentFrom);
-        tabItems.push(customerForm);
+        //tabItems.push(departmentFrom);
+        //tabItems.push(customerForm);
         //tabItems.push(adminManagementForm);
+        tabItems.push(catelogy);
         tabItems.push(meterialForm);
         
         //tabItems.push(departmentFrom);
         //tabItems.push(supplierFrom);
 
         //tabItems.push(celledit);
-        tabItems.push(test1);
+        //tabItems.push(test1);
         
 
         /*
