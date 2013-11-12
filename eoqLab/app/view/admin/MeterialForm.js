@@ -154,7 +154,8 @@
             msg: 'Please wait generate items...', width: 300, closable: false
             });
             //create new poppu
-            var quickConfWindow = new EditMaterialWindow(
+            //var quickConfWindow = new EditMaterialWindow(
+            var quickConfWindow = new ImportWindow(
             {
                 listeners: {
                                 close: function (panel, eOpts) {
