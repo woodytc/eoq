@@ -209,6 +209,7 @@
     <Content Include="app\view\users\usermodels.js" />
     <Content Include="app\view\windowsadmin\EditCatelogyWindow.js" />
     <Content Include="app\view\windowsadmin\EditBrandWindow.js" />
+    <Content Include="app\view\windowsadmin\_EditHistogramBinConfigForm.js" />
     <Content Include="app\view\windowsadmin\EditSizesWindow.js" />
     <Content Include="app\view\windowsadmin\EditColorWindow.js" />
     <Content Include="app\view\windowsadmin\ImportWindow.js" />

@@ -155,7 +155,7 @@
             });
             //create new poppu
             //var quickConfWindow = new EditMaterialWindow(
-            var quickConfWindow = new ImportWindow(
+            var quickConfWindow = new EditHistogramBinConfig(
             {
                 listeners: {
                                 close: function (panel, eOpts) {
