@@ -16,8 +16,8 @@
             },
             writer: {
                 type: 'json',
-                writeAllFields: false,
-                root: 'data'
+                writeAllFields: true
+                //root: 'data'
             },
             listeners: {
                 exception: function (proxy, response, operation) {
