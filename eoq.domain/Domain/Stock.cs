@@ -13,6 +13,7 @@ namespace Eoq.Domain
         public virtual int? OrderId { get; set; }
         public virtual int ColorId { get; set; }
         public virtual int BranchId { get; set; }
+        public virtual int BrandId { get; set; }
         public virtual int UnitId { get; set; }
         public virtual int SizeId { get; set; }
         public virtual decimal Reorderpoint { get; set; }

@@ -20,6 +20,7 @@ namespace Eoq.Mappings.FluentNh
             Map(x => x.OrderId).Column("Order_ID");
             Map(x => x.ColorId).Column("Color_ID").Not.Nullable();
             Map(x => x.BranchId).Column("Branch_ID").Not.Nullable();
+            Map(x => x.BrandId).Column("Brand_ID").Not.Nullable();
             Map(x => x.UnitId).Column("Unit_ID").Not.Nullable();
             Map(x => x.SizeId).Column("Size_ID").Not.Nullable();
             Map(x => x.Reorderpoint).Column("ReorderPoint").Not.Nullable();
