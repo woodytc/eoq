@@ -129,6 +129,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -161,6 +162,8 @@
     <Content Include="app\model\EulerAngles.js" />
     <Content Include="app\model\GpsAwake.js" />
     <Content Include="app\model\GpsFirstFix.js" />
+    <Content Include="app\model\home\MainproductModel.js" />
+    <Content Include="app\model\home\PurchaseOrderModel.js" />
     <Content Include="app\model\ImpactAlert1.js" />
     <Content Include="app\model\ImpactAlert2.js" />
     <Content Include="app\model\JourneyBasis.js" />
@@ -202,6 +205,8 @@
     <Content Include="app\view\device\RequestPendingToolbar.js" />
     <Content Include="app\view\device\SimulationScriptWindow.js" />
     <Content Include="app\view\device\Toolbar.js" />
+    <Content Include="app\view\home\MainProductForm.js" />
+    <Content Include="app\view\home\PurchaseOrderForm.js" />
     <Content Include="app\view\users\EditUserManagemantWindow.js" />
     <Content Include="app\view\users\LogonWindow.js" />
     <Content Include="app\view\users\UserManagemantForm.js" />
@@ -209,7 +214,6 @@
     <Content Include="app\view\users\usermodels.js" />
     <Content Include="app\view\windowsadmin\EditCatelogyWindow.js" />
     <Content Include="app\view\windowsadmin\EditBrandWindow.js" />
-    <Content Include="app\view\windowsadmin\_EditHistogramBinConfigForm.js" />
     <Content Include="app\view\windowsadmin\EditSizesWindow.js" />
     <Content Include="app\view\windowsadmin\EditColorWindow.js" />
     <Content Include="app\view\windowsadmin\ImportWindow.js" />
@@ -3076,6 +3080,7 @@
     <None Include="Scripts\touch\resources\themes\templates\project\manifest.rb" />
     <None Include="Scripts\touch\resources\themes\templates\project\sencha-touch.scss" />
     <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\eoq.domain\Eoq.Domain.csproj">
