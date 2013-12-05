@@ -126,9 +126,9 @@ namespace eoqLab.Controllers
 
         //save 
         [HttpPost]
-        public void Update(JsonResult purchaseOrders)
+        public void Update(List<PurchaseOrderModel> purchaseOrders)
         {
-            var objectJson = new JavaScriptSerializer().Deserialize<PurchaseOrderModel>(purchaseOrders.Data.ToString());
+            var t = purchaseOrders;
         }
     }//end class
 }//end namespace
