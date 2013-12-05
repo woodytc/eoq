@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Eoq.Mappings.FluentNh.Repository;
 using eoqLab.Models;
 
@@ -125,9 +126,9 @@ namespace eoqLab.Controllers
 
         //save 
         [HttpPost]
-        public void Update(string purchaseOrders)
+        public void Update(JsonResult purchaseOrders)
         {
-            var test = purchaseOrders ;
+            var objectJson = new JavaScriptSerializer().Deserialize<PurchaseOrderModel>(purchaseOrders.Data.ToString());
         }
     }//end class
 }//end namespace
