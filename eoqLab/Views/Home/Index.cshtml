@@ -1,0 +1,100 @@
+﻿<!-- include CSS -->
+<link rel="stylesheet" type="text/css" href='@Url.Content("~/Scripts/extjs/resources/css/ext-all-access.css")' />
+<link rel="stylesheet" type="text/css" href='@Url.Content("~/Content/Site.css")' />
+<link rel="stylesheet" type="text/css" href='@Url.Content("~/Content/icons.css")' />
+
+<script src='@Url.Content("~/Scripts/extjs/ext-all.js")' type="text/javascript"></script>
+
+<!--FrontEnd Model-->
+<script src="@Url.Content("~/app/model/home/MainproductModel.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/model/home/PurchaseOrderModel.js")" type="text/javascript"></script>
+
+<!--FrontEnd View-->
+<script src="@Url.Content("~/app/view/home/MainProductForm.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/home/PurchaseOrderForm.js")" type="text/javascript"></script>
+
+<!-- Start script -->
+<script type="text/javascript">
+    Ext.Loader.setConfig({ enabled: true });
+    Ext.Loader.setPath('Ext.ux', '@Url.Content("~/Scripts/extjs/ux")');
+    Ext.require(['*']);
+    Ext.QuickTips.init();
+
+    window.read_mainProductURL = '@Url.Action("GridEoq","Admin")';
+    
+    //Purchase Order URL
+    window.read_purchaseOrderURL = '@Url.Action("GridEoq","Admin")';
+    window.update_purchaseOrderURL = '@Url.Action("GridEoq","Admin")';
+    window.create_purchaseOrderURL = '@Url.Action("GridEoq","Admin")';
+    window.destroy_purchaseOrderURL = '@Url.Action("GridEoq","Admin")';
+
+    window.read_products_list = '@Url.Action("ProductsList","Home")';
+    window.read_categories_list = '@Url.Action("CategoriesList","Home")'; 
+    //create front end view
+    var mainProductForm     = new MainProductForm(),
+        purchaseOrderForm   = new PurchaseOrderForm();
+    
+    //Create main View
+    window.viewport = Ext.create('Ext.Viewport', {
+        id: 'viewport',
+        layout: 'border',
+        items: [
+                    {
+                        xtype: 'panel',
+                        region: 'north',
+                        height: 25, // give north and south regions a height
+                        title: 'Device Management [ ' + 'currentUser' + ' : ' + 'CurrentUserRole'
+                                + ' ]<a href=' + 'actionLogoff' + ' style="font-family:verdana;font-size:12px;color:red;text-decoration: none;">   Logoff</a>'
+                    },
+                    {
+                        xtype: 'tabpanel',
+                        region: 'center',
+                        height: Ext.getBody().getViewSize().height * 0.95, // Change to support labtop screen
+                        width: Ext.getBody().getViewSize().width * 1,  // Change to support labtop screen
+                        minWidth  : 500,
+                        minHeight :  600,
+                        items: [
+                             {
+                                 id: 'tab1',
+                                 xtype: 'panel',
+                                 title: 'หน้าหลัก',
+                                 minHeight: 450,
+                                 items: [mainProductForm]
+                             },
+                             {
+                                 id: 'tab2',
+                                 xtype: 'panel',
+                                 region: 'north',
+                                 title: 'ขาย',
+                                 minHeight: 450 ,
+                                 items: [purchaseOrderForm]
+                             },
+                             {
+                                 id: 'tab3',
+                                 xtype: 'panel',
+                                 region: 'north',
+                                 title: 'คลังสินค้า',
+                                 minHeight: 450,
+                                 items: []
+                             },
+                             {
+                                 id: 'tab4',
+                                 xtype: 'panel',
+                                 region: 'north',
+                                 title: 'รายการขาย',
+                                 minHeight: 450,
+                                 items: []
+                             },
+                             {
+                                 id: 'tab5',
+                                 xtype: 'panel',
+                                 region: 'north',
+                                 title: 'รายงาน',
+                                 minHeight: 450,
+                                 items: []
+                             }
+                        ]
+                    }
+            ]
+    });
+</script>
