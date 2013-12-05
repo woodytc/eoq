@@ -1,16 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+//using System.Collections.Generic;
+
 
 namespace Eoq.Domain
 {
-    class MaterialCat: Material
+    /// <summary>
+    /// fk Catelogy id map table Catelogy 
+    /// </summary>
+    public partial class MaterialCat:Material
     {
-        public MaterialCat() { 
-
+        public MaterialCat()
+        {
         }
-        public virtual int CatelogyName { get; set; }
-            
+        public virtual int CatelogyId { get; set; }
+        public virtual string CatelogyName { get; set; }
+        
     }
 }

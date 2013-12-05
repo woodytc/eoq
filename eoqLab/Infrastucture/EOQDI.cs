@@ -117,7 +117,7 @@ namespace eoqLab.Infrastucture
                 .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
 
             //stock
-            kernel.Bind<>()
+            kernel.Bind<IStockRepository>()
                 .To<StockRepository>()
                 .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
 

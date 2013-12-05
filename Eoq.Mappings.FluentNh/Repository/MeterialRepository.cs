@@ -130,17 +130,15 @@ namespace Eoq.Mappings.FluentNh.Repository
                             .List<Product>();
  
                  */
-               var q = (from m in session.Query<Material>() 
-                        join c in session.Query<Catelogy>() 
-                            on m.CatelogyId equals c.Id
-                        select new MaterialCat{ 
-                            CatelogyId = c.Id,
-                            catelogy = c.Name,
-                            MatId = m.MatId,
-                            MetName = m.MetName,
-                            MatDetail = m.MatDetail,
-                        }).ToList();
-
+                var q = (from m in session.Query<Material>()
+                         join c in session.Query<Catelogy>()
+                             on m.CatelogyId equals c.Id
+                         select new MaterialCat
+                         {
+                             CatelogyId = c.Id,
+                             CatelogyName = c.Name,
+                             MetName = m.MetName
+                         });
             }
         }
     }

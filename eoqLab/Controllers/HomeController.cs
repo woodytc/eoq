@@ -62,9 +62,9 @@ namespace eoqLab.Controllers
             var q = from m in b
                     select new
                                {
-                                   MatId = m.MATID
+                                   MatId = m.MatId
                                    ,
-                                   MatName = m.MATNAME
+                                   MatName = m.MetName
                                };
 
             return Json(new { data = q, total = q.Count() }, JsonRequestBehavior.AllowGet);
