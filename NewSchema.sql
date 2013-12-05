@@ -1,6 +1,48 @@
 USE [EOQ]
 GO
-/****** Object:  Table [dbo].[Unit]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Branch]    Script Date: 12/05/2013 15:23:27 ******/
+DROP TABLE [dbo].[Branch]
+GO
+/****** Object:  Table [dbo].[Brand]    Script Date: 12/05/2013 15:23:27 ******/
+DROP TABLE [dbo].[Brand]
+GO
+/****** Object:  Table [dbo].[Cashier]    Script Date: 12/05/2013 15:23:27 ******/
+DROP TABLE [dbo].[Cashier]
+GO
+/****** Object:  Table [dbo].[Catelogy]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[Catelogy]
+GO
+/****** Object:  Table [dbo].[Color]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[Color]
+GO
+/****** Object:  Table [dbo].[District]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[District]
+GO
+/****** Object:  Table [dbo].[Employee]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[Employee]
+GO
+/****** Object:  Table [dbo].[Material]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[Material]
+GO
+/****** Object:  Table [dbo].[Orders]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[Orders]
+GO
+/****** Object:  Table [dbo].[Province]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[Province]
+GO
+/****** Object:  Table [dbo].[Sizes]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[Sizes]
+GO
+/****** Object:  Table [dbo].[Stock]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[Stock]
+GO
+/****** Object:  Table [dbo].[Supplier]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[Supplier]
+GO
+/****** Object:  Table [dbo].[Unit]    Script Date: 12/05/2013 15:23:28 ******/
+DROP TABLE [dbo].[Unit]
+GO
+/****** Object:  Table [dbo].[Unit]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -15,7 +57,7 @@ CREATE TABLE [dbo].[Unit](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Supplier]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Supplier]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -34,7 +76,7 @@ CREATE TABLE [dbo].[Supplier](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Stock]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Stock]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -60,7 +102,7 @@ CREATE TABLE [dbo].[Stock](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Sizes]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Sizes]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -74,7 +116,7 @@ CREATE TABLE [dbo].[Sizes](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Province]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Province]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -84,7 +126,7 @@ CREATE TABLE [dbo].[Province](
 	[province_name] [nvarchar](150) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Orders]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Orders]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -100,7 +142,7 @@ CREATE TABLE [dbo].[Orders](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Material]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Material]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -119,7 +161,7 @@ CREATE TABLE [dbo].[Material](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Employee]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Employee]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -138,7 +180,7 @@ CREATE TABLE [dbo].[Employee](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[District]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[District]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -153,7 +195,7 @@ CREATE TABLE [dbo].[District](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Color]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Color]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -167,7 +209,7 @@ CREATE TABLE [dbo].[Color](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Catelogy]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Catelogy]    Script Date: 12/05/2013 15:23:28 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -185,7 +227,7 @@ CREATE TABLE [dbo].[Catelogy](
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Cashier]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Cashier]    Script Date: 12/05/2013 15:23:27 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -208,7 +250,7 @@ CREATE TABLE [dbo].[Cashier](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Brand]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Brand]    Script Date: 12/05/2013 15:23:27 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -222,7 +264,7 @@ CREATE TABLE [dbo].[Brand](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Branch]    Script Date: 12/05/2013 10:56:16 ******/
+/****** Object:  Table [dbo].[Branch]    Script Date: 12/05/2013 15:23:27 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
