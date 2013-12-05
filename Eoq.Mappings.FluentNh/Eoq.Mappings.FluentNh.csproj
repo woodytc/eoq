@@ -78,9 +78,11 @@
   <ItemGroup>
     <Compile Include="Map\BranchMap.cs" />
     <Compile Include="Map\BrandMap.cs" />
+    <Compile Include="Map\CashierMap.cs" />
     <Compile Include="Map\ColorMap.cs" />
     <Compile Include="Map\CatelogyMap.cs" />
     <Compile Include="Map\SizesMap.cs" />
+    <Compile Include="Map\StockMap.cs" />
     <Compile Include="Map\UnitMap.cs" />
     <Compile Include="Map\DepartmentMap.cs" />
     <Compile Include="Map\EmployeeMailMap.cs" />
@@ -101,6 +103,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ColorRepository.cs" />
     <Compile Include="Repository\CatelogyRepository.cs" />
+    <Compile Include="Repository\CashierRepository.cs" />
+    <Compile Include="Repository\StockRepository.cs" />
     <Compile Include="Repository\SizesRepository.cs" />
     <Compile Include="Repository\BrandRepository.cs" />
     <Compile Include="Repository\UnitRepository.cs" />

@@ -4,33 +4,32 @@ using System.Text;
 
 
 namespace Eoq.Domain {
-    
+    /// <summary>
+    /// fk Catelogy id map table Catelogy 
+    /// </summary>
     public partial class Material {
         public Material()
         {
+            this.Createdate = DateTime.Now;
+                
         }
-        public Material(string matName,string matDetail,decimal matPrice,int matReorderPoint,int unitID,int matID = 0){
-            MATGID = System.Guid.NewGuid();
-            if (matID > 0) MATID = matID;
-            MATNAME = matName;
-            MATDETAIL = matDetail;
-            MATPrice = matPrice;
-            MATREORDERPOINT = matReorderPoint;
-            UNITAID = unitID;
-            CreateBy = "admin";
-            CreateDate = DateTime.Now;
-            UpdateBY = "admin";
+        public Material(string matName, string matDetail, int catelogyId)
+        {
+
+            MetName = matName;
+            MatDetail = matDetail;
+            CatelogyId = catelogyId;
+            Createdate = DateTime.Now;
+            Updatedate = DateTime.Now;
+            
         }
-        public virtual int MATID { get; set; }
-        public virtual System.Guid MATGID { get; set; }
-        public virtual string MATNAME { get; set; }
-        public virtual string MATDETAIL { get; set; }
-        public virtual decimal? MATPrice { get; set; }
-        public virtual int? MATREORDERPOINT { get; set; }
-        public virtual int? UNITAID { get; set; }
-        public virtual string CreateBy { get; set; }
-        public virtual DateTime? CreateDate { get; set; }
-        //public virtual DateTime? UpdateDate { get; set; }
-        public virtual string UpdateBY { get; set; }
+        
+        public virtual int MatId { get; set; }
+        public virtual int CatelogyId { get; set; }
+        public virtual string MetName { get; set; }
+        public virtual string MatDetail { get; set; }
+        public virtual DateTime? Createdate { get; set; }
+        public virtual DateTime? Updatedate { get; set; }
+        public virtual string Updateby { get; set; }
     }
 }

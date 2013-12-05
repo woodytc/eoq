@@ -80,35 +80,34 @@
                     }//end Header
             
             , {
-            xtype: 'grid',
-            id: me.prefix + 'grid',
-            title: 'User Management List',
-            columnLines: true,
-            //  autoScore: true,
-            region: 'center',
-            store: me.gridStore,
-            selModel: Ext.create('Ext.selection.CheckboxModel'),
-            columns: [
-            { text: 'MatId', dataIndex: 'MatId', width: 250, sortable: false, align: 'center',hidden: true },
-            { text: 'Material Name', dataIndex: 'MatName', width: 250, sortable: false, align: 'center' },
-            { text: 'Material Detail', dataIndex: 'MatDetail', width: 250, sortable: false, align: 'center' },
-            { text: 'Price', dataIndex: 'MatPrice', width: 250, sortable: false, align: 'center'},
-            { text: 'Reorder Point', dataIndex: 'MatReorderPoint', width: 250, sortable: false, align: 'center' },
-            { text: 'UnitID', dataIndex: 'UnitID', width: 250, sortable: false, align: 'center',hidden: true }
-            ],
-
-            bbar: Ext.create('Ext.PagingToolbar', {
-            id: me.prefix + 'PagingToolbar',
-            store: me.gridStore
-            , displayInfo: true
-            , displayMsg: 'Displaying User and Roles Order {0} - {1} of {2}'
-            , emptyMsg: "No User and Roles Order to display",
-            }),
-            viewConfig: {
-            listeners: {
-            itemdblclick: me.popUpEditItem,
-            //    itemclick: me.manageRedeployBtn
-            }
+                xtype: 'grid',
+                id: me.prefix + 'grid',
+                title: 'User Management List',
+                columnLines: true,
+                //  autoScore: true,
+                region: 'center',
+                store: me.gridStore,
+                selModel: Ext.create('Ext.selection.CheckboxModel'),
+                columns: [
+                            { text: 'MatId', dataIndex: 'MatId', width: 250, sortable: false, align: 'center',hidden: true },
+                            { text: 'Material Name', dataIndex: 'MatName', width: 250, sortable: false, align: 'center' },
+                            { text: 'Material Detail', dataIndex: 'MatDetail', width: 250, sortable: false, align: 'center' },
+                            { text: 'Price', dataIndex: 'MatPrice', width: 250, sortable: false, align: 'center'},
+                            { text: 'Reorder Point', dataIndex: 'MatReorderPoint', width: 250, sortable: false, align: 'center' },
+                            { text: 'UnitID', dataIndex: 'UnitID', width: 250, sortable: false, align: 'center',hidden: true }
+                        ],
+                            bbar: Ext.create('Ext.PagingToolbar', {
+                            id: me.prefix + 'PagingToolbar',
+                            store: me.gridStore
+                            , displayInfo: true
+                            , displayMsg: 'Displaying User and Roles Order {0} - {1} of {2}'
+                            , emptyMsg: "No User and Roles Order to display",
+                        }),
+                        viewConfig: {
+                        listeners: {
+                        itemdblclick: me.popUpEditItem,
+                    //    itemclick: me.manageRedeployBtn
+                     }
             }, //end view config
 
             dockedItems: [{

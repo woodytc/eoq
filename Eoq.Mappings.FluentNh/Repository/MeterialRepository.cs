@@ -9,9 +9,11 @@ namespace Eoq.Mappings.FluentNh.Repository
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
+    using NHibernate.Linq;
     using Eoq.Domain;
     using System.Diagnostics;
+    using NHibernate.Criterion;
+  
 
     public interface IMaterialRepository
     {
@@ -107,5 +109,39 @@ namespace Eoq.Mappings.FluentNh.Repository
         }
 
         #endregion
+
+        public void SelectGridMeterial()
+        {
+            using (var session = SessionFactory.OpenSession())
+            {
+                /*
+                    var linq = (from product in session.Query<Product>()
+                    join category in session.Query<Category>()
+                         on product.Category.Id equals category.Id
+                    where category.CategoryName == "Condiments"
+                    && !product.Discontinued
+                    select product).ToList();
+                 */
+                /*
+                 var list4 = session.CreateCriteria<Product>()
+                            .Add(Restrictions.Eq("Discontinued", false))
+                            .CreateAlias("Category", "c")
+                            .Add(Restrictions.Eq("c.CategoryName", "Condiments"))
+                            .List<Product>();
+ 
+                 */
+               var q = (from m in session.Query<Material>() 
+                        join c in session.Query<Catelogy>() 
+                            on m.CatelogyId equals c.Id
+                        select new MaterialCat{ 
+                            CatelogyId = c.Id,
+                            catelogy = c.Name,
+                            MatId = m.MatId,
+                            MetName = m.MetName,
+                            MatDetail = m.MatDetail,
+                        }).ToList();
+
+            }
+        }
     }
 }

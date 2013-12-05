@@ -115,7 +115,17 @@ namespace eoqLab.Infrastucture
             kernel.Bind<ISizesRepository>()
                 .To<SizesRepository>()
                 .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
-  
+
+            //stock
+            kernel.Bind<>()
+                .To<StockRepository>()
+                .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
+
+            //Cashier
+            kernel.Bind<ICashierRepository>()
+                .To<CashierRepository>()
+                .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
+
             //StartProcess();
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }

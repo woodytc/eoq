@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="EOQRepository.cs" company="">
+// <copyright file="CashierRepository.cs" company="">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
@@ -9,23 +9,31 @@ namespace Eoq.Mappings.FluentNh.Repository
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using NHibernate.Linq;
     using System.Text;
     using Eoq.Domain;
-    using NHibernate.Criterion;
-    using NHibernate.Mapping;
-    
-    public class EOQRepository : NhRepository, IEOQRepository
+
+    public interface ICashierRepository
+    {
+        void Save(Cashier newCashier);
+        void SaveOrUpdate(Cashier newCashier);
+        List<Cashier> GetAll();
+        int Update(Cashier oldCashier);
+        int CountAll();
+
+        void Delete(Cashier Cashier);
+    }
+
+    public class CashierRepository : NhRepository, ICashierRepository
     {
         #region save update select all countall
 
-        public void Save(EOQ newEOQ)
+        public void Save(Cashier newCashier)
         {
             using (var session = SessionFactory.OpenSession())
             using (var ts = session.BeginTransaction())
             {
                 //HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
-                session.Save(newEOQ);
+                session.Save(newCashier);
                 session.Flush();
                 //session.Close();
                 ts.Commit();
@@ -33,36 +41,36 @@ namespace Eoq.Mappings.FluentNh.Repository
         }
 
 
-        public void SaveOrUpdate(EOQ newEOQ)
+        public void SaveOrUpdate(Cashier newCashier)
         {
             using (var session = SessionFactory.OpenSession())
             using (var ts = session.BeginTransaction())
             {
-                session.SaveOrUpdate(newEOQ);
+                session.SaveOrUpdate(newCashier);
                 session.Flush();
                 //session.Close();
                 ts.Commit();
             }
         }
 
-        public List<EOQ> GetAll()
+        public List<Cashier> GetAll()
         {
             //using (var session = SessionFactory.OpenSession())
             //using (session.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
             using (var session = SessionFactory.OpenStatelessSession())
             {
-                var results = session.QueryOver<EOQ>().List() as List<EOQ>;
+                var results = session.QueryOver<Cashier>().List() as List<Cashier>;
                 //session.Close();
                 return results;
             }
         }
 
-        public int Update(EOQ oldEOQ)
+        public int Update(Cashier oldCashier)
         {
             using (var session = SessionFactory.OpenSession())
             using (var ts = session.BeginTransaction())
             {
-                session.Update(oldEOQ);
+                session.Update(oldCashier);
                 session.Flush();
                 //session.Close();
                 ts.Commit();
@@ -74,31 +82,20 @@ namespace Eoq.Mappings.FluentNh.Repository
         {
             using (var session = SessionFactory.OpenStatelessSession())
             {
-                var result = session.QueryOver<EOQ>().RowCount();
+                var result = session.QueryOver<Cashier>().RowCount();
                 return result;
             }
 
         }
 
-        #endregion
-        /// <summary>
-        /// use IQueryable
-        ///  foreach (var list in iquery)
-        ///  Console.WriteLine(grade.eoq.);
-        /// </summary>
-        /// <returns></returns>
-        public void GitEOQ()
+        public void Delete(Cashier Cashier)
         {
             using (var session = SessionFactory.OpenStatelessSession())
             {
-                //var q = from e in session.Query<EOQ>() 
-                //        join m in session.Query<Material>() 
-                //            on e.MatID equals m.MATID
-                //        select new { eoq = e, m.MATNAME };
-                //session.Close();
-                //return q.ToList();
-
+                session.Delete(Cashier);
             }
         }
+
+        #endregion
     }
 }

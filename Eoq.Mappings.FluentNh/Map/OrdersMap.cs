@@ -1,21 +1,24 @@
-using System; 
-using System.Collections.Generic; 
-using System.Text; 
+using System;
+using System.Collections.Generic;
+using System.Text;
 using FluentNHibernate.Mapping;
-using Eoq.Domain; 
+using Eoq.Domain;
 
-namespace Eoq.Mappings.FluentNh {
-    
-    
-    public partial class OrdersMap : ClassMap<Orders> {
-        
-        public OrdersMap() {
-			Table("ORDERS");
-			LazyLoad();
-			CompositeId().KeyProperty(x => x.MatID, "Mat_ID")
-			             .KeyProperty(x => x.PONo, "PO_No");
-			Map(x => x.QTY).Column("QTY");
-			Map(x => x.Unit).Column("Unit");
+namespace Eoq.Mappings.FluentNh
+{
+
+
+    public class OrdersMap : ClassMap<Orders>
+    {
+
+        public OrdersMap()
+        {
+            Table("Orders");
+            LazyLoad();
+            Id(x => x.Id).GeneratedBy.Identity().Column("ID");
+            Map(x => x.BranchId).Column("Branch_ID").Not.Nullable();
+            Map(x => x.Importdate).Column("ImportDate").Not.Nullable();
+            Map(x => x.Createby).Column("CreateBy");
         }
     }
 }

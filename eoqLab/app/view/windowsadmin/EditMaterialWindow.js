@@ -1,21 +1,4 @@
-﻿
-Ext.apply(Ext.form.field.VTypes, {
-
-    //  vtype validation function
-    psssword: function (val) {
-        //var pass = ;
-        var repass = '';
-        return fileName.test(val);
-    },
-    // vtype Text property to display error Text
-    // when the validation function returns false
-    fileText: "File must be Microsoft Excel",
-    // vtype Mask property for keystroke filter mask
-    fileMask: /[a-z_\.]/i
-
-});
-
-Ext.define('EditMaterialWindow', {
+﻿Ext.define('EditMaterialWindow', {
     extend: 'Ext.Window',
     initComponent: function () {
         var me = this;
