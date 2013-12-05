@@ -139,6 +139,7 @@
     <Compile Include="helper\MemberMessage.cs" />
     <Compile Include="Infrastucture\EOQDI.cs" />
     <Compile Include="Infrastucture\NinjectDependencyResolver.cs" />
+    <Compile Include="Models\PurchaseOrderModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -205,6 +206,7 @@
     <Content Include="app\view\device\RequestPendingToolbar.js" />
     <Content Include="app\view\device\SimulationScriptWindow.js" />
     <Content Include="app\view\device\Toolbar.js" />
+    <Content Include="app\view\home\ComboboxRender.js" />
     <Content Include="app\view\home\MainProductForm.js" />
     <Content Include="app\view\home\PurchaseOrderForm.js" />
     <Content Include="app\view\users\EditUserManagemantWindow.js" />
@@ -2645,7 +2647,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\scripts\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
@@ -3109,7 +3110,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>4698</DevelopmentServerPort>
+          <DevelopmentServerPort>1880</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

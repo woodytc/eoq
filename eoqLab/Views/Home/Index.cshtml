@@ -10,6 +10,7 @@
 <script src="@Url.Content("~/app/model/home/PurchaseOrderModel.js")" type="text/javascript"></script>
 
 <!--FrontEnd View-->
+<script src="@Url.Content("~/app/view/home/ComboboxRender.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/home/MainProductForm.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/home/PurchaseOrderForm.js")" type="text/javascript"></script>
 
@@ -20,15 +21,15 @@
     Ext.require(['*']);
     Ext.QuickTips.init();
 
-    window.read_mainProductURL = '@Url.Action("GridEoq","Admin")';
+    window.read_mainProductURL = '@Url.Action("ProductsList","Home")';
     
     //Purchase Order URL
-    window.read_purchaseOrderURL = '@Url.Action("GridEoq","Admin")';
-    window.update_purchaseOrderURL = '@Url.Action("GridEoq","Admin")';
-    window.create_purchaseOrderURL = '@Url.Action("GridEoq","Admin")';
-    window.destroy_purchaseOrderURL = '@Url.Action("GridEoq","Admin")';
+    window.read_purchaseOrderURL = '@Url.Action("ProductsList","Home")';
+    window.update_purchaseOrderURL = '@Url.Action("Update","Home")';
+    window.create_purchaseOrderURL = '@Url.Action("Save","Home")';
+    window.destroy_purchaseOrderURL = '@Url.Action("ProductsList","Home")';
 
-    window.read_products_list = '@Url.Action("ProductsList","Home")';
+    window.read_products_list = '@Url.Action("GetProducts","Home")';
     window.read_categories_list = '@Url.Action("CategoriesList","Home")'; 
     //create front end view
     var mainProductForm     = new MainProductForm(),

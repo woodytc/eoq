@@ -125,8 +125,8 @@
             scope: me,
             id: 'productsField',
             handler: me.onSelectedProduct,
-            displayField: 'MatName',
-            valueField: 'MatId',
+            displayField: 'MaterialName',
+            valueField: 'MaterialId',
             store: productStore,
             allowBlank: false
         }, categoriesField = {
@@ -197,9 +197,10 @@
                 header: 'ชื่อสินค้า',
                 width: 180,
                 sortable: true,
-                tdCls: 'MatName',
-                dataIndex: 'MatId',
-                field: productsField
+                //tdCls: 'MaterialId',
+                dataIndex: 'MaterialName',
+                renderer: Ext.ux.renderer.Combo(productsField),
+                editor: productsField
             },
             {
                 header: 'Due Date',
@@ -264,7 +265,7 @@
 
         });
 
-        //me.grid.getSelectionModel().on('selectionchange', this.onSelectChange, this);
+        me.grid.getSelectionModel().on('selectionchange', this.onSelectChange, this);
 
         //Display
         Ext.apply(me, {
@@ -337,8 +338,8 @@
 
         var selection = me.grid.getSelectionModel().getSelection();
         if (selection) {
-            //me.store.remove(selection);
-            console.log(me.selection);
+            me.Store.remove(selection);
+            //console.log(me.selection);
         }
     }
 });

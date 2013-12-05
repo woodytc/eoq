@@ -23,6 +23,7 @@
                 }
             ]
         };
+        
         //model 
         Ext.define('Task', {
             extend: 'Ext.data.Model',
@@ -68,10 +69,11 @@
         //store
         var store = Ext.create('Ext.data.Store', {
             model: 'Task',
-            data: data1,
+            data: data,
             sorters: { property: 'due', direction: 'ASC' },
             groupField: 'project'
         });
+        
         // showSummary
         var showSummary = true;
         //grid summary
@@ -133,19 +135,6 @@
                 width: 180,
                 sortable: true,
                 dataIndex: 'project'
-            }, {
-                header: 'Due Date',
-                width: 130,
-                sortable: true,
-                dataIndex: 'due',
-                summaryType: 'max',
-                renderer: Ext.util.Format.dateRenderer('m/d/Y'),
-                summaryRenderer: Ext.util.Format.dateRenderer('m/d/Y'),
-                field: {
-                    xtype: 'numberfield',
-                    allowBlank: false,
-
-                }
             },
              {
                 header: 'Due Date',

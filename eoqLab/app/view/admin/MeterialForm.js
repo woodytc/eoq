@@ -153,8 +153,8 @@
             msg: 'Please wait generate items...', width: 300, closable: false
             });
             //create new poppu
-            //var quickConfWindow = new EditMaterialWindow(
-            var quickConfWindow = new EditHistogramBinConfig(
+            var quickConfWindow = new window.EditMaterialWindow(
+            //var quickConfWindow = new ImportWindow(
             {
                 listeners: {
                                 close: function (panel, eOpts) {
@@ -181,7 +181,7 @@
             ]//end item
         }); //end apply
         //me.gridStore.setpro
-        MeterialForm.superclass.constructor.apply(this, arguments);
+        window.MeterialForm.superclass.constructor.apply(this, arguments);
     } // end constructor
 });
 

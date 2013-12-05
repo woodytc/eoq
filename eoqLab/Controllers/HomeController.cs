@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Eoq.Mappings.FluentNh.Repository;
+using eoqLab.Models;
 
 namespace eoqLab.Controllers
 {
@@ -67,8 +68,35 @@ namespace eoqLab.Controllers
                                    MatName = m.MetName
                                };
 
-            return Json(new { data = q, total = q.Count() }, JsonRequestBehavior.AllowGet);
+            return Json(new { data = b, total = q.Count() }, JsonRequestBehavior.AllowGet);
 
+        }
+
+        public JsonResult GetProducts()
+        {
+            var b = this.MaterialRepository.GetAll();
+
+            var q = from m in b
+                    select new
+                    {
+                        MaterialId = m.MatId
+                        ,
+                        MaterialName = m.MetName
+
+                    };
+
+            var productList = new List<object>();
+
+            for (int j = 1; j < 6; j++)
+            {
+                productList.Add(new
+                {
+                    MaterialId = j,
+                    MaterialName = "วัสดุ" + j
+                });
+            }
+
+            return Json(new { data = productList, total = productList.Count() }, JsonRequestBehavior.AllowGet);
         }
 
         //get categories list
@@ -93,6 +121,13 @@ namespace eoqLab.Controllers
             }
 
             return Json(new { data = categoriesResult, total = categoriesResult.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+        //save 
+        [HttpPost]
+        public void Update(string purchaseOrders)
+        {
+            var test = purchaseOrders ;
         }
     }//end class
 }//end namespace

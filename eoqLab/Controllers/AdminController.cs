@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Eoq.Mappings.FluentNh.Repository;
 using Eoq.Domain;
+using Eoq.Mappings.FluentNh.Repository;
 
 namespace eoqLab.Controllers
 {
