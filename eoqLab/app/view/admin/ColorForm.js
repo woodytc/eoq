@@ -27,7 +27,7 @@
 
         Ext.apply(this, {
             iconCls: 'icon-tabs',
-            title: 'Color',
+            title: 'สี',
             layout: 'border',
             autoScroll: true,
             border: true,
@@ -35,7 +35,7 @@
                     {
                         //Header                
                         xtype: 'panel',
-                        title: 'Color Managemnet',
+                        title: 'บริหารจัดการสี',
                         bodyStyle: 'padding:5px 5px 0',
                         region: 'north',
                         border: true,
@@ -58,7 +58,7 @@
                                     {
                                     iconCls: 'icon-find',
                                     id: me.prefix + 'user-search-btn-Search',
-                                    text: 'Search',
+                                    text: 'ค้นหา',
                                     //Handler event btn search click
                                     handler: function (btn, evt) {
                                         //get value from textbox and combobox
@@ -70,7 +70,7 @@
                                 }, {
                                     iconCls: 'icon-reload',
                                     id: me.prefix + 'user-btn-Reset',
-                                    text: 'Reset',
+                                    text: 'ล้าง',
                                     handler: function (btn, evt) {
                                         Ext.getCmp(me.prefix + 'Name').setValue('');
                                     } // end handler
@@ -97,8 +97,8 @@
             id: me.prefix + 'PagingToolbar',
             store: me.gridStore
             , displayInfo: true
-            , displayMsg: 'Displaying User and Roles Order {0} - {1} of {2}'
-            , emptyMsg: "No User and Roles Order to display",
+            , displayMsg: 'รายการสี {0} - {1} of {2}'
+            , emptyMsg: "ไม่มีรายการสี",
             }),
             viewConfig: {
             listeners: {
@@ -111,7 +111,7 @@
             xtype: 'toolbar',
             items: [{
             iconCls: 'icon-edit',
-            text: 'Edit',
+            text: 'ปรับปรุง',
             tooltip: 'Update Color',
             disabled: false,
             handler: function (btn, evt) {
@@ -124,7 +124,7 @@
             },
             {
                     iconCls: 'icon-delete',
-                    text: 'Delete',
+                    text: 'ลบ',
                     tooltip: 'Delete Color',
                     disabled: false,
                     handler: function (btn, evt) {
@@ -132,7 +132,7 @@
                         var recordsSelected = gridpanel.getSelectionModel().getSelection();
 
                         if (recordsSelected.length) {
-                            Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete that?', function (cbtn, bool) {
+                            Ext.MessageBox.confirm('Confirm', 'คุณต้องการที่จะลบสี??', function (cbtn, bool) {
                                 if (cbtn == 'yes')    //                            
                                     me.deleteColor(gridpanel, recordsSelected, 'Delete');   //    
                             });
@@ -142,7 +142,7 @@
             '->'
             , {
             iconCls: 'icon-add',
-            text: 'Add Color',
+            text: 'เพิ่มสี',
             handler: function (btn, evt) {
             Ext.MessageBox.show({
             msg: 'Please wait generate items...', width: 300, closable: false
@@ -207,7 +207,7 @@ ColorForm.prototype.popUpEditColor = function (id, name) {
     var win = new Ext.Window({
         id: prefix + 'update',
         iconCls: 'icon-details',
-        title: 'Update Color',
+        title: 'ปรับปรุงสี',
         y: 20,
         width    :500,
         //height   :args.height * 1.0 ||200,
@@ -239,7 +239,7 @@ ColorForm.prototype.popUpEditColor = function (id, name) {
                             },
                     success: function (response) {
                         var text = response.responseText;
-                        Ext.MessageBox.alert('Change role successfull !!');
+                        Ext.MessageBox.alert('Status','เปลื่ยนแปลงสีเรียบร้อยแล้ว');
                         ColorForm.prototype.search(window.gridColorData, "");
                     }
                 });

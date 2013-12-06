@@ -27,7 +27,7 @@
 
         Ext.apply(this, {
             iconCls: 'icon-tabs',
-            title: 'Sizes',
+            title: 'ขนาดสินค้า',
             layout: 'border',
             autoScroll: true,
             border: true,
@@ -35,7 +35,7 @@
                     {
                         //Header                
                         xtype: 'panel',
-                        title: 'Sizes Managemnet',
+                        title: 'จัดการขนาดสินค้า',
                         bodyStyle: 'padding:5px 5px 0',
                         region: 'north',
                         border: true,
@@ -50,7 +50,7 @@
                                     fieldDefaults: { labelAlign: 'right' },
                                     labelStyle: 'text-align: right',
                                     items: [
-                                            { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'สี',labelStyle: 'text-align: right', emptyText: '[ชื่อสี]', anchor: '-600'}
+                                            { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'ขนาดสินค้า',labelStyle: 'text-align: right', emptyText: '[ขนาดสินค้า]', anchor: '-600'}
                                     ]
                                 }
                         ]//end main item in header
@@ -58,7 +58,7 @@
                                     {
                                     iconCls: 'icon-find',
                                     id: me.prefix + 'user-search-btn-Search',
-                                    text: 'Search',
+                                    text: 'ค้นหา',
                                     //Handler event btn search click
                                     handler: function (btn, evt) {
                                         //get value from textbox and combobox
@@ -70,7 +70,7 @@
                                 }, {
                                     iconCls: 'icon-reload',
                                     id: me.prefix + 'user-btn-Reset',
-                                    text: 'Reset',
+                                    text: 'ล้าง',
                                     handler: function (btn, evt) {
                                         Ext.getCmp(me.prefix + 'Name').setValue('');
                                     } // end handler
@@ -81,7 +81,7 @@
             , {
             xtype: 'grid',
             id: me.prefix + 'grid',
-            title: 'Sizes Management List',
+            title: 'รายการ ขนาดสินค้า',
             columnLines: true,
             //  autoScore: true,
             region: 'center',
@@ -97,8 +97,8 @@
             id: me.prefix + 'PagingToolbar',
             store: me.gridStore
             , displayInfo: true
-            , displayMsg: 'Displaying User and Roles Order {0} - {1} of {2}'
-            , emptyMsg: "No User and Roles Order to display",
+            , displayMsg: 'แสดงรายการขนาดสินค้า {0} - {1} of {2}'
+            , emptyMsg: "ไม่มีรายการขนาดสินค้า",
             }),
             viewConfig: {
             listeners: {

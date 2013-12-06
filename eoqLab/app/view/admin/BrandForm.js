@@ -27,7 +27,7 @@
 
         Ext.apply(this, {
             iconCls: 'icon-tabs',
-            title: 'Brand',
+            title: 'แบรนด์เนม',
             layout: 'border',
             autoScroll: true,
             border: true,
@@ -35,7 +35,7 @@
                     {
                         //Header                
                         xtype: 'panel',
-                        title: 'Brand Managemnet',
+                        title: 'บริาหารจัดการญี่ห้อ',
                         bodyStyle: 'padding:5px 5px 0',
                         region: 'north',
                         border: true,
@@ -50,7 +50,7 @@
                                     fieldDefaults: { labelAlign: 'right' },
                                     labelStyle: 'text-align: right',
                                     items: [
-                                            { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'สี',labelStyle: 'text-align: right', emptyText: '[ชื่อสี]', anchor: '-600'}
+                                            { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'แบรนด์เนม',labelStyle: 'text-align: right', emptyText: '[ชื่อแบรนด์เนม]', anchor: '-600'}
                                     ]
                                 }
                         ]//end main item in header
@@ -58,7 +58,7 @@
                                     {
                                     iconCls: 'icon-find',
                                     id: me.prefix + 'user-search-btn-Search',
-                                    text: 'Search',
+                                    text: 'ค้นหา',
                                     //Handler event btn search click
                                     handler: function (btn, evt) {
                                         me.name = Ext.getCmp(me.prefix + 'Name').getValue();
@@ -67,7 +67,7 @@
                                 }, {
                                     iconCls: 'icon-reload',
                                     id: me.prefix + 'user-btn-Reset',
-                                    text: 'Reset',
+                                    text: 'ล้าง',
                                     handler: function (btn, evt) {
                                         Ext.getCmp(me.prefix + 'Name').setValue('');
                                     } // end handler
@@ -78,7 +78,7 @@
             , {
             xtype: 'grid',
             id: me.prefix + 'grid',
-            title: 'Brand Management List',
+            title: 'รายการ แบรนด์เนม',
             columnLines: true,
             //  autoScore: true,
             region: 'center',
@@ -94,8 +94,8 @@
             id: me.prefix + 'PagingToolbar',
             store: me.gridStore
             , displayInfo: true
-            , displayMsg: 'Displaying User and Roles Order {0} - {1} of {2}'
-            , emptyMsg: "No User and Roles Order to display",
+            , displayMsg: 'แสดงรายการยี่ห้อ {0} - {1} of {2}'
+            , emptyMsg: "ไม่มียี่ห้อที่ต้องการ",
             }),
             viewConfig: {
             listeners: {
@@ -108,8 +108,8 @@
             xtype: 'toolbar',
             items: [{
             iconCls: 'icon-edit',
-            text: 'Edit',
-            tooltip: 'Update Brand',
+            text: 'ปรับปรุง',
+            tooltip: 'ปรับปรุงญี่ห้อ',
             disabled: false,
             handler: function (btn, evt) {
             var gridpanel = btn.up().up();
@@ -122,14 +122,14 @@
             {
                     iconCls: 'icon-delete',
                     text: 'Delete',
-                    tooltip: 'Delete Brand',
+                    tooltip: 'ลบ',
                     disabled: false,
                     handler: function (btn, evt) {
                         var gridpanel = btn.up().up();
                         var recordsSelected = gridpanel.getSelectionModel().getSelection();
 
                         if (recordsSelected.length) {
-                            Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete that?', function (cbtn, bool) {
+                            Ext.MessageBox.confirm('Confirm', 'คุณต้องาการที่จะจบ ยี่ห้อ?', function (cbtn, bool) {
                                 if (cbtn == 'yes')    //                            
                                     me.deleteBrand(gridpanel, recordsSelected, 'Delete');   //    
                             });
@@ -139,7 +139,7 @@
             '->'
             , {
             iconCls: 'icon-add',
-            text: 'Add Brand',
+            text: 'เพิ่มยี่ห้อ  ',
             handler: function (btn, evt) {
             Ext.MessageBox.show({
             msg: 'Please wait generate items...', width: 300, closable: false
@@ -207,7 +207,7 @@ BrandForm.prototype.popUpEditBrand = function (id, name) {
     var win = new Ext.Window({
         id: prefix + 'update',
         iconCls: 'icon-details',
-        title: 'Update Brand',
+        title: 'ปรับปรุงยี่ห้อ',
         y: 20,
         width    :500,
         //height   :args.height * 1.0 ||200,
@@ -223,11 +223,11 @@ BrandForm.prototype.popUpEditBrand = function (id, name) {
         items: [
                 { id: prefix + 'ID', name: 'ID', fieldLabel: 'รหัส', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false,readOnly:true},
-                { id: prefix + 'name', name: 'name', fieldLabel: 'สี่', labelStyle: 'text-align: right'
+                { id: prefix + 'name', name: 'name', fieldLabel: 'ยี่ห้อ', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false }
                 ],
         buttons: [{
-            text: 'Update',
+            text: 'ปรับปรุง',
             onClick: function (button) {
                 
                 Ext.Ajax.request({
@@ -239,7 +239,7 @@ BrandForm.prototype.popUpEditBrand = function (id, name) {
                             },
                     success: function (response) {
                         var text = response.responseText;
-                        Ext.MessageBox.alert('Change role successfull !!');
+                        Ext.MessageBox.alert('status !!', 'ปรุบปรุง ยี่ห้อเรียบร้อยแล้ว');
                         BrandForm.prototype.search(window.gridBrandData, "");
                     }
                 });
@@ -250,7 +250,7 @@ BrandForm.prototype.popUpEditBrand = function (id, name) {
         },
                 {
                     iconCls: 'icon-cancel',
-                    text: 'Cancel',
+                    text: 'ยกเลิก',
                     name: 'button-cancel',
                     handler: function (btn, evt) {
                         intend = "cancel";
