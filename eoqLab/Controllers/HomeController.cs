@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Eoq.Mappings.FluentNh.Repository;
 using eoqLab.Models;
+using eoqLab.helper;
 
 namespace eoqLab.Controllers
 {
@@ -59,8 +60,8 @@ namespace eoqLab.Controllers
         //get product list
         public JsonResult ProductsList()
         {
-            var b = this.MaterialRepository.GetAll();
-
+       //     var b = this.MaterialRepository.GetAll();
+       /*
             var q = from m in b
                     select new
                                {
@@ -68,8 +69,8 @@ namespace eoqLab.Controllers
                                    ,
                                    MatName = m.MetName
                                };
-
-            return Json(new { data = b, total = q.Count() }, JsonRequestBehavior.AllowGet);
+         */
+            return Json(new { data = "", total = 10 }, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -124,11 +125,19 @@ namespace eoqLab.Controllers
             return Json(new { data = categoriesResult, total = categoriesResult.Count() }, JsonRequestBehavior.AllowGet);
         }
 
-        //save 
+        //save
+        /// <summary>
+        ///  reate a single action method with all the possible arguments that you expect and it will map the values (where possible) for you
+        /// </summary>
+        /// <param name="purchaseOrders"></param>
+        /// <param name="purchaseOrderss"></param>
+        /// <param name="purchaseOrdersss"></param>
+        /// <returns></returns>
         [HttpPost]
-        public void Update(List<PurchaseOrderModel> purchaseOrders)
+        public string Update(List<PurchaseOrderModel> purchaseOrders, PurchaseOrderModel purchaseOrderss, string purchaseOrdersss)
         {
-            var t = purchaseOrders;
+            //var t = JSONHelper.Deserialize < List<PurchaseOrderModel>>();
+            return purchaseOrders + ""; ;
         }
     }//end class
 }//end namespace
