@@ -7,12 +7,12 @@
         me.items = [];
 
         //Create store combobox
-        var unitCombobox = Ext.create('Ext.data.Store', {
+        var catelogyCombobox = Ext.create('Ext.data.Store', {
             autoLoad: true,
-            fields: ['ID', 'UnitName'],
+            fields: ['Id', 'Name'],
             proxy: {
                 type: 'ajax',
-                url: window.unitData,
+                url: window.catelogComboBox,
                 reader: {
                     type: 'json',
                     root: 'items'
@@ -34,40 +34,33 @@
             layout: { type: 'table', columns: 1 },
             defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
             items: [
-                { id: me.prefix + 'UNITAID',
-                    name: 'UNITAID',
+                { //id: me.prefix + 'catelogyid',
+                    name: 'catelogyid',
                     xtype: 'combo',
                     editable: false,
                     anchor: '-10',
-                    fieldLabel: 'Unit',
+                    fieldLabel: 'หมวดสินค้า',
                     afterLabelTextTpl: required,
                     labelStyle: 'text-align: right',
-                    value: 'Plese Select',
-                    store: unitCombobox,
+                    value: '--กรุณาเลือก--',
+                    store: catelogyCombobox,
                     queryMode: 'remote',
-                    displayField: 'UnitName',
+                    displayField: 'Name',
                     valueField: 'ID'
                 },
-                { id: me.prefix + 'MATNAME', name: 'MATNAME', fieldLabel: 'Materaial Name', afterLabelTextTpl: required, labelStyle: 'text-align: right'
-                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false,  emptyText: '[Material Name]'
+                { name: 'matname', fieldLabel: 'ชื่อสินค้า', afterLabelTextTpl: required, labelStyle: 'text-align: right'
+                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false,  emptyText: '[ซื่อสินค้า]'
                 },
-                { id: me.prefix + 'MATDETAIL', name: 'MATDETAIL', fieldLabel: 'Detail',vafterLabelTextTpl: required, labelStyle: 'text-align: right'
-                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false,  emptyText: '[Material Detail]'
-                },
-                { id: me.prefix + 'MATPrice', name: 'MATPrice', fieldLabel: 'Price', afterLabelTextTpl: required, labelStyle: 'text-align: right'
-                    , xtype: 'numberfield', fieldStyle: 'text-align: right', allowBlank: false,  emptyText: '0.00'
-                },
-                { id: me.prefix + 'MATREORDERPOINT', name: 'MATREORDERPOINT', fieldLabel: 'Reorder Point', afterLabelTextTpl: required, labelStyle: 'text-align: right'
-                    , xtype: 'numberfield', fieldStyle: 'text-align: right', allowBlank: false, emptyText: '0'
+                { name: 'matdetail', fieldLabel: 'รายละเอียดสินค้า', vafterLabelTextTpl: required, labelStyle: 'text-align: right'
+                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false,  emptyText: '[รายละเอียดสินค้า]'
                 }
-
             ]
         };
 
         //Display
         Ext.apply(me, {
             iconCls: 'icon-details',
-            title: 'New User ID',
+            title: 'บันทึกสินค้าใหม่',
             y: 20,
             resizable: false,
             modal: true,
@@ -97,7 +90,7 @@
                 handler: function (btn, evt) {
                     var form = me.down('form').getForm();
                     //var isvalid = me.isValid();
-                    if (true) {
+                    if (me.down('form').getForm().isValid()) {
                         // me.prepareData();
 
                         Ext.MessageBox.show({ msg: 'Please wait save items...', width: 300, closable: false });
@@ -106,18 +99,15 @@
                             //url from
                             url: window.create,
                             timeout: 999999,
-                            params: {
-                                unitID: Ext.getCmp(prefix + 'UNITAID').getValue(),
-                                matName: Ext.getCmp(prefix + 'MATNAME').getValue(),
-                                matDetail: Ext.getCmp(prefix + 'MATDETAIL').getValue(),
-                                matPrice: Ext.getCmp(prefix + 'MATPrice').getValue(),
-                                matReorderPront: Ext.getCmp(prefix + 'MATREORDERPOINT').getValue()
-                            },
+//                            params: {
+//                                catelogyID: Ext.getCmp(me.prefix + 'catelogyid').getValue(),
+//                                matName: Ext.getCmp('matname').getValue(),
+//                                matDetail: Ext.getCmp(prefix + 'matdetail').getValue()
+//                            },
                             success: function (formPanel, action) {
                                 var data = Ext.decode(action.response.responseText);
 
-
-                                Ext.MessageBox.alert('Status Register user comple !!');
+                                Ext.MessageBox.alert('Status');
                                 me.intend = "save-success";
                                 me.close();
 
@@ -155,60 +145,6 @@ EditMaterialWindow.prototype.create = function () {
     // Ext.getCmp(prefix + 'principle-code').setValue("");
     // Ext.getCmp(prefix + 'status').setValue("Creating");
     // Ext.getCmp(prefix + 'effective-date').setValue(currentDateServerSt);
-}
-
-EditMaterialWindow.prototype.isValid = function () {
-    console.log('isValid');
-    var prefix = this.prefix;
-
-    console.log("pass: " + Ext.getCmp(prefix + 'password').getValue())
-
-    var form = Ext.getCmp(prefix + 'form-info');
-    for (var i = 0; i < form.items.length; i++) {
-        for (var j = 0; j < form.items.items[i].items.length; j++) {
-            if (form.items.items[i].hidden == false) {
-                var component = form.items.items[i].items.items[j];
-                console.log(component);
-                if (component.xtype != "button") {
-
-                    var vld = component.isValid();
-                    console.log(vld);
-                    if (!vld) {
-                        return vld;
-                    }
-                }
-            }
-        }
-    }
-
-    if (Ext.getCmp(prefix + 'password').getValue() === Ext.getCmp(prefix + 'repassword').getValue()) {
-        return true;
-    } else {
-        return false;
-    }
-    return true;
-}
-
-EditMaterialWindow.prototype.editUserAndRoles = function (id, username, email, role, parent) {
-    this.title = "Display Quick Deploy";
-    var prefix = this.prefix;
-    this.setValue(record);
-    this.sndeviceStore.loadData(record.Devices);
-    this.setDisplay();
-    this.filterConf(Ext.getCmp(prefix + 'conf-type').setValue(record.ConfigurationType), "Display");
-
-    Ext.getCmp(prefix + 'conf-button-save').disable();
-    Ext.getCmp(prefix + 'q-deploy-btn-details-device').show();
-    Ext.getCmp(prefix + 'q-deploy-btn-create-device').hide();
-}
-
-EditMaterialWindow.prototype.prepareData = function () {
-    var confItems = this.items;
-    for (var i = 0; i < confItems.length; i++) {
-        if (confItems.items[i].hidden) {
-            this.resetData(confItems.items[i]);
-        }
-    }
 }
 
 

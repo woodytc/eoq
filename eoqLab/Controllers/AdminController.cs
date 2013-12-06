@@ -57,58 +57,66 @@ namespace eoqLab.Controllers
             return View();
         }
 
-       
-        //#region Material
-        //[HttpPost]
-        //public JsonResult CreateMaterial(string matName,string matDetail,decimal matPrice,int matReorderPront,int unitID)
-        //{
-        //    try
-        //    {
-        //        Material material = new Material(matName, matDetail, matPrice, matReorderPront, unitID,0);
-        //        //insert
-        //        MaterialRepository.Save(material);
-        //        return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
 
-        //[HttpPost]
-        //public JsonResult UpdateMaterial(string matName, string matDetail, decimal matPrice, int matReorderPront, int unitID,int matID)
-        //{
-        //    try
-        //    {
-        //        //Material material = new Material(matName, matDetail, matPrice, matReorderPront, unitID,matID);
-        //        //insert
-        //        //MaterialRepository.Update(material);
-        //        return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
+        #region Material
+        [HttpPost]
+        public JsonResult CreateMaterial(string matname, string matdetail, int catelogyid)
+        {
+            try
+            {
+                Material material = new Material();
+                material.MetName = matname;
+                material.CatelogyId = catelogyid;
+                material.Createdate = DateTime.Now;
+                material.MatDetail = matdetail;
 
-        //public JsonResult DeleteMaterial(List<int> matID)
-        //{
-        //    try
-        //    {
-        //        for (int i = 0; i < matID.Count; i++)
-        //        {
-        //            Material material = new Material();
-        //            material.MATID = matID[i];
-        //            MaterialRepository.Delete(material);
-        //        }
-        //        return Json(new { success = true, message = "Delete Successful" }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, message = "This material can not be delete because there are others from using." }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-        //#endregion
+                //insert
+                MaterialRepository.Save(material);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message}, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateMaterial(string matName, string matDetail, int catelogyID, int matID)
+        {
+            try
+            {
+                Material material = new Material();
+                material.MatId = matID;
+                material.MetName = matName;
+                material.CatelogyId = catelogyID;
+                //insert
+                MaterialRepository.Update(material);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message}, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult DeleteMaterial(List<int> matID)
+        {
+            try
+            {
+                for (int i = 0; i < matID.Count; i++)
+                {
+                    Material material = new Material();
+                    material.MatId = matID[i];
+                    MaterialRepository.Delete(material);
+                }
+                return Json(new { success = true, message = "Delete Successful" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "This material can not be delete because there are others from using." }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
 
         #region Unit
         [HttpPost]
@@ -692,56 +700,11 @@ namespace eoqLab.Controllers
             return View();
         }
 
-        //public JsonResult GridEoq(string MatName)
-        //{
-
-            
-        //    //var a = this.EOQRepository.GetAll();
-        //    var a = this.UnitRepository.GetAll();
-        //    var b = this.MaterialRepository.GetAll();
-        //    if (string.IsNullOrEmpty(MatName))
-        //    {
-        //        var q = from e in a
-        //                join m in b on e.ID equals m.UNITAID
-        //                select new
-        //                {
-        //                    MatId = m.MATID
-        //                 ,
-        //                    MatName = m.MATNAME
-        //                 ,
-        //                    MatDetail = m.MATDETAIL
-        //                 ,
-        //                    MatPrice = m.MATPrice
-        //                 ,
-        //                    MatReorderPoint = m.MATREORDERPOINT
-        //                 ,
-        //                    UnitID = m.UNITAID
-        //                };
-
-        //        return Json(new { items = q, total = q.Count() }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    else
-        //    {
-        //        var q = from e in a
-        //                join m in b on e.ID equals m.UNITAID where m.MATNAME.Contains(MatName)
-        //                select new
-        //                {
-        //                    MatId = m.MATID
-        //                 ,
-        //                    MatName = m.MATNAME
-        //                 ,
-        //                    MatDetail = m.MATDETAIL
-        //                 ,
-        //                    MatPrice = m.MATPrice
-        //                 ,
-        //                    MatReorderPoint = m.MATREORDERPOINT
-        //                 ,
-        //                    UnitID = m.UNITAID
-        //                };
-
-        //        return Json(new { items = q, total = q.Count() }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
+        public JsonResult GridEoq(string MatName)
+        {
+            var result = MaterialRepository.SelectGridMeterial(MatName);
+            return Json(new { items = result, total = result.Count() }, JsonRequestBehavior.AllowGet);
+        }
 
         //maeterial
         public JsonResult GridMaterial()
@@ -799,6 +762,20 @@ namespace eoqLab.Controllers
             Sizes un = new Sizes();
             un.Id = -1;
             un.Name = "Please Select";
+            results.Add(un);
+
+            return Json(
+                new { items = results, total = results.Count, success = true },
+                JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetCatelogy()
+        {
+            //var results = SizesRepository.GetAll();
+            var results = CatelogyRepository.GetAll();
+            Catelogy un = new Catelogy();
+            un.Id = -1;
+            un.Name = "--กรุณาเลือก--";
             results.Add(un);
 
             return Json(

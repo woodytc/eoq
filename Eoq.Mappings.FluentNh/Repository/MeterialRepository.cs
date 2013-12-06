@@ -23,6 +23,7 @@ namespace Eoq.Mappings.FluentNh.Repository
         int Update(Material oldMaterial);
         int CountAll();
         void Delete(Material material);
+        List<MaterialCat> SelectGridMeterial(string name);
     }
     
     public class MaterialRepository : NhRepository, IMaterialRepository
@@ -110,18 +111,10 @@ namespace Eoq.Mappings.FluentNh.Repository
 
         #endregion
 
-        public void SelectGridMeterial()
+        public List<MaterialCat> SelectGridMeterial(string name)
         {
             using (var session = SessionFactory.OpenSession())
             {
-                /*
-                    var linq = (from product in session.Query<Product>()
-                    join category in session.Query<Category>()
-                         on product.Category.Id equals category.Id
-                    where category.CategoryName == "Condiments"
-                    && !product.Discontinued
-                    select product).ToList();
-                 */
                 /*
                  var list4 = session.CreateCriteria<Product>()
                             .Add(Restrictions.Eq("Discontinued", false))
@@ -133,12 +126,16 @@ namespace Eoq.Mappings.FluentNh.Repository
                 var q = (from m in session.Query<Material>()
                          join c in session.Query<Catelogy>()
                              on m.CatelogyId equals c.Id
+                          where c.Name.Contains(name)
                          select new MaterialCat
                          {
+                             MatId = m.MatId,
                              CatelogyId = c.Id,
                              CatelogyName = c.Name,
+                             MatDetail = m.MatDetail,
                              MetName = m.MetName
-                         });
+                         }).ToList();
+                return q;
             }
         }
     }

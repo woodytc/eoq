@@ -89,12 +89,11 @@
                 store: me.gridStore,
                 selModel: Ext.create('Ext.selection.CheckboxModel'),
                 columns: [
-                            { text: 'MatId', dataIndex: 'MatId', width: 250, sortable: false, align: 'center',hidden: true },
-                            { text: 'Material Name', dataIndex: 'MatName', width: 250, sortable: false, align: 'center' },
-                            { text: 'Material Detail', dataIndex: 'MatDetail', width: 250, sortable: false, align: 'center' },
-                            { text: 'Price', dataIndex: 'MatPrice', width: 250, sortable: false, align: 'center'},
-                            { text: 'Reorder Point', dataIndex: 'MatReorderPoint', width: 250, sortable: false, align: 'center' },
-                            { text: 'UnitID', dataIndex: 'UnitID', width: 250, sortable: false, align: 'center',hidden: true }
+                            { text: 'รหัสสินค้า', dataIndex: 'MatId', width: 250, sortable: false, align: 'center',hidden: true },
+                            { text: 'UnitID', dataIndex: 'CatelogyId', width: 250, sortable: false, align: 'center',hidden: true },
+                            { text: 'ชื่อสินค้า', dataIndex: 'MetName', width: 250, sortable: false, align: 'center' },
+                            { text: 'หมวดสินค้า', dataIndex: 'CatelogyName', width: 250, sortable: false, align: 'center'},
+                            { text: 'รายละเอียดสินค้า', dataIndex: 'MatDetail', width: 250, sortable: false, align: 'center' }
                         ],
                             bbar: Ext.create('Ext.PagingToolbar', {
                             id: me.prefix + 'PagingToolbar',

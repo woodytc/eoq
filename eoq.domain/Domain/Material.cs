@@ -10,7 +10,7 @@ namespace Eoq.Domain {
     public partial class Material {
         public Material()
         {
-            this.Createdate = DateTime.Now;
+            this.Updatedate = DateTime.Now;
                 
         }
         public Material(string matName, string matDetail, int catelogyId)
