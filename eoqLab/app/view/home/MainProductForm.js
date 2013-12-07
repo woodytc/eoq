@@ -11,7 +11,7 @@
             type: 'ajax',
             reader: {
                 type: 'json',
-                root: 'items',
+                root: 'data',
                 totalProperty: 'total'
             },
             simpleSortMode: true
@@ -23,7 +23,7 @@
             id: me.prefix + 'gridStore',
             pageSize: 25,
             autoLoad: true,
-            model: 'MaterialViewModel',
+            model: 'EOQ.model.Mainproduct',
             proxy: proxyOptions
         });
 
@@ -42,17 +42,15 @@
                         store: me.gridStore,
                         columnLines: true,
                         columns: [
-                        { text: 'MatId', dataIndex: 'MatId', width: 250, sortable: false, align: 'center', hidden: true },
-                        { text: 'Material Name', dataIndex: 'MatName', width: 250, sortable: false, align: 'center' },
-                        { text: 'Material Detail', dataIndex: 'MatDetail', width: 250, sortable: false, align: 'center' },
-                        { text: 'Price', dataIndex: 'MatPrice', width: 250, sortable: false, align: 'center' },
-                        { text: 'Reorder Point', dataIndex: 'MatReorderPoint', width: 250, sortable: false, align: 'center' },
-                        { text: 'UnitID', dataIndex: 'UnitID', width: 250, sortable: false, align: 'center', hidden: true }
+                        { text: 'รหัสสินค้า', dataIndex: 'ProductID', width: 250, sortable: false, align: 'center' },
+                        { text: 'ชื่อสินค้า', dataIndex: 'ProductName', width: 500, sortable: false, align: 'center' },
+                        { text: 'จำนวน', dataIndex: 'Amount', width: 250, sortable: false, align: 'center' },
+                        { text: 'หน่วย', dataIndex: 'Unit', width: 250, sortable: false, align: 'center' },
                         ]
                     }//end Header
                    ]//end items
         }); //end apply
 
-        MainProductForm.superclass.constructor.apply(this, arguments);
+        window.MainProductForm.superclass.constructor.apply(this, arguments);
     } // end constructor
 });

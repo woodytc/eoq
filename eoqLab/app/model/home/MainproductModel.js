@@ -3,8 +3,8 @@
     fields: [
         { name: 'ProductID', type: 'int' },
         { name: 'ProductName' },
-        { name: 'QTY', type: 'int' },
-        { name: 'UnitType' }
+        { name: 'Amount', type: 'int' },
+        { name: 'Unit' }
     ]
 });
 

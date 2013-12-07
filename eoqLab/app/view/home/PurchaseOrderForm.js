@@ -16,7 +16,7 @@
             },
             writer: {
                 type: 'json',
-                writeAllFields: true
+                writeAllFields: false
                 //root: 'data'
             },
             listeners: {
@@ -46,12 +46,12 @@
 
         //grid store
         me.Store = Ext.create('Ext.data.Store', {
-            model: 'Model.Task',
+            model: 'EOQ.model.PurchaseOrder',
             autoLoad: true,
             //autoSync: true,
-            data: window.testPurchaseOrderData,
-            sorters: { property: 'due', direction: 'ASC' },
-            //groupField: 'project',
+            data: window.purchaseOrderData,
+            sorters: { property: 'Total', direction: 'ASC' },
+            groupField: 'CategoryName',
             proxy: purchaseOrderProxy
         });
 
@@ -112,7 +112,7 @@
         categoryProxy.api = {
             read: window.read_categories_list
         };
-        
+
         var categoryStore = Ext.create('Ext.data.Store', {
             model: 'EOQ.Model.CategoriesList',
             proxy: categoryProxy
@@ -120,13 +120,13 @@
 
         var productsField = {
             xtype: 'combobox',
-            //typeAhead: true,
-            //triggerAction: 'all',
+            typeAhead: true,
+            triggerAction: 'all',
             scope: me,
             id: 'productsField',
             handler: me.onSelectedProduct,
-            displayField: 'MaterialName',
-            valueField: 'MaterialId',
+            displayField: 'ProductName',
+            valueField: 'ProductID',
             store: productStore,
             allowBlank: false
         }, categoriesField = {
@@ -136,8 +136,8 @@
             scope: me,
             id: 'categoriesField',
             handler: me.onSelectedCategories,
-            //displayField : '',
-            //valueField : '',
+            displayField: 'CategoryName',
+            valueField: 'CategoryID',
             store: categoryStore,
             allowBlank: false
         };
@@ -151,7 +151,7 @@
             minHeight: 550,
             frame: true,
             autoscroll: true,
-            title: 'Sponsored Projects',
+            title: '',
             iconCls: 'icon-grid',
             requires: [
                 'Ext.grid.plugin.CellEditing',
@@ -173,16 +173,16 @@
                 id: 'group',
                 ftype: 'groupingsummary',
                 groupHeaderTpl: '{name}',
-                hideGroupedHeader: true,
+                hideGroupedHeader: false,
                 enableGroupingMenu: false
             }],
             columns: [{
-                text: 'Task',
+                text: 'รหัสสินค้า',
                 width: 300,
                 //locked: true,
-                tdCls: 'task',
+                tdCls: 'ProductName',
                 sortable: true,
-                dataIndex: 'description',
+                dataIndex: 'ProductID',
                 //hideable: false,
                 flex: 1,
                 field: {
@@ -191,62 +191,57 @@
                 },
                 summaryType: 'count',
                 summaryRenderer: function (value, summaryData, dataIndex) {
-                    return ((value === 0 || value > 1) ? '(' + value + ' Tasks)' : '(1 Task)');
+                    return ((value === 0 || value > 1) ? '(' + value + ' รายการ)' : '(1 รายการ)');
                 }
             }, {
                 header: 'ชื่อสินค้า',
                 width: 180,
                 sortable: true,
-                //tdCls: 'MaterialId',
-                dataIndex: 'MaterialName',
-                renderer: Ext.ux.renderer.Combo(productsField),
+                //tdCls: 'ProductID',
+                dataIndex: 'ProductName',
+                renderer: this.Combo(productsField),
                 editor: productsField
             },
             {
-                header: 'Due Date',
+                header: 'หมวดสินค้า',
                 width: 130,
                 sortable: true,
-                dataIndex: 'due',
-                summaryType: 'max',
-                renderer: Ext.util.Format.dateRenderer('m/d/Y'),
-                summaryRenderer: Ext.util.Format.dateRenderer('m/d/Y'),
-                field: {
-                    xtype: 'datefield',
-                    allowBlank: false
-                }
+                dataIndex: 'CategoryName',
+                renderer: Ext.ux.renderer.Combo(categoriesField),
+                editor: categoriesField
             }, {
-                header: 'Estimate',
+                header: 'จำนวน',
                 width: 130,
                 sortable: true,
-                dataIndex: 'estimate',
+                dataIndex: 'Amount',
                 summaryType: 'sum',
                 renderer: function (value, metaData, record, rowIdx, colIdx, store, view) {
-                    return value + ' hours';
+                    return value;
                 },
                 summaryRenderer: function (value, summaryData, dataIndex) {
-                    return value + ' hours';
+                    return value;
                 },
                 field: {
                     xtype: 'numberfield'
                 }
             }, {
-                header: 'Rate',
+                header: 'ราคา',
                 width: 130,
                 sortable: true,
                 renderer: Ext.util.Format.usMoney,
                 summaryRenderer: Ext.util.Format.usMoney,
-                dataIndex: 'rate',
-                summaryType: 'average',
+                summaryType : 'sum',
+                dataIndex: 'Price',
                 field: {
                     xtype: 'numberfield'
                 }
             }, {
-                header: 'Cost',
+                header: 'ราคารวม',
                 width: 130,
                 sortable: false,
                 groupable: false,
                 renderer: function (value, metaData, record, rowIdx, colIdx, store, view) {
-                    return Ext.util.Format.usMoney(record.get('estimate') * record.get('rate'));
+                    return Ext.util.Format.usMoney(record.get('Amount') * record.get('Price'));
                 },
                 summaryType: function (records) {
                     var i = 0,
@@ -256,7 +251,7 @@
 
                     for (; i < length; ++i) {
                         record = records[i];
-                        total += record.get('estimate') * record.get('rate');
+                        total += record.get('Amount') * record.get('Price');
                     }
                     return total;
                 },
@@ -303,15 +298,18 @@
 
     },
     onAddClick: function () {
-        var rec = new window.Model.Task({
-            projectId: 100,
-            project: '',
-            taskId: 112,
-            description: '',
-            estimate: 0,
-            rate: 0,
-            due: new Date()
+        var rec = new EOQ.model.PurchaseOrder({
+            ProductID: 0,
+            ProductName: '',
+            CategoryID: 112,
+            CategoryName: '',
+            Amount: 0,
+            UnitID: 0,
+            UnitName : '',
+            name: 0.00
         }),
+            
+         
             me = this,
             edit = me.cellEditing;
 
@@ -341,5 +339,39 @@
             me.Store.remove(selection);
             //console.log(me.selection);
         }
+    },
+    onSelectedCombo: function (options) {
+        var value = options.value;
+        var combo = options.combo;
+
+        var returnValue = value;
+        var valueField = combo.valueField;
+
+
+        var idx = combo.store.findBy(function (record) {
+
+            if (record.get(valueField) == value) {
+                returnValue = record.get(combo.displayField);
+                record.set(combo.valueField, value);
+                record.dirty = true;
+                record.editing = true;
+                return true;
+            }
+            return false;
+        });
+
+        // This is our application specific and might need to be removed for your apps
+        if (idx < 0 && value == 0) {
+            returnValue = '';
+        }
+
+        return returnValue;
+    },
+    Combo: function (combo) {
+        var me = this;
+        return function (value, meta, record) {
+            return me.onSelectedCombo({ value: value, meta: meta, record: record, combo: combo });
+        };
     }
+
 });
