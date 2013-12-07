@@ -111,7 +111,7 @@
             xtype: 'toolbar',
             items: [{
             iconCls: 'icon-edit',
-            text: 'ปรับปรุง',
+            text: 'แก้ไข',
             tooltip: 'Update Color',
             disabled: false,
             handler: function (btn, evt) {
@@ -227,7 +227,7 @@ ColorForm.prototype.popUpEditColor = function (id, name) {
                     , afterLabelTextTpl: required, xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false }
                 ],
         buttons: [{
-            text: 'Update',
+            text: 'ปรับปรุง',
             onClick: function (button) {
                 
                 Ext.Ajax.request({
@@ -250,7 +250,7 @@ ColorForm.prototype.popUpEditColor = function (id, name) {
         },
                 {
                     iconCls: 'icon-cancel',
-                    text: 'Cancel',
+                    text: 'ยกเลิก',
                     name: 'button-cancel',
                     handler: function (btn, evt) {
                         intend = "cancel";

@@ -27,7 +27,7 @@
 
         Ext.apply(this, {
             iconCls: 'icon-tabs',
-            title: 'Unit',
+            title: 'หน่วย',
             layout: 'border',
             autoScroll: true,
             border: true,
@@ -35,7 +35,7 @@
                     {
                         //Header                
                         xtype: 'panel',
-                        title: 'Unit Managemnet',
+                        title: 'บริหารจัดการหน่วย',
                         bodyStyle: 'padding:5px 5px 0',
                         region: 'north',
                         border: true,
@@ -58,7 +58,7 @@
                                     {
                                     iconCls: 'icon-find',
                                     id: me.prefix + 'user-search-btn-Search',
-                                    text: 'Search',
+                                    text: 'ค้นหา',
                                     //Handler event btn search click
                                     handler: function (btn, evt) {
                                         //get value from textbox and combobox
@@ -70,7 +70,7 @@
                                 }, {
                                     iconCls: 'icon-reload',
                                     id: me.prefix + 'user-btn-Reset',
-                                    text: 'Reset',
+                                    text: 'ล้าง',
                                     handler: function (btn, evt) {
                                         Ext.getCmp(me.prefix + 'unitName').setValue('');
                                     } // end handler
@@ -79,97 +79,94 @@
                     }//end Header
             
             , {
-            xtype: 'grid',
-            id: me.prefix + 'grid',
-            title: 'Unit Management List',
-            columnLines: true,
-            //  autoScore: true,
-            region: 'center',
-            store: me.gridStore,
-            selModel: Ext.create('Ext.selection.CheckboxModel'),
-            columns: [
-            { text: 'รหัส', dataIndex: 'ID', width: 250, sortable: false, align: 'center' },
-            { text: 'ชื่อหน่วย', dataIndex: 'UnitName', width: 250, sortable: false, align: 'center' }//,
-            //{ text: 'จำนวนนับ', dataIndex: 'unit', width: 250, sortable: false, align: 'center' },
-            ],
+                xtype: 'grid',
+                id: me.prefix + 'grid',
+                title: 'รายการหน่วย',
+                columnLines: true,
+                //  autoScore: true,
+                region: 'center',
+                store: me.gridStore,
+                selModel: Ext.create('Ext.selection.CheckboxModel'),
+                columns: [
+                { text: 'รหัส', dataIndex: 'ID', width: 250, sortable: false, align: 'center' },
+                { text: 'ชื่อหน่วย', dataIndex: 'UnitName', width: 250, sortable: false, align: 'center' }//,
+                //{ text: 'จำนวนนับ', dataIndex: 'unit', width: 250, sortable: false, align: 'center' },
+                ],
 
-            bbar: Ext.create('Ext.PagingToolbar', {
-            id: me.prefix + 'PagingToolbar',
-            store: me.gridStore
-            , displayInfo: true
-            , displayMsg: 'Displaying User and Roles Order {0} - {1} of {2}'
-            , emptyMsg: "No User and Roles Order to display",
-            }),
-            viewConfig: {
-            listeners: {
-            itemdblclick: me.popUpEditItem,
-            //    itemclick: me.manageRedeployBtn
-            }
+                bbar: Ext.create('Ext.PagingToolbar', {
+                id: me.prefix + 'PagingToolbar',
+                store: me.gridStore
+                , displayInfo: true
+                , displayMsg: 'รายการหน่วย {0} - {1} of {2}'
+                , emptyMsg: "ไม่มีรายการหน่วย",
+                }),
+                viewConfig: {
+                listeners: {
+                itemdblclick: me.popUpEditItem,
+                //    itemclick: me.manageRedeployBtn
+                }
             }, //end view config
 
-            dockedItems: [{
-            xtype: 'toolbar',
-            items: [{
-            iconCls: 'icon-edit',
-            text: 'Edit',
-            tooltip: 'Update Unit',
-            disabled: false,
-            handler: function (btn, evt) {
-            var gridpanel = btn.up().up();
-            var recordSelected = gridpanel.getSelectionModel().getSelection();
-            if (recordSelected.length == 1) {
-                me.popUpEditItem(gridpanel, recordSelected[0], btn);
-            }
-            } //end handler
-            },
-            {
-                    iconCls: 'icon-delete',
-                    text: 'Delete',
-                    tooltip: 'Delete Unit',
-                    disabled: false,
-                    handler: function (btn, evt) {
-                        var gridpanel = btn.up().up();
-                        var recordsSelected = gridpanel.getSelectionModel().getSelection();
+                dockedItems: [{
+                        xtype: 'toolbar',
+                        items: [{
+                                    iconCls: 'icon-edit',
+                                    text: 'แก้ไข',
+                                    tooltip: 'แกไขหน่วย',
+                                    disabled: false,
+                                    handler: function (btn, evt) {
+                                        var gridpanel = btn.up().up();
+                                        var recordSelected = gridpanel.getSelectionModel().getSelection();
+                                        if (recordSelected.length == 1) {
+                                            me.popUpEditItem(gridpanel, recordSelected[0], btn);
+                                        }
+                                    } //end handler
+                            },
+                            {
+                                    iconCls: 'icon-delete',
+                                    text: 'ลบ',
+                                    tooltip: 'Delete Unit',
+                                    disabled: false,
+                                    handler: function (btn, evt) {
+                                        var gridpanel = btn.up().up();
+                                        var recordsSelected = gridpanel.getSelectionModel().getSelection();
 
-                        if (recordsSelected.length) {
-                            Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete that?', function (cbtn, bool) {
-                                if (cbtn == 'yes')    //                            
-                                    me.deleteUnit(gridpanel, recordsSelected, 'Delete');   //    
-                            });
-                        }
-                    }
-                },
-            '->'
-            , {
-            iconCls: 'icon-add',
-            text: 'Add Unit',
-            handler: function (btn, evt) {
-            Ext.MessageBox.show({
-            msg: 'Please wait generate items...', width: 300, closable: false
-            });
-            //create new poppu
-            var quickConfWindow = new EditUnitWindow(
-            {
-                listeners: {
-                                close: function (panel, eOpts) {
-                                if (panel.intend === 'save-success') {
-                                    console.log('insave success');
-                                    me.search(window.gridUnitData,me.username);
-                                }
-                            }
-            },
-            animateTarget: btn
-            }
-            );
-
-            quickConfWindow.create();
-            // quickConfWindow.saveService = window.SaveQuickDeploymentAct;
-            Ext.MessageBox.hide();
-            quickConfWindow.show();
-
-            } // end handler
-            }] // end items
-            }]//end dockedItems
+                                        if (recordsSelected.length) {
+                                            Ext.MessageBox.confirm('Confirm', 'คุณต้องการที่จะลบหน่วย?', function (cbtn, bool) {
+                                                if (cbtn == 'yes')    //                            
+                                                    me.deleteUnit(gridpanel, recordsSelected, 'Delete');   //    
+                                            });
+                                        }
+                                    }
+                                },
+                             '->',
+                            {
+                                iconCls: 'icon-add',
+                                text: 'เพิ่มหน่วย',
+                                handler: function (btn, evt) {
+                                    Ext.MessageBox.show({
+                                    msg: 'Please wait generate items...', width: 300, closable: false
+                                    });
+                                    //create new poppu
+                                    var quickConfWindow = new EditUnitWindow(
+                                    {
+                                        listeners: {
+                                                        close: function (panel, eOpts) {
+                                                        if (panel.intend === 'save-success') {
+                                                            me.search(window.gridUnitData,me.username);
+                                                        }
+                                                    }
+                                    },
+                                        animateTarget: btn
+                                    });
+                                    quickConfWindow.create();
+                                    Ext.MessageBox.hide();
+                                    quickConfWindow.show();
+                                } // end handler
+                                    }
+                        ] // end items
+                }
+                ]//end dockedItems
             }//end grid
             
             ]//end item
@@ -207,7 +204,7 @@ UnitForm.prototype.popUpEditUnit = function (id, unitName) {
     var win = new Ext.Window({
         id: prefix + 'update',
         iconCls: 'icon-details',
-        title: 'Update Unit',
+        title: 'แกไขหน่วย',
         y: 20,
         width    :500,
         //height   :args.height * 1.0 ||200,
@@ -227,37 +224,37 @@ UnitForm.prototype.popUpEditUnit = function (id, unitName) {
                     , afterLabelTextTpl: required, xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false }
                 ],
         buttons: [{
-            text: 'Update',
-            onClick: function (button) {
+                    text: 'แก้ไข',
+                    onClick: function (button) {
                 
-                Ext.Ajax.request({
-                    method: 'post',
-                    url: url,
-                    params: {
-                                unitID: Ext.getCmp(prefix + 'unitID').getValue(),
-                                unitName: Ext.getCmp(prefix + 'unitName').getValue(),
-                            },
-                    success: function (response) {
-                        var text = response.responseText;
-                        Ext.MessageBox.alert('Change role successfull !!');
-                        UnitForm.prototype.search(window.gridUnitData, "");
-                    }
-                });
+                        Ext.Ajax.request({
+                            method: 'post',
+                            url: url,
+                            params: {
+                                        unitID: Ext.getCmp(prefix + 'unitID').getValue(),
+                                        unitName: Ext.getCmp(prefix + 'unitName').getValue(),
+                                    },
+                            success: function (response) {
+                                var text = response.responseText;
+                                Ext.MessageBox.alert('Status',"ปรับปรุงเรียบร้อย");
+                                UnitForm.prototype.search(window.gridUnitData, "");
+                            }
+                        });
 
-                win.destroy();
-
-            }
-        },
-                {
-                    iconCls: 'icon-cancel',
-                    text: 'Cancel',
-                    name: 'button-cancel',
-                    handler: function (btn, evt) {
-                        intend = "cancel";
                         win.destroy();
+
                     }
-                }]
-    }).show();
+                   },
+                    {
+                        iconCls: 'icon-cancel',
+                        text: 'ยกเลิก',
+                        name: 'button-cancel',
+                        handler: function (btn, evt) {
+                            intend = "cancel";
+                            win.destroy();
+                        }
+                    }]
+    }).show();  
 //set data
     Ext.getCmp(prefix + 'unitName').setValue(unitName);
     Ext.getCmp(prefix + 'unitID').setValue(id);

@@ -27,7 +27,7 @@
 
         Ext.apply(this, {
             iconCls: 'icon-tabs',
-            title: 'Catelogy',
+            title: 'หมวดสินค้า',
             layout: 'border',
             autoScroll: true,
             border: true,
@@ -35,7 +35,7 @@
                     {
                         //Header                
                         xtype: 'panel',
-                        title: 'Catelogy Managemnet',
+                        title: 'บริการจัดการหมวดสินค้า',
                         bodyStyle: 'padding:5px 5px 0',
                         region: 'north',
                         border: true,
@@ -50,7 +50,7 @@
                                     fieldDefaults: { labelAlign: 'right' },
                                     labelStyle: 'text-align: right',
                                     items: [
-                                            { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'สี',labelStyle: 'text-align: right', emptyText: '[ชื่อสี]', anchor: '-600'}
+                                            { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'หมวดสินค้า',labelStyle: 'text-align: right', emptyText: '[หมวดสินค้า]', anchor: '-600'}
                                     ]
                                 }
                         ]//end main item in header
@@ -58,7 +58,7 @@
                                     {
                                     iconCls: 'icon-find',
                                     id: me.prefix + 'user-search-btn-Search',
-                                    text: 'Search',
+                                    text: 'ค้นหา',
                                     //Handler event btn search click
                                     handler: function (btn, evt) {
                                         me.name = Ext.getCmp(me.prefix + 'Name').getValue();
@@ -67,7 +67,7 @@
                                 }, {
                                     iconCls: 'icon-reload',
                                     id: me.prefix + 'user-btn-Reset',
-                                    text: 'Reset',
+                                    text: 'ล้าง',
                                     handler: function (btn, evt) {
                                         Ext.getCmp(me.prefix + 'Name').setValue('');
                                     } // end handler
@@ -78,7 +78,7 @@
             , {
             xtype: 'grid',
             id: me.prefix + 'grid',
-            title: 'Catelogy Management List',
+            title: 'รายการหมวดสินค้า',
             columnLines: true,
             //  autoScore: true,
             region: 'center',
@@ -108,7 +108,7 @@
             xtype: 'toolbar',
             items: [{
             iconCls: 'icon-edit',
-            text: 'Edit',
+            text: 'แก้ไข',
             tooltip: 'Update Catelogy',
             disabled: false,
             handler: function (btn, evt) {
@@ -121,7 +121,7 @@
             },
             {
                     iconCls: 'icon-delete',
-                    text: 'Delete',
+                    text: 'ลบ',
                     tooltip: 'Delete Catelogy',
                     disabled: false,
                     handler: function (btn, evt) {
@@ -139,7 +139,7 @@
             '->'
             , {
             iconCls: 'icon-add',
-            text: 'Add Catelogy',
+            text: 'เพิ่มหมวดสินค้า',
             handler: function (btn, evt) {
             Ext.MessageBox.show({
             msg: 'Please wait generate items...', width: 300, closable: false
@@ -207,7 +207,7 @@ CatelogyForm.prototype.popUpEditCatelogy = function (id, name) {
     var win = new Ext.Window({
         id: prefix + 'update',
         iconCls: 'icon-details',
-        title: 'Update Catelogy',
+        title: 'ปรับปรุงหมวดสินค้า',
         y: 20,
         width    :500,
         //height   :args.height * 1.0 ||200,
@@ -223,11 +223,11 @@ CatelogyForm.prototype.popUpEditCatelogy = function (id, name) {
         items: [
                 { id: prefix + 'ID', name: 'ID', fieldLabel: 'รหัส', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false,readOnly:true},
-                { id: prefix + 'name', name: 'name', fieldLabel: 'สี่', labelStyle: 'text-align: right'
+                { id: prefix + 'name', name: 'name', fieldLabel: 'ชื่อหมวด', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false }
                 ],
         buttons: [{
-            text: 'Update',
+            text: 'ปรับปรุง',
             onClick: function (button) {
                 
                 Ext.Ajax.request({
@@ -239,7 +239,7 @@ CatelogyForm.prototype.popUpEditCatelogy = function (id, name) {
                             },
                     success: function (response) {
                         var text = response.responseText;
-                        Ext.MessageBox.alert('Change role successfull !!');
+                        Ext.MessageBox.alert('Status','ปรับปรุงเรียบร้อยแล้ว');
                         CatelogyForm.prototype.search(window.gridCatelogyData, "");
                     }
                 });
@@ -250,7 +250,7 @@ CatelogyForm.prototype.popUpEditCatelogy = function (id, name) {
         },
                 {
                     iconCls: 'icon-cancel',
-                    text: 'Cancel',
+                    text: 'ยกเลิก',
                     name: 'button-cancel',
                     handler: function (btn, evt) {
                         intend = "cancel";

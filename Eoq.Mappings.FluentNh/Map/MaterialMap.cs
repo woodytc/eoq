@@ -5,9 +5,10 @@ using FluentNHibernate.Mapping;
 using Eoq.Domain; 
 
 namespace Eoq.Mappings.FluentNh {
-    
-    
-    public partial class MaterialMap : ClassMap<Material> {
+
+
+    public class MaterialMap : ClassMap<Material>
+    {
 
         public MaterialMap()
         {

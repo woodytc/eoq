@@ -58,22 +58,12 @@ namespace Eoq.Mappings.FluentNh.Repository
 
         public List<Material> GetAll()
         {
-            List<Material> results = null;
             //using (var session = SessionFactory.OpenSession())
             //using (session.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
-            using (var session = SessionFactory.OpenSession())
+            using (var session = SessionFactory.OpenStatelessSession())
             {
-                try
-                {
-
-                    results = session.QueryOver<Material>().List() as List<Material>;
-                    session.Close();
-                    //return results;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
+                var results = (from x in session.Query<Material>() select x).ToList<Material>(); //session.QueryOver<Material>().List() as List<Material>;
+                //session.Close();
                 return results;
             }
         }
