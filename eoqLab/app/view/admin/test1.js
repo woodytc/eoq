@@ -378,5 +378,17 @@ Test1.prototype.deleteUnit = function (dataview, reconds, type) {
     });
 };
 
+ //listeners: {
+            // edit: function (editor, e) {
+            //     var record = e.record;
+            //     //console.log(e);
+            //     //console.log(editor);
+            //     //console.log(Ext.String.format(
+            //     //'The field "{0}" or record #{1} has been changed from {2} to {3}',
+            //     //e.field, record.get('low'), e.originalValue, e.newValue
+            //     //));
 
-
+            //     //console.log('The following fields of the records are dirty: ' + Ext.Object.getKeys(record.modified).join(', '));
+            //     e.record.commit();
+            //    }
+            //}
