@@ -209,6 +209,7 @@
     <Content Include="app\view\home\ComboboxRender.js" />
     <Content Include="app\view\home\MainProductForm.js" />
     <Content Include="app\view\home\PurchaseOrderForm.js" />
+    <Content Include="app\view\home\StockForm.js" />
     <Content Include="app\view\users\EditUserManagemantWindow.js" />
     <Content Include="app\view\users\LogonWindow.js" />
     <Content Include="app\view\users\UserManagemantForm.js" />

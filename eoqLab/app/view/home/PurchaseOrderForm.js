@@ -63,34 +63,29 @@
             xtype: 'toolbar',
             items: [{
                 iconCls: 'icon-add',
-                text: 'Add',
+                text: 'เพิ่ม',
                 scope: me,
                 handler: me.onAddClick
             }, {
                 iconCls: 'icon-delete',
-                text: 'Delete',
+                text: 'ลบ',
                 disabled: true,
                 itemId: 'delete',
                 scope: me,
                 handler: me.onDeleteClick
             }, '->', {
                 iconCls: 'icon-save',
-                text: 'Save',
+                text: 'บันทึก',
                 scope: me,
                 iconAlign: 'right',
                 handler: me.onSync
             }, {
                 iconCls: 'icon-cancel',
-                text: 'Cancel',
+                text: 'ยกเลิกทั้งหมด',
                 name: 'button-cancel',
                 handler: function (btn, evt) {
-                    me.intend = "cancel";
-                    //cancel editing current cell
-                    me.cellEditing.cancelEdit();
-                    //remove data model from curent store
-                    if (me.currentRecord != null) {
-                        me.Store.remove(me.currentRecord);
-                    }
+                    me.grid.store.clearData();
+                    me.grid.view.refresh();
                 }
             }]
 
@@ -102,7 +97,7 @@
         };
 
         //product store
-        var productStore = Ext.create('Ext.data.Store', {
+        me.productStore = Ext.create('Ext.data.Store', {
             model: 'EOQ.Model.ProductsList',
             //sorters: { property: 'MatName', direction: 'ASC' },
             proxy: productProxy
@@ -113,7 +108,7 @@
             read: window.read_categories_list
         };
 
-        var categoryStore = Ext.create('Ext.data.Store', {
+        me.categoryStore = Ext.create('Ext.data.Store', {
             model: 'EOQ.Model.CategoriesList',
             proxy: categoryProxy
         });
@@ -127,8 +122,9 @@
             handler: me.onSelectedProduct,
             displayField: 'ProductName',
             valueField: 'ProductID',
-            store: productStore,
-            allowBlank: false
+            store: me.productStore,
+            allowBlank: false,
+            editable: false
         }, categoriesField = {
             xtype: 'combobox',
             typeAhead: true,
@@ -138,7 +134,7 @@
             handler: me.onSelectedCategories,
             displayField: 'CategoryName',
             valueField: 'CategoryID',
-            store: categoryStore,
+            store: me.categoryStore,
             allowBlank: false
         };
 
@@ -155,24 +151,57 @@
             iconCls: 'icon-grid',
             requires: [
                 'Ext.grid.plugin.CellEditing',
+                'Ext.grid.plugin.RowEditing',
                 'Ext.form.field.Text',
                 'Ext.toolbar.TextItem',
                 'Ext.grid.*',
                 'Ext.data.*',
                 'Ext.util.*',
             ],
+            listeners: {
+                edit: function (editor, context, e) {
+                    var record = context.record;
+                    switch (context.field) {
+                        case "ProductName":
+                            {
+                                //set product id on store
+                                record.set("ProductID", context.value);
+                                //set product name on store
+                                me.productStore.each(function (rec) {
+                                    if (rec.get("ProductID") == context.value) {
+                                        var productName = rec.get("ProductName");
+                                        record.set("ProductName", productName);
+                                    }
+                                });
+                                 break;
+                            }
+                         case "CategoryName": 
+                             {
+                                 //set category id on store
+                                record.set("CategoryID", context.value);
+                                //set category name on store 
+                                me.categoryStore.each(function (rec) {
+                                    if (rec.get("CategoryID") == context.value) {
+                                        var categoryName = rec.get("CategoryName");
+                                        record.set("CategoryName", categoryName);
+                                    }
+                                });
+                            }
+
+                    }
+
+                }
+            },
             //renderTo: document.body,
             store: me.Store,
             plugins: [me.cellEditing],
-            selModel: {
-                selType: 'cellmodel'
-            },
+            selModel: Ext.create('Ext.selection.CheckboxModel'),
             region: 'center',
             dockedItems: [headerButtons],
             features: [{
                 id: 'group',
                 ftype: 'groupingsummary',
-                groupHeaderTpl: '{name}',
+                groupHeaderTpl: 'รายการสินค้า : {name}',
                 hideGroupedHeader: false,
                 enableGroupingMenu: false
             }],
@@ -197,9 +226,9 @@
                 header: 'ชื่อสินค้า',
                 width: 180,
                 sortable: true,
-                //tdCls: 'ProductID',
+                tdCls: 'ProductID',
                 dataIndex: 'ProductName',
-                renderer: this.Combo(productsField),
+                renderer: Ext.ux.renderer.Combo(productsField),
                 editor: productsField
             },
             {
@@ -230,7 +259,7 @@
                 sortable: true,
                 renderer: Ext.util.Format.usMoney,
                 summaryRenderer: Ext.util.Format.usMoney,
-                summaryType : 'sum',
+                summaryType: 'sum',
                 dataIndex: 'Price',
                 field: {
                     xtype: 'numberfield'
@@ -298,18 +327,18 @@
 
     },
     onAddClick: function () {
-        var rec = new EOQ.model.PurchaseOrder({
+        var rec = new window.EOQ.model.PurchaseOrder({
             ProductID: 0,
             ProductName: '',
             CategoryID: 112,
             CategoryName: '',
             Amount: 0,
             UnitID: 0,
-            UnitName : '',
+            UnitName: '',
             name: 0.00
         }),
-            
-         
+
+
             me = this,
             edit = me.cellEditing;
 
@@ -323,38 +352,32 @@
 
     },
     onSync: function () {
-        this.Store.sync();
+        var me = this;
+        me.Store.sync();
+        me.grid.store.clearData();
+        me.grid.view.refresh();
     },
     onDeleteClick: function () {
         var me = this;
+        Ext.MessageBox.confirm('ยืนยัน', 'คุณต้องการลบแถวข้อมูลหรือไม่?', function (cbtn, bool) {
+            if (cbtn == 'yes') {
 
-        Ext.MessageBox.show({
-            msg: 'Please wait update status items...',
-            width: 300,
-            closable: false
+                var selection = me.grid.getSelectionModel().getSelection();
+                if (selection) {
+                    me.Store.remove(selection);
+                }
+            }
         });
-
-        var selection = me.grid.getSelectionModel().getSelection();
-        if (selection) {
-            me.Store.remove(selection);
-            //console.log(me.selection);
-        }
     },
     onSelectedCombo: function (options) {
-        var value = options.value;
-        var combo = options.combo;
-
-        var returnValue = value;
-        var valueField = combo.valueField;
-
+        var value = options.value,
+            combo = options.combo,
+            returnValue = value,
+            valueField = combo.valueField;
 
         var idx = combo.store.findBy(function (record) {
-
             if (record.get(valueField) == value) {
                 returnValue = record.get(combo.displayField);
-                record.set(combo.valueField, value);
-                record.dirty = true;
-                record.editing = true;
                 return true;
             }
             return false;
@@ -366,12 +389,10 @@
         }
 
         return returnValue;
-    },
-    Combo: function (combo) {
+    }, Combo: function (combo) {
         var me = this;
         return function (value, meta, record) {
             return me.onSelectedCombo({ value: value, meta: meta, record: record, combo: combo });
         };
     }
-
 });

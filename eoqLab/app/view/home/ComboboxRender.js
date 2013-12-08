@@ -24,7 +24,7 @@ Ext.ux.renderer.ComboRenderer = function (options) {
     if (idx < 0 && value == 0) {
         returnValue = '';
     }
-
+    
     return returnValue;
 };
 

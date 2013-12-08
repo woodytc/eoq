@@ -26,6 +26,7 @@ namespace eoqLab.Controllers
         public ICatelogyRepository CatelogyRepository { get; set; }
         public IStockRepository StockRepository { get; set; }
 
+        public int Branch { get; set; }
         public HomeController(IEOQRepository eoqRepository
                               , IMaterialRepository materialRepository
                               , IUnitRepository unit
@@ -54,6 +55,8 @@ namespace eoqLab.Controllers
             this.CatelogyRepository = catelogyRepository;
             this.StockRepository = stockRepository;
 
+            Branch = 1;
+
         }
 
         public ActionResult Index()
@@ -71,6 +74,7 @@ namespace eoqLab.Controllers
             var products = from stock in stockList
                     join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
                     join unit in unitList on stock.UnitId equals unit.ID
+                    where stock.Amount <= stock.Reorderpoint && stock.BranchId == this.Branch 
                     select new
                             {
                                 ProductID   = product.MatId,

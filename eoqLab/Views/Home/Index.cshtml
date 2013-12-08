@@ -23,14 +23,17 @@
 
     window.read_mainProductURL = '@Url.Action("ProductsList","Home")';
     
-    //Purchase Order URL
+    //Purchase Order URLs
     window.read_purchaseOrderURL = '@Url.Action("ProductsList","Home")';
     window.update_purchaseOrderURL = '@Url.Action("Update","Home")';
     window.create_purchaseOrderURL = '@Url.Action("Save","Home")';
     window.destroy_purchaseOrderURL = '@Url.Action("ProductsList","Home")';
 
     window.read_products_list = '@Url.Action("GetProducts","Home")';
-    window.read_categories_list = '@Url.Action("CategoriesList","Home")'; 
+    window.read_categories_list = '@Url.Action("CategoriesList","Home")';
+
+    //Stock URLs
+    window.read_stockURL = '@Url.Action("StockList","Home")';
     //create front end view
     var mainProductForm     = new MainProductForm(),
         purchaseOrderForm   = new PurchaseOrderForm();
