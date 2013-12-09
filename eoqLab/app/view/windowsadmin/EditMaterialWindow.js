@@ -7,19 +7,19 @@
         me.items = [];
 
         //Create store combobox
-        var catelogyCombobox = Ext.create('Ext.data.Store', {
+        var catelogyCombobox = Ext.create('Ext.data.JsonStore', {
+            //model: 'ComboboxDefault',
             autoLoad: true,
             fields: ['Id', 'Name'],
             proxy: {
                 type: 'ajax',
-                url: window.catelogComboBox,
+                api: { read: window.catelogComboBox },
                 reader: {
                     type: 'json',
-                    root: 'items'
+                    root: 'items'//,
+                    //totalProperty: 'total'
                 }
-            },
-            storeId: me.prefix+'storecommb',
-            root: 'items'
+            }
         });
 
         var required = '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>';
@@ -34,25 +34,16 @@
             layout: { type: 'table', columns: 1 },
             defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
             items: [
-                { //id: me.prefix + 'catelogyid',
-                    name: 'catelogyid',
-                    xtype: 'combo',
-                    editable: false,
-                    anchor: '-10',
-                    fieldLabel: 'หมวดสินค้า',
-                    afterLabelTextTpl: required,
-                    labelStyle: 'text-align: right',
-                    value: '--กรุณาเลือก--',
-                    store: catelogyCombobox,
-                    queryMode: 'remote',
-                    displayField: 'Name',
-                    valueField: 'ID'
+                { id: prefix + 'catelogy', name: 'catelogyid', xtype: 'combo', mode: 'local', editable: false, displayField: 'Name', valueField: 'Id'
+                        , queryMode: 'local', allowBlank: false, emptyText: 'selected'
+                    , store: catelogyCombobox,
+                    fieldLabel: 'หมวดสินค้า', afterLabelTextTpl: required, labelStyle: 'text-align: right', width: 500
                 },
                 { name: 'matname', fieldLabel: 'ชื่อสินค้า', afterLabelTextTpl: required, labelStyle: 'text-align: right'
-                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false,  emptyText: '[ซื่อสินค้า]'
+                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false, emptyText: '[ซื่อสินค้า]', width: 500
                 },
-                { name: 'matdetail', fieldLabel: 'รายละเอียดสินค้า', vafterLabelTextTpl: required, labelStyle: 'text-align: right'
-                    , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false,  emptyText: '[รายละเอียดสินค้า]'
+                { name: 'matdetail', fieldLabel: 'รายละเอียดสินค้า', afterLabelTextTpl: required, labelStyle: 'text-align: right'
+                    , xtype: 'textareafield', fieldStyle: 'text-align: right', allowBlank: false, emptyText: '[รายละเอียดสินค้า]', width: 500
                 }
             ]
         };
@@ -61,12 +52,13 @@
         Ext.apply(me, {
             iconCls: 'icon-details',
             title: 'บันทึกสินค้าใหม่',
-            y: 20,
+            y: 10,
             resizable: false,
             modal: true,
             buttonAlign: 'center',
             //            autoScroll: true,
             layout: 'vbox',
+            width: 650,
             items: [
             {
                 xtype: 'form',
