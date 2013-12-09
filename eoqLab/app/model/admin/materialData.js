@@ -1,5 +1,5 @@
 ﻿Ext.define('MaterialViewModel', {
     extend: 'Ext.data.Model',
-    fields: ['MatId', 'MatName', 'MatDetail', 'MatPrice','MatReorderPoint','UnitID'],
+    fields: ['MatId', 'CatelogyId', 'MetName', 'MatDetail','CatelogyName'],
     idProperty: 'MatId'
 });
