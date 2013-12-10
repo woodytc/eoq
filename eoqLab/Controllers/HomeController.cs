@@ -116,6 +116,36 @@ namespace eoqLab.Controllers
             return null;
         }
 
+        [HttpGet]
+        public JsonResult GetProductPrice(ProductParams productParams)
+        {
+            try
+            {
+                if (productParams != null)
+                {
+                    var productList = this.MaterialRepository.GetAll();
+                    var stockList = this.StockRepository.GetAll();
+
+                    var price = from stock in stockList
+                                   join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
+                                   where stock.BranchId == this.Branch
+                                   && stock.MeterialId == productParams.ProductId
+                                   && stock.UnitId == productParams.UnitId
+                                   select new
+                                   {
+                                       stock.Price
+                                   };
+
+                    return Json(new { data = price, total = price.Count(), error = "" },
+                                JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { data = "", total = 0, error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+            return null;
+        }
         //get categories list
         public JsonResult CategoriesList()
         {

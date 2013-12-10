@@ -155,7 +155,7 @@
         }, unitsField = {
             xtype: 'combobox',
             typeAhead: true,
-            triggerAction: 'query',
+            triggerAction: 'all',
             scope: me,
             id: 'unitField',
             displayField: 'UnitName',
@@ -174,6 +174,7 @@
             minHeight: 550,
             frame: true,
             autoscroll: true,
+            afteredit: true,
             title: '',
             iconCls: 'icon-grid',
             requires: [
@@ -188,9 +189,7 @@
             listeners: {
                 beforeedit: function (editor, context, e) {
                     var record = context.record;
-
                     if (context.value == null) return false;
-
                     switch (context.field) {
                         case "ProductName":
                             {
@@ -219,6 +218,11 @@
                                     }
                                 });
 
+                                //get product price
+                                me.getProductPrice(record, function (price) {
+                                    if (price == null) price = 0;
+                                    record.set("Price", price);
+                                });
                                 break;
                             }
                         case "CategoryName":
@@ -238,10 +242,15 @@
                                 //get product data
                                 me.productStore.getProxy().extraParams.CategoryId = context.value;
                                 record.set("ProductName", "กรุณาเลือกสินค้า");
+                                record.set("Price", 0);
+
                                 me.productStore.lastQuery = null;
 
-                                //get unit
-                                
+                                //get product price
+                                me.getProductPrice(record, function (price) {
+                                    if (price == null) price = 0;
+                                    record.set("Price", price);
+                                });
                                 break;
                             }
                         case "UnitName":
@@ -256,6 +265,12 @@
                                         var unitName = rec.get("UnitName");
                                         record.set("UnitName", unitName);
                                     }
+                                });
+
+                                //get product price
+                                me.getProductPrice(record, function (price) {
+                                    if (price == null) price = 0;
+                                    record.set("Price", price);
                                 });
                                 break;
                             }
@@ -430,6 +445,7 @@
     onSync: function () {
         var me = this;
         me.Store.sync();
+        Ext.getCmp('totalSummary').setText('ราคารวม :' + 0);
         me.grid.store.clearData();
         me.grid.view.refresh();
     },
@@ -444,31 +460,34 @@
                 }
             }
         });
-    },
-    onSelectedCombo: function (options) {
-        var value = options.value,
-            combo = options.combo,
-            returnValue = value,
-            valueField = combo.valueField;
+    }, getProductPrice: function (record, cb) {
+        var prarams = {};
+        prarams.ProductId = record.get("ProductID");
+        prarams.UnitId = record.get("UnitID");
+        
+        $.ajax({
+            type: "GET",
+            cache: false,
+            data: params,
+            url: window.get_product_price,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var price;
+                if (result.data[0] == "undefined") {
+                    price = 0;
+                } else {
+                    price = result.data[0].Price;
+                }
+                if (typeof cb == "function") {
+                    cb(price);
+                }
 
-        var idx = combo.store.findBy(function (record) {
-            if (record.get(valueField) == value) {
-                returnValue = record.get(combo.displayField);
-                return true;
+                return price;
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                return null;
             }
-            return false;
         });
-
-        // This is our application specific and might need to be removed for your apps
-        if (idx < 0 && value == 0) {
-            returnValue = '';
-        }
-
-        return returnValue;
-    }, Combo: function (combo) {
-        var me = this;
-        return function (value, meta, record) {
-            return me.onSelectedCombo({ value: value, meta: meta, record: record, combo: combo });
-        };
     }
 });
