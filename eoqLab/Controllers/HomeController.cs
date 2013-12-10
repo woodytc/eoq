@@ -87,20 +87,33 @@ namespace eoqLab.Controllers
 
         }
 
-        public JsonResult GetProducts()
+        public JsonResult GetProducts(CategoryParam category)
         {
-            var productList = this.MaterialRepository.GetAll();
+            try
+            {
+                if (category != null)
+                {
+                    var productList = this.MaterialRepository.GetAll();
 
-            var products = from product in productList
-                    select new
-                    {
-                        ProductID = product.MatId
-                        ,
-                        ProductName = product.MetName
+                    var products = from product in productList
+                                   where product.CatelogyId == category.CategoryId
+                                   select new
+                                              {
+                                                  ProductID = product.MatId
+                                                  ,
+                                                  ProductName = product.MetName
 
-                    };
+                                              };
 
-            return Json(new { data = products, total = productList.Count() }, JsonRequestBehavior.AllowGet);
+                    return Json(new {data = products, total = productList.Count(), error = ""},
+                                JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { data = "", total = 0 ,error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+            return null;
         }
 
         //get categories list
@@ -115,6 +128,21 @@ namespace eoqLab.Controllers
                                               };
 
             return Json(new { data = categoriesResult, total = categoriesResult.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        //get categories list
+        public JsonResult UnitsList()
+        {
+            var allUnits = this.UnitRepository.GetAll();
+            var unitsResult = from unit in allUnits
+                                   select new
+                                   {
+                                       UnitID = unit.ID,
+                                       unit.UnitName
+                                   };
+
+            return Json(new { data = unitsResult, total = unitsResult.Count() }, JsonRequestBehavior.AllowGet);
         }
 
         public List<Eoq.Domain.Material> CreateProductDummy()

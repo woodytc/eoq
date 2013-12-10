@@ -73,6 +73,11 @@
                 itemId: 'delete',
                 scope: me,
                 handler: me.onDeleteClick
+            }, {
+                xtype: 'label',
+                id: 'totalSummary',
+                text: '',
+                margins: '0 0 0 10'
             }, '->', {
                 iconCls: 'icon-save',
                 text: 'บันทึก',
@@ -91,18 +96,19 @@
 
         };
 
+        //Products List data
         var productProxy = proxyOptions;
         productProxy.api = {
             read: window.read_products_list
         };
 
-        //product store
         me.productStore = Ext.create('Ext.data.Store', {
             model: 'EOQ.Model.ProductsList',
             //sorters: { property: 'MatName', direction: 'ASC' },
             proxy: productProxy
         });
 
+        //Categories List data
         var categoryProxy = proxyOptions;
         categoryProxy.api = {
             read: window.read_categories_list
@@ -113,13 +119,23 @@
             proxy: categoryProxy
         });
 
+        //Units List data
+        var unitProxy = proxyOptions;
+        unitProxy.api = {
+            read: window.read_units_list
+        };
+
+        me.unitStore = Ext.create('Ext.data.Store', {
+            model: 'EOQ.Model.UnitsList',
+            proxy: unitProxy
+        });
+
         var productsField = {
             xtype: 'combobox',
             typeAhead: true,
-            triggerAction: 'all',
+            triggerAction: 'query',
             scope: me,
             id: 'productsField',
-            handler: me.onSelectedProduct,
             displayField: 'ProductName',
             valueField: 'ProductID',
             store: me.productStore,
@@ -131,11 +147,22 @@
             triggerAction: 'all',
             scope: me,
             id: 'categoriesField',
-            handler: me.onSelectedCategories,
             displayField: 'CategoryName',
             valueField: 'CategoryID',
             store: me.categoryStore,
-            allowBlank: false
+            allowBlank: false,
+            editable: false
+        }, unitsField = {
+            xtype: 'combobox',
+            typeAhead: true,
+            triggerAction: 'query',
+            scope: me,
+            id: 'unitField',
+            displayField: 'UnitName',
+            valueField: 'UnitID',
+            store: me.unitStore,
+            allowBlank: false,
+            editable: false
         };
 
         me.grid = Ext.create('Ext.grid.Panel', {
@@ -159,13 +186,31 @@
                 'Ext.util.*',
             ],
             listeners: {
-                edit: function (editor, context, e) {
+                beforeedit: function (editor, context, e) {
                     var record = context.record;
+
+                    if (context.value == null) return false;
+
                     switch (context.field) {
                         case "ProductName":
                             {
-                                //set product id on store
-                                record.set("ProductID", context.value);
+                                //refresh pruduct data
+                                me.productStore.load();
+                                break;
+                            }
+                    }
+                },
+                edit: function (editor, context, e) {
+                    var record = context.record;
+                    if (context.value == null) return false;
+                    switch (context.field) {
+                        case "ProductName":
+                            {
+                                if (typeof context.value == "number") {
+                                    //set product id on store
+                                    record.set("ProductID", context.value);
+                                }
+
                                 //set product name on store
                                 me.productStore.each(function (rec) {
                                     if (rec.get("ProductID") == context.value) {
@@ -173,12 +218,15 @@
                                         record.set("ProductName", productName);
                                     }
                                 });
-                                 break;
+
+                                break;
                             }
-                         case "CategoryName": 
-                             {
-                                 //set category id on store
-                                record.set("CategoryID", context.value);
+                        case "CategoryName":
+                            {
+                                if (typeof context.value == "number") {
+                                    //set category id on store
+                                    record.set("CategoryID", context.value);
+                                }
                                 //set category name on store 
                                 me.categoryStore.each(function (rec) {
                                     if (rec.get("CategoryID") == context.value) {
@@ -186,8 +234,31 @@
                                         record.set("CategoryName", categoryName);
                                     }
                                 });
-                            }
 
+                                //get product data
+                                me.productStore.getProxy().extraParams.CategoryId = context.value;
+                                record.set("ProductName", "กรุณาเลือกสินค้า");
+                                me.productStore.lastQuery = null;
+
+                                //get unit
+                                
+                                break;
+                            }
+                        case "UnitName":
+                            {
+                                if (typeof context.value == "number") {
+                                    //set category id on store
+                                    record.set("UnitID", context.value);
+                                }
+                                //set category name on store 
+                                me.unitStore.each(function (rec) {
+                                    if (rec.get("UnitID") == context.value) {
+                                        var unitName = rec.get("UnitName");
+                                        record.set("UnitName", unitName);
+                                    }
+                                });
+                                break;
+                            }
                     }
 
                 }
@@ -214,24 +285,11 @@
                 dataIndex: 'ProductID',
                 //hideable: false,
                 flex: 1,
-                field: {
-                    xtype: 'textfield',
-                    allowBlank: false
-                },
                 summaryType: 'count',
                 summaryRenderer: function (value, summaryData, dataIndex) {
                     return ((value === 0 || value > 1) ? '(' + value + ' รายการ)' : '(1 รายการ)');
                 }
             }, {
-                header: 'ชื่อสินค้า',
-                width: 180,
-                sortable: true,
-                tdCls: 'ProductID',
-                dataIndex: 'ProductName',
-                renderer: Ext.ux.renderer.Combo(productsField),
-                editor: productsField
-            },
-            {
                 header: 'หมวดสินค้า',
                 width: 130,
                 sortable: true,
@@ -239,6 +297,14 @@
                 renderer: Ext.ux.renderer.Combo(categoriesField),
                 editor: categoriesField
             }, {
+                header: 'ชื่อสินค้า',
+                width: 180,
+                sortable: true,
+                dataIndex: 'ProductName',
+                renderer: Ext.ux.renderer.Combo(productsField),
+                editor: productsField
+            },
+            {
                 header: 'จำนวน',
                 width: 130,
                 sortable: true,
@@ -253,7 +319,16 @@
                 field: {
                     xtype: 'numberfield'
                 }
-            }, {
+            },
+            {
+                header: 'หน่วย',
+                width: 130,
+                sortable: true,
+                dataIndex: 'UnitName',
+                renderer: Ext.ux.renderer.Combo(unitsField),
+                editor: unitsField
+            },
+            {
                 header: 'ราคา',
                 width: 130,
                 sortable: true,
@@ -270,18 +345,27 @@
                 sortable: false,
                 groupable: false,
                 renderer: function (value, metaData, record, rowIdx, colIdx, store, view) {
+
+                    var total = 0;
+                    store.each(function (rec) {
+                        total += rec.get('Amount') * rec.get('Price');
+                    });
+
+                    Ext.getCmp('totalSummary').setText('ราคารวม :' + total);
+
                     return Ext.util.Format.usMoney(record.get('Amount') * record.get('Price'));
                 },
                 summaryType: function (records) {
-                    var i = 0,
-                    length = records.length,
+
+                    var length = records.length,
                     total = 0,
                     record;
 
-                    for (; i < length; ++i) {
+                    for (var i = 0; i < length; ++i) {
                         record = records[i];
                         total += record.get('Amount') * record.get('Price');
                     }
+
                     return total;
                 },
                 summaryRenderer: Ext.util.Format.usMoney
@@ -315,15 +399,7 @@
     onSelectChange: function (selModel, selections) {
         this.down('#delete').setDisabled(selections.length === 0);
     },
-    onSelectedCategories: function () {
-        //        var products = Ext.getElementById('productsField');
-        //        var id = this.val();
-        //
-        //        products.store.reload({
-        //            params: { id: id }
-        //        });
-    },
-    onSelctedProduct: function () {
+    onToggleClick: function () {
 
     },
     onAddClick: function () {
