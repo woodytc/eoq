@@ -116,7 +116,7 @@ namespace Eoq.Mappings.FluentNh.Repository
                 var q = (from m in session.Query<Material>()
                          join c in session.Query<Catelogy>()
                              on m.CatelogyId equals c.Id
-                          where c.Name.Contains(name)
+                          where m.MetName.Contains(name)
                          select new MaterialCat
                          {
                              MatId = m.MatId,

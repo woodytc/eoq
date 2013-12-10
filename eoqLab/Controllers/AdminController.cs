@@ -86,9 +86,13 @@ namespace eoqLab.Controllers
             try
             {
                 Material material = new Material();
+
                 material.MatId = matID;
-                material.MetName = matName;
                 material.CatelogyId = catelogyID;
+                material.MetName = matName;
+                material.MatDetail = matDetail;
+                material.Updatedate = DateTime.Now;
+                material.Updateby = "testter";
                 //insert
                 MaterialRepository.Update(material);
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
