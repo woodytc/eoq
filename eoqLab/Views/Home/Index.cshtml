@@ -23,18 +23,26 @@
 
     window.read_mainProductURL = '@Url.Action("ProductsList","Home")';
     
-    //Purchase Order URLs
+    /**Purchase Order URLs**/
     window.read_purchaseOrderURL = '@Url.Action("ProductsList","Home")';
-    window.update_purchaseOrderURL = '@Url.Action("Update","Home")';
-    window.create_purchaseOrderURL = '@Url.Action("Save","Home")';
-    window.destroy_purchaseOrderURL = '@Url.Action("ProductsList","Home")';
+    window.update_purchaseOrderURL = '@Url.Action("UpdatePurchaseOrder","Home")';
+    window.create_purchaseOrderURL = '@Url.Action("SavePurchaseOrder","Home")';
 
+    //products combobox
     window.read_products_list = '@Url.Action("GetProducts","Home")';
+    //product categories combobox
     window.read_categories_list = '@Url.Action("CategoriesList","Home")';
+    //units combobox
     window.read_units_list = '@Url.Action("UnitsList","Home")';
+    //product price
     window.get_product_price = '@Url.Action("GetProductPrice","Home")';
-    //Stock URLs
-    //window.read_stockURL = '@Url.Action("StockList","Home")';
+    
+    /**Stock URLs**/
+    window.read_stockURL = '@Url.Action("StockList","Home")';
+    window.create_stockURL = '@Url.Action("saveStock","Home")';
+    window.update_stockURL = '@Url.Action("updateStock","Home")';
+    window.delete_stockURL = '@Url.Action("deleteStock","Home")';
+    
     //create front end view
     var mainProductForm     = new MainProductForm(),
         purchaseOrderForm   = new PurchaseOrderForm();

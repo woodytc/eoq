@@ -63,7 +63,7 @@ namespace eoqLab.Controllers
         {
             return View();
         }
-
+        #region Purchase Order
         //get product list
         public JsonResult ProductsList()
         {
@@ -200,7 +200,7 @@ namespace eoqLab.Controllers
         /// <param name="purchaseOrder"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult Update(List<PurchaseOrderModel> purchaseOrders, PurchaseOrderModel purchaseOrder)
+        public JsonResult UpdatePurchaseOrder(List<PurchaseOrderModel> purchaseOrders, PurchaseOrderModel purchaseOrder)
         {
             try
             {
@@ -234,7 +234,7 @@ namespace eoqLab.Controllers
 
 
         [HttpPost]
-        public JsonResult Save()
+        public JsonResult SavePurchaseOrder(List<PurchaseOrderModel> purchaseOrders, PurchaseOrderModel purchaseOrder)
         {
 
             return Json(new { },JsonRequestBehavior.DenyGet);
@@ -272,5 +272,47 @@ namespace eoqLab.Controllers
         //        return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
         //    }
         //}
+
+#endregion
+
+        #region Stock
+        public JsonResult StockList()
+        {
+            var stockList = this.StockRepository.GetAll();
+            var unitList = this.UnitRepository.GetAll();
+            var productList = this.MaterialRepository.GetAll();
+
+            var products = from stock in stockList
+                           join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
+                           join unit in unitList on stock.UnitId equals unit.ID
+                           where stock.Amount <= stock.Reorderpoint && stock.BranchId == this.Branch
+                           select new
+                           {
+                               ProductID = product.MatId,
+                               ProductName = product.MetName,
+                               Unit = unit.UnitName,
+                               stock.Amount
+                           };
+
+            return Json(new { data = products, total = products.Count() }, JsonRequestBehavior.AllowGet);
+
+            return null;
+        }
+
+        public JsonResult SaveStock()
+        {
+            return null;
+        }
+
+        public JsonResult UpdateStock()
+        {
+            return null;    
+        }
+
+        public JsonResult DeleteStock()
+        {
+            return null;
+        }
+        #endregion
     }//end class
 }//end namespace

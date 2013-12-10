@@ -32,10 +32,10 @@
 
         var stockProxy = proxyOptions;
         stockProxy.api = {
-            read: window.read_purchaseOrderURL,
-            create: window.create_purchaseOrderURL,
-            update: window.update_purchaseOrderURL,
-            destroy: window.destroy_purchaseOrderURL
+            read: window.read_stockURL,
+            create: window.create_stockURL,
+            update: window.update_stockURL,
+            destroy: window.delete_stockURL
         };
     }
 });

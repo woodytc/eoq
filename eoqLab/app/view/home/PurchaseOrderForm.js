@@ -35,8 +35,7 @@
         purchaseOrderProxy.api = {
             read: window.read_purchaseOrderURL,
             create: window.create_purchaseOrderURL,
-            update: window.update_purchaseOrderURL,
-            destroy: window.destroy_purchaseOrderURL
+            update: window.update_purchaseOrderURL
         };
 
         //cell edit
@@ -461,10 +460,10 @@
             }
         });
     }, getProductPrice: function (record, cb) {
-        var prarams = {};
-        prarams.ProductId = record.get("ProductID");
-        prarams.UnitId = record.get("UnitID");
-        
+        var params = {};
+        params.ProductId = record.get("ProductID");
+        params.UnitId = record.get("UnitID");
+
         $.ajax({
             type: "GET",
             cache: false,
@@ -474,7 +473,7 @@
             dataType: "json",
             success: function (result) {
                 var price;
-                if (result.data[0] == "undefined") {
+                if (typeof result.data[0] == "undefined") {
                     price = 0;
                 } else {
                     price = result.data[0].Price;
