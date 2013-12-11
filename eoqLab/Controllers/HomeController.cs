@@ -63,7 +63,7 @@ namespace eoqLab.Controllers
         {
             return View();
         }
-
+        #region Purchase Order
         //get product list
         public JsonResult ProductsList()
         {
@@ -87,22 +87,65 @@ namespace eoqLab.Controllers
 
         }
 
-        public JsonResult GetProducts()
+        public JsonResult GetProducts(CategoryParam category)
         {
-            var productList = this.MaterialRepository.GetAll();
+            try
+            {
+                if (category != null)
+                {
+                    var productList = this.MaterialRepository.GetAll();
 
-            var products = from product in productList
-                    select new
-                    {
-                        ProductID = product.MatId
-                        ,
-                        ProductName = product.MetName
+                    var products = from product in productList
+                                   where product.CatelogyId == category.CategoryId
+                                   select new
+                                              {
+                                                  ProductID = product.MatId
+                                                  ,
+                                                  ProductName = product.MetName
 
-                    };
+                                              };
 
-            return Json(new { data = products, total = productList.Count() }, JsonRequestBehavior.AllowGet);
+                    return Json(new {data = products, total = productList.Count(), error = ""},
+                                JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { data = "", total = 0 ,error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+            return null;
         }
 
+        [HttpGet]
+        public JsonResult GetProductPrice(ProductParams productParams)
+        {
+            try
+            {
+                if (productParams != null)
+                {
+                    var productList = this.MaterialRepository.GetAll();
+                    var stockList = this.StockRepository.GetAll();
+
+                    var price = from stock in stockList
+                                   join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
+                                   where stock.BranchId == this.Branch
+                                   && stock.MeterialId == productParams.ProductId
+                                   && stock.UnitId == productParams.UnitId
+                                   select new
+                                   {
+                                       stock.Price
+                                   };
+
+                    return Json(new { data = price, total = price.Count(), error = "" },
+                                JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { data = "", total = 0, error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+            return null;
+        }
         //get categories list
         public JsonResult CategoriesList()
         {
@@ -115,6 +158,21 @@ namespace eoqLab.Controllers
                                               };
 
             return Json(new { data = categoriesResult, total = categoriesResult.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        //get categories list
+        public JsonResult UnitsList()
+        {
+            var allUnits = this.UnitRepository.GetAll();
+            var unitsResult = from unit in allUnits
+                                   select new
+                                   {
+                                       UnitID = unit.ID,
+                                       unit.UnitName
+                                   };
+
+            return Json(new { data = unitsResult, total = unitsResult.Count() }, JsonRequestBehavior.AllowGet);
         }
 
         public List<Eoq.Domain.Material> CreateProductDummy()
@@ -142,7 +200,7 @@ namespace eoqLab.Controllers
         /// <param name="purchaseOrder"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult Update(List<PurchaseOrderModel> purchaseOrders, PurchaseOrderModel purchaseOrder)
+        public JsonResult UpdatePurchaseOrder(List<PurchaseOrderModel> purchaseOrders, PurchaseOrderModel purchaseOrder)
         {
             try
             {
@@ -176,7 +234,7 @@ namespace eoqLab.Controllers
 
 
         [HttpPost]
-        public JsonResult Save()
+        public JsonResult SavePurchaseOrder(List<PurchaseOrderModel> purchaseOrders, PurchaseOrderModel purchaseOrder)
         {
 
             return Json(new { },JsonRequestBehavior.DenyGet);
@@ -214,5 +272,47 @@ namespace eoqLab.Controllers
         //        return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
         //    }
         //}
+
+#endregion
+
+        #region Stock
+        public JsonResult StockList()
+        {
+            var stockList = this.StockRepository.GetAll();
+            var unitList = this.UnitRepository.GetAll();
+            var productList = this.MaterialRepository.GetAll();
+
+            var products = from stock in stockList
+                           join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
+                           join unit in unitList on stock.UnitId equals unit.ID
+                           where stock.Amount <= stock.Reorderpoint && stock.BranchId == this.Branch
+                           select new
+                           {
+                               ProductID = product.MatId,
+                               ProductName = product.MetName,
+                               Unit = unit.UnitName,
+                               stock.Amount
+                           };
+
+            return Json(new { data = products, total = products.Count() }, JsonRequestBehavior.AllowGet);
+
+            return null;
+        }
+
+        public JsonResult SaveStock()
+        {
+            return null;
+        }
+
+        public JsonResult UpdateStock()
+        {
+            return null;    
+        }
+
+        public JsonResult DeleteStock()
+        {
+            return null;
+        }
+        #endregion
     }//end class
 }//end namespace

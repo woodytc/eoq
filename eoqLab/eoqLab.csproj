@@ -139,6 +139,8 @@
     <Compile Include="helper\MemberMessage.cs" />
     <Compile Include="Infrastucture\EOQDI.cs" />
     <Compile Include="Infrastucture\NinjectDependencyResolver.cs" />
+    <Compile Include="Models\CategoryParam.cs" />
+    <Compile Include="Models\ProductParams.cs" />
     <Compile Include="Models\PurchaseOrderModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -165,6 +167,7 @@
     <Content Include="app\model\GpsFirstFix.js" />
     <Content Include="app\model\home\MainproductModel.js" />
     <Content Include="app\model\home\PurchaseOrderModel.js" />
+    <Content Include="app\model\home\StockModel.js" />
     <Content Include="app\model\ImpactAlert1.js" />
     <Content Include="app\model\ImpactAlert2.js" />
     <Content Include="app\model\JourneyBasis.js" />
