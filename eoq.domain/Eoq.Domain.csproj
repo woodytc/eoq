@@ -95,6 +95,7 @@
     <Compile Include="Domain\SupplierMail.cs" />
     <Compile Include="Domain\SupplierPhone.cs" />
     <Compile Include="Domain\Supplier.cs" />
+    <Compile Include="Domain\UserInBranchs.cs" />
     <Compile Include="Domain\Withdraw.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

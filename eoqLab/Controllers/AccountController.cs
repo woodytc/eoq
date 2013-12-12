@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using eoqLab.helper;
+using Eoq.Mappings.FluentNh.Repository;
+using Eoq.Domain.Domain;
 
 namespace eoqLab.Controllers
 {
@@ -12,6 +14,19 @@ namespace eoqLab.Controllers
     {
         private MembershipCreateStatus result;
         private readonly MembershipProvider _provider;
+
+        public IBranchRepository BranchRepository { get; set; }
+        public IUserInBranchsRepository UserInBranchsRepository { get; set; }
+        
+        public AccountController()
+        {
+        }
+
+        public AccountController(IBranchRepository branchRepository,IUserInBranchsRepository userInBranchsRepository)
+        {
+            this.BranchRepository = branchRepository;
+            this.UserInBranchsRepository = userInBranchsRepository;
+        }
         //
         // GET: /Account/
 
@@ -24,13 +39,14 @@ namespace eoqLab.Controllers
                 string[] roleArray = rolePrincipal.GetRoles();
 
                 string role = "";
-                if (User.IsInRole("UserManager"))
+                if (User.IsInRole("admin"))
                 {
-                    //  return RedirectToAction("", "Account");
+                      return RedirectToAction("Index", "Admin");
                 }
-                else if (User.IsInRole("Member"))
+                else if (User.IsInRole("member"))
                 {
                     ViewBag.Username = userName;
+                    return RedirectToAction("Index", "Home");
 
                 }
 
@@ -106,7 +122,12 @@ namespace eoqLab.Controllers
                     return Json(new { success = true, url = "../Devices" }, JsonRequestBehavior.AllowGet);
 
                 }
-                else if (Roles.IsUserInRole(username, "UserManager"))
+                else if (Roles.IsUserInRole(username, "admin"))
+                {
+                    //return RedirectToAction("Index", "Admin");
+                    return Json(new { success = true, url = "../Admin" }, JsonRequestBehavior.AllowGet);
+                }
+                else if (Roles.IsUserInRole(username, "admin"))
                 {
                     //return RedirectToAction("Index", "Account");
                     return Json(new { success = true, url = "./" }, JsonRequestBehavior.AllowGet);
@@ -159,7 +180,7 @@ namespace eoqLab.Controllers
 
         [HttpPost]
         //public ActionResult Register(RegisterModel model)
-        public JsonResult Register(string UserName, string Password, string Email, string role)
+        public JsonResult Register(string UserName, string Password, string Email, string role,int branchID)
         {
             //statscreate code
 
@@ -175,7 +196,12 @@ namespace eoqLab.Controllers
                 }
                 else
                 {
+                    
                     Roles.AddUserToRole(UserName, role);
+                    //mapping branch to user
+                    
+                    UserToBranch(UserName, branchID);
+
                     return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
                 }
             }
@@ -195,10 +221,10 @@ namespace eoqLab.Controllers
                              {
                                  UserName = user.UserName,
                                  Email = user.Email,
-                                 Roles = (string.Join(", ", roles)).Replace("UserManager", "User Management"),
+                                 Roles = (string.Join(", ", roles)).Replace("admin", "Admin"),
                                  IsApproved = user.IsApproved ? "Enable" : "Disable"
                              });
-            var dataPage = (from x in userRoles where x.Roles.Contains((role == "UserManager" ? "User Management" : role)) select x).Skip(start).Take(limit);
+            var dataPage = (from x in userRoles where x.Roles.Contains((role == "admin" ? "Admin" : role)) select x).Skip(start).Take(limit);
             return Json(new { items = dataPage, total = dataPage.Count() }, JsonRequestBehavior.AllowGet);
         }
 
@@ -212,10 +238,10 @@ namespace eoqLab.Controllers
                              {
                                  UserName = user.UserName,
                                  Email = user.Email,
-                                 Roles = (string.Join(", ", roles)).Replace("UserManager", "User Management"),
+                                 Roles = (string.Join(", ", roles)).Replace("admin", "Admin"),
                                  IsApproved = user.IsApproved ? "Enable" : "Disable"
                              });
-            var dataPage = (from x in userRoles where x.Roles.Contains((role == "UserManager" ? "User Management" : role)) && (x.UserName.ToLower().Contains(username)) select x).Skip(start).Take(limit);
+            var dataPage = (from x in userRoles where x.Roles.Contains((role == "admin" ? "Admin" : role)) && (x.UserName.ToLower().Contains(username)) select x).Skip(start).Take(limit);
             return Json(new { items = dataPage, total = dataPage.Count() }, JsonRequestBehavior.AllowGet);
         }
 
@@ -229,7 +255,7 @@ namespace eoqLab.Controllers
                              {
                                  UserName = user.UserName,
                                  Email = user.Email,
-                                 Roles = (string.Join(", ", roles)).Replace("UserManager", "User Management"),
+                                 Roles = (string.Join(", ", roles)).Replace("admin", "Admin"),
                                  IsApproved = user.IsApproved ? "Enable" : "Disable"
                              });
             var dataPage = (from x in userRoles select x).Skip(start).Take(limit);
@@ -247,10 +273,10 @@ namespace eoqLab.Controllers
                              {
                                  UserName = user.UserName,
                                  Email = user.Email,
-                                 Roles = (string.Join(", ", roles)).Replace("UserManager", "User Management"),
+                                 Roles = (string.Join(", ", roles)).Replace("admin", "Admin"),
                                  IsApproved = user.IsApproved ? "Enable" : "Disable"
                              });
-            var dataPage = from x in userRoles where x.Roles.Contains((role == "UserManager" ? "User Management" : role)) && (x.UserName.Contains(username)) select x;
+            var dataPage = from x in userRoles where x.Roles.Contains((role == "admin" ? "Admin" : role)) && (x.UserName.Contains(username)) select x;
 
             return Json(new { items = dataPage, total = dataPage.Count() }, JsonRequestBehavior.AllowGet);
         }
@@ -359,6 +385,28 @@ namespace eoqLab.Controllers
         protected void SignOut()
         {
             FormsAuthentication.SignOut();
+        }
+
+        protected void UserToBranch(string username, int branch)
+        {
+            var entity = new UserInBranchs();
+            entity.BranchID = branch;
+            entity.Username = username;
+            try
+            {
+                UserInBranchsRepository.Save(entity);
+            }
+            catch (Exception ex)
+            {
+                //ex.Message;
+            }
+        }
+
+        public JsonResult GetBranch()
+        {
+            var result = this.BranchRepository.GetAll();
+            
+            return Json(new { items = result, total = result.Count() }, JsonRequestBehavior.AllowGet);
         }
     }
 }

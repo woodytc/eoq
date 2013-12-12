@@ -5,11 +5,15 @@ using System.Web;
 using System.Web.Mvc;
 using Eoq.Domain;
 using Eoq.Mappings.FluentNh.Repository;
+using System.Web.Security;
 
 namespace eoqLab.Controllers
 {
     public class AdminController : Controller
     {
+
+        private string _userName = "";
+        private string[] roleArray;
 
         public IEOQRepository EOQRepository { get; set; }
         public IMaterialRepository MaterialRepository { get; set; }
@@ -23,6 +27,8 @@ namespace eoqLab.Controllers
         public IBrandRepository BrandRepository { get; set; }
         public ISizesRepository SizesRepository { get; set; }
         public ICatelogyRepository CatelogyRepository { get; set; }
+        public IBranchRepository BranchRepository { get; set; }
+        
         public AdminController(IEOQRepository eoqRepository
             ,IMaterialRepository materialRepository
             ,IUnitRepository unit
@@ -34,6 +40,7 @@ namespace eoqLab.Controllers
             ,IBrandRepository brandRepository
             ,ISizesRepository sizesRepository
             ,ICatelogyRepository catelogyRepository
+            ,IBranchRepository branchRepository
             )
         {
             EOQRepository = eoqRepository;
@@ -48,12 +55,66 @@ namespace eoqLab.Controllers
             this.BrandRepository = brandRepository;
             this.SizesRepository = sizesRepository;
             this.CatelogyRepository = catelogyRepository;
+            this.BranchRepository = branchRepository;
            
         }
 
   
         public ActionResult Index()
         {
+            _userName = User.Identity.Name;
+
+            //check login
+            if (string.IsNullOrEmpty(_userName))
+            {
+                return RedirectToAction("Logon", "Account");
+            }
+
+            RolePrincipal rolePrincipal = (RolePrincipal)User;
+            roleArray = rolePrincipal.GetRoles();
+
+            string role = "";
+            
+            ViewBag.AuthPrinciple = false;
+            ViewBag.AuthScheme = false;
+            ViewBag.AuthGeneration = false;
+            ViewBag.AuthDeploy = false;
+            ViewBag.AuthQuickDeploy = false;
+            ViewBag.InAdminRole = false;
+
+            if (User.IsInRole("admin"))
+            {
+                ViewBag.AuthPrinciple = true;
+                ViewBag.AuthScheme = true;
+                ViewBag.AuthGeneration = true;
+                ViewBag.AuthDeploy = true;
+                ViewBag.AuthQuickDeploy = true;
+
+                ViewBag.InAdminRole = true;
+            }
+            else if (User.IsInRole("Member"))
+            {
+                ViewBag.AuthQuickDeploy = true;
+            }
+            else if (User.IsInRole("Manage"))
+            {
+                return RedirectToAction("AddRoles", "UserManagement");
+            }
+
+            foreach (var item in roleArray)
+            {
+                role += item + ",";
+            }
+            if (!role.Equals(""))
+            {
+                role = role.Remove(role.Length - 1);
+            }
+
+            ViewBag.CurrentDateServerSt = DateTime.Now.ToString("dd/MM/yyyy");
+            ViewBag.CurrentTimeServerSt = DateTime.Now.ToString("HH:mm");
+            ViewBag.CurrentUser = _userName;
+            ViewBag.CurrentUserRole = role;
+
             return View();
         }
 
@@ -88,7 +149,10 @@ namespace eoqLab.Controllers
                 Material material = new Material();
                 material.MatId = matID;
                 material.MetName = matName;
+                material.MatDetail = matDetail;
                 material.CatelogyId = catelogyID;
+                material.Updatedate = DateTime.Now;
+                material.Updateby = "";
                 //insert
                 MaterialRepository.Update(material);
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
@@ -781,6 +845,13 @@ namespace eoqLab.Controllers
             return Json(
                 new { items = results, total = results.Count, success = true },
                 JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetBranch()
+        {
+            var result = this.BranchRepository.GetAll();
+
+            return Json(new { items = result, total = result.Count() }, JsonRequestBehavior.AllowGet);
         }
 
         private void EoqManage(EOQ eoqEntity,string type){

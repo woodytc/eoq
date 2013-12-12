@@ -286,7 +286,7 @@ AdminManagementForm.prototype.popUpEditUserAndRoles = function (id, username, em
 
     var roleStore = Ext.create('Ext.data.Store', {
         fields: ['name', 'value'],
-        data: [{ name: 'User Management', value: 'UserManager' }, { name: 'Member', value: 'Member'}]
+        data: [{ name: 'Admin', value: 'admin' }, { name: 'Member', value: 'member'}]
     });
     var win = new Ext.Window({
         id: prefix + 'update',

@@ -18,6 +18,7 @@
     }
 </style>*@
 <script src='@Url.Content("~/Scripts/extjs/ext-all.js")' type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href='@Url.Content("~/Scripts/extjs/resources/css/ext-all-access.css")' />
 <script type="text/javascript">
     Ext.Loader.setConfig({ enabled: true });
     Ext.Loader.setPath('Ext.ux', '@Url.Content("~/Scripts/extjs/ux")');
@@ -44,10 +45,12 @@
     window.disableUser = '@Url.Action("DisableUser","Account")';
 
     window.gridData = '@Url.Action("GetUserAll", "Account")';
+
+    window.branchCombobox = '@Url.Action("GetUserAll", "Account")';
     
 </script>
 <script src="@Url.Content("~/app/view/users/usermodels.js")" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href='@Url.Content("~/Scripts/extjs/resources/css/ext-all.css")' />
+@*<link rel="stylesheet" type="text/css" href='@Url.Content("~/Scripts/extjs/resources/css/ext-all.css")' />*@
 <!-- maybe not use -->
 <!-- 
 <script src="@Url.Content("~/app/view/users/words-en.js")" type="text/javascript"></script>

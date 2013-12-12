@@ -14,7 +14,7 @@
         var usernmae = "";
         var role = "";
         me.prefix = prefix;
-        
+
 
         Ext.apply(me, {
             xtype: 'form',
@@ -27,32 +27,41 @@
             align: 'certer',
             bodyPadding: '5 5 0',
             width: 350,
-//            fieldDefaults: {
-//                msgTarget: 'side',
-//                labelWidth: 75
-//            },
+            //            fieldDefaults: {
+            //                msgTarget: 'side',
+            //                labelWidth: 75
+            //            },
             defaultType: 'textfield',
             items: [{
                 fieldLabel: 'Username:',
+                id: 'username',
                 afterLabelTextTpl: required,
                 name: 'username',
                 allowBlank: false
             }, {
                 fieldLabel: 'Password',
+                id:'password',
+                inputType: 'password',
                 afterLabelTextTpl: required,
                 name: 'password',
                 allowBlank: false
             }],
 
             buttons: [{
-                text: 'Save',
+                text: 'Logon',
                 handler: function () {
-                    this.up('form').getForm().isValid();
+                    if(this.up('form').getForm().isValid())
+                    var form = this.up('form').getForm();
+                    if (this.up('form').getForm().isValid()) 
+                        me.logon(Ext.getCmp('username').getValue(), Ext.getCmp('password').getValue(), form);
+                    else alert("Error: Please check valid data!!");
                 }
             }, {
-                text: 'Cancel',
+                text: 'Reset',
                 handler: function () {
-                    this.up('form').getForm().reset();
+                    //this.up('form').getForm().reset();
+                    Ext.getCmp('username').setValue("");
+                    Ext.getCmp('password').setValue("");
                 }
             }]
         }); //end apply

@@ -106,7 +106,7 @@ namespace eoqLab.Infrastucture
                 .To<BrandRepository>()
                 .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
             
-            //Brand
+            //Catelogy
             kernel.Bind<ICatelogyRepository>()
                 .To<CatelogyRepository>()
                 .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
@@ -125,8 +125,15 @@ namespace eoqLab.Infrastucture
             kernel.Bind<ICashierRepository>()
                 .To<CashierRepository>()
                 .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
+            //UserInBranchs
+            kernel.Bind<IUserInBranchsRepository>()
+                .To<UserInBranchsRepository>()
+                .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
+            //Branch
+            kernel.Bind<IBranchRepository>()
+                .To<BranchRepository>()
+                .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
 
-            //StartProcess();
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }
 
