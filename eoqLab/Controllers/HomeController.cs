@@ -64,7 +64,9 @@ namespace eoqLab.Controllers
             return View();
         }
         #region Purchase Order
+
         //get product list
+        [HttpGet]
         public JsonResult ProductsList()
         {
             var stockList = this.StockRepository.GetAll();
@@ -86,7 +88,7 @@ namespace eoqLab.Controllers
             return Json(new { data = products, total = products.Count() }, JsonRequestBehavior.AllowGet);
 
         }
-
+        [HttpGet]
         public JsonResult GetProducts(CategoryParam category)
         {
             try
@@ -146,7 +148,9 @@ namespace eoqLab.Controllers
             }
             return null;
         }
+
         //get categories list
+        [HttpGet]
         public JsonResult CategoriesList()
         {
             var allCategories = this.CatelogyRepository.GetAll();
@@ -162,6 +166,7 @@ namespace eoqLab.Controllers
 
 
         //get categories list
+        [HttpGet]
         public JsonResult UnitsList()
         {
             var allUnits = this.UnitRepository.GetAll();
@@ -173,6 +178,34 @@ namespace eoqLab.Controllers
                                    };
 
             return Json(new { data = unitsResult, total = unitsResult.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult ColorsList()
+        {
+            var colorList = this.ColorRepository.GetAll();
+            var colors = from color in colorList
+                              select new
+                              {
+                                  ColorID   = color.Id,
+                                  ColorName = color.Name
+                              };
+
+            return Json(new { data = colors, total = colors.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult BrandList()
+        {
+            var brandList = this.BrandRepository.GetAll();
+            var brands = from brand in brandList
+                         select new
+                         {
+                             BrandID = brand.Id,
+                             BrandName = brand.Name
+                         };
+
+            return Json(new { data = brands, total = brands.Count() }, JsonRequestBehavior.AllowGet);
         }
 
         public List<Eoq.Domain.Material> CreateProductDummy()
@@ -273,45 +306,62 @@ namespace eoqLab.Controllers
         //    }
         //}
 
-#endregion
+        #endregion
 
         #region Stock
         public JsonResult StockList()
         {
-            var stockList = this.StockRepository.GetAll();
-            var unitList = this.UnitRepository.GetAll();
-            var productList = this.MaterialRepository.GetAll();
-
-            var products = from stock in stockList
+            var stockList       = this.StockRepository.GetAll();
+            var unitList        = this.UnitRepository.GetAll();
+            var productList     = this.MaterialRepository.GetAll();
+            var categoryList    = this.CatelogyRepository.GetAll();
+            var colorList       = this.ColorRepository.GetAll();
+            var brandList       = this.BrandRepository.GetAll();
+            var stocks = from stock in stockList
                            join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
                            join unit in unitList on stock.UnitId equals unit.ID
+                           join category in categoryList on product.CatelogyId equals category.Id
+                           join color in colorList on stock.ColorId equals color.Id
+                           join brand in brandList on stock.BrandId equals brand.Id
                            where stock.Amount <= stock.Reorderpoint && stock.BranchId == this.Branch
                            select new
                            {
-                               ProductID = product.MatId,
-                               ProductName = product.MetName,
-                               Unit = unit.UnitName,
-                               stock.Amount
+                               ID               = stock.Id,
+                               ProductID        = product.MatId,
+                               ProductName      = product.MetName,
+                               CategoryID       = product.CatelogyId,
+                               CategoryName     = category.Name,
+                               ColorID          = color.Id,
+                               ColorName        = color.Name,
+                               UnitID           = unit.ID,
+                               Unit             = unit.UnitName,
+                               BrandID          = brand.Id,
+                               BrandName        = brand.Name,
+                               stock.Amount,
+                               stock.Price
                            };
 
-            return Json(new { data = products, total = products.Count() }, JsonRequestBehavior.AllowGet);
-
-            return null;
+            return Json(new { data = stocks, total = stocks.Count() }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult SaveStock(StockParams stockParams)
+        {
+            var ob = new object();
+            return Json(new { data = ob, total = 0 }, JsonRequestBehavior.AllowGet); 
         }
 
-        public JsonResult SaveStock()
+        [HttpPost]
+        public JsonResult UpdateStock(StockParams stockParams)
         {
-            return null;
+            var ob = new object();
+            return Json(new { data = ob, total = 0 }, JsonRequestBehavior.AllowGet);    
         }
 
-        public JsonResult UpdateStock()
+        [HttpPost]
+        public JsonResult DeleteStock(List<int> ids)
         {
-            return null;    
-        }
-
-        public JsonResult DeleteStock()
-        {
-            return null;
+            var ob = new object();
+            return Json(new { data = ob, total = 0 }, JsonRequestBehavior.AllowGet);
         }
         #endregion
     }//end class

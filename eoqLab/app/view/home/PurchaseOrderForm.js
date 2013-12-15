@@ -2,7 +2,7 @@
     extend: 'Ext.Panel',
     constructor: function (config) {
         var me = this;
-        var prefix = "PurchaseOrderForm-";
+        var prefix = "PurchaseOrder-";
         me.prefix = prefix;
 
         //Define proxy datastore
@@ -17,7 +17,6 @@
             writer: {
                 type: 'json',
                 writeAllFields: false
-                //root: 'data'
             },
             listeners: {
                 exception: function (proxy, response, operation) {
