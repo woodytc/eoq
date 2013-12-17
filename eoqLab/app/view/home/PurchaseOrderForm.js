@@ -412,9 +412,6 @@
     onSelectChange: function (selModel, selections) {
         this.down('#delete').setDisabled(selections.length === 0);
     },
-    onToggleClick: function () {
-
-    },
     onAddClick: function () {
         var rec = new window.EOQ.model.PurchaseOrder({
             ProductID: 0,

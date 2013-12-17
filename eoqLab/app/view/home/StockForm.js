@@ -43,10 +43,10 @@
             model: 'EOQ.model.Stock',
             autoLoad: true,
             //autoSync : true,
-            encode: true,
             pageSize: 25,
             data: window.TestStockData,
             totalCount: window.TestStockData.length,
+            encode: true,
             proxy: stockProxy
         });
 
@@ -359,6 +359,7 @@
             queryMode: 'remote',
             allowBlank: false,
             editable: false,
+            disabled: true,
             name: 'ProductID',
             fieldLabel: 'ชื่อสินค้า',
             labelStyle: 'text-align: right',
@@ -383,6 +384,8 @@
             listeners: {
                 // public event change - when selection1 dropdown is changed
                 select: function (combo, rec, index) {
+                    var productCombobox = Ext.getCmp(prefix + 'ProductID');
+                    productCombobox.setDisabled(false);
                     me.productStore.getProxy().extraParams.CategoryId = combo.value;
                 }
             }
@@ -412,12 +415,15 @@
                         params = {};
                     params.ProductID = combop.getValue();
                     params.UnitID = newValue;
-                    console.log(params);
-                    //get product price
-                    //                    me.getProductPrice(params, function (price) {
-                    //                        if (price == null) price = 0;
-                    //                        //record.set("Price", price);
-                    //                    });
+                    if (!me.isNullOrUndefined(params.ProductID) && !me.isNullOrUndefined(params.UnitID)) {
+                        //get product price
+                        me.getProductPrice(params, function (price) {
+                            if (price == null) price = 0;
+                            var priceField = Ext.getCmp(prefix + 'Price');
+                            priceField.setValue(price);
+                        });
+                    }
+
                 }
             }
         }, colorsField = {
@@ -457,7 +463,7 @@
             editable: false
         };
 
-        var win = new Ext.Window({
+        me.win = new Ext.Window({
             id: prefix + 'update',
             iconCls: 'icon-details',
             title: 'ปรับปรุงรายการคลังสินค้า',
@@ -500,7 +506,7 @@
                             }
                         });
 
-                        win.destroy();
+                        me.win.destroy();
 
                     }
                 },
@@ -509,7 +515,7 @@
                     text: 'ยกเลิก',
                     name: 'button-cancel',
                     handler: function (btn, evt) {
-                        win.destroy();
+                        me.win.destroy();
                     }
                 }]
         }).show();
@@ -526,8 +532,7 @@
     }, setSelectedCombo: function (id, name, data) {
         var combo = Ext.getCmp(id);
         combo.select(data);
-        var t = jQuery(id).val();
-        console.log(t);
+        if (id == 'updateStock-CategoryID') return false;
         var rec = combo.getStore().findRecord(name, data);
         combo.fireEvent('select', combo, [rec]);
     }, getProductPrice: function (params, cb) {
@@ -559,5 +564,7 @@
                 return null;
             }
         });
+    }, isNullOrUndefined: function (val) {
+        return (val == null || typeof val == 'undefined');
     }
 });

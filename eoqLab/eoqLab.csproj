@@ -210,6 +210,7 @@
     <Content Include="app\view\device\RequestPendingToolbar.js" />
     <Content Include="app\view\device\SimulationScriptWindow.js" />
     <Content Include="app\view\device\Toolbar.js" />
+    <Content Include="app\view\home\ComboboxPatch.js" />
     <Content Include="app\view\home\ComboboxRender.js" />
     <Content Include="app\view\home\MainProductForm.js" />
     <Content Include="app\view\home\PurchaseOrderForm.js" />

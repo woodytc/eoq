@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using eoqLab.helper;
-using Eoq.Mappings.FluentNh.Repository;
 using Eoq.Domain.Domain;
-
+using Eoq.Mappings.FluentNh.Repository;
+using eoqLab.helper;
 namespace eoqLab.Controllers
 {
     public class AccountController : Controller
