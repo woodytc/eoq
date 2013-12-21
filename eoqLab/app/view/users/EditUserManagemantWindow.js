@@ -33,16 +33,31 @@ Ext.define('EditUserManagemantWindow', {
 
         me.roleStore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
-            data: [{ name: 'User Management', value: 'UserManager' }, { name: 'Member', value: 'Member'}]
+            data: [{ name: 'Admin', value: 'admin' }, { name: 'Member', value: 'member'}]
         })
 
         me.configRoleStore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
             data: [
-                    { name: 'UserManager', value: 'UserManager' },
+                    { name: 'Admin', value: 'admin' },
                     { name: 'Member', value: 'Member' }
             ]
 
+        });
+
+        me.branchCombobox = Ext.create('Ext.data.JsonStore', {
+            //model: 'ComboboxDefault',
+            autoLoad: true,
+            fields: ['BranchID', 'BranchName'],
+            proxy: {
+                type: 'ajax',
+                api: { read: window.branchCombobox },
+                reader: {
+                    type: 'json',
+                    root: 'items'//,
+                    //totalProperty: 'total'
+                }
+            }
         });
 
         //woody
@@ -78,6 +93,11 @@ Ext.define('EditUserManagemantWindow', {
                     anchor: '-10',
                     value: 'Member',
                     store: me.roleStore
+                },
+                { id: prefix + 'branch', name: 'branchID', xtype: 'combo', mode: 'local', editable: false, displayField: 'BranchName', valueField: 'BranchID'
+                        , queryMode: 'local', allowBlank: false, emptyText: 'selected'
+                    , store: me.branchCombobox,
+                    fieldLabel: 'หมวดสินค้า', labelStyle: 'text-align: right', width: 500
                 }
             ]
         };
@@ -125,7 +145,10 @@ Ext.define('EditUserManagemantWindow', {
                             params: {
                                 UserName: Ext.getCmp(prefix + 'username').getValue(),
                                 Password: Ext.getCmp(prefix + 'password').getValue(),
-                                Email: Ext.getCmp(prefix + 'email').getValue()
+                                Email: Ext.getCmp(prefix + 'email').getValue(),
+                                BranchID: Ext.getCmp(prefix + 'branch').getValue(),
+                                Role: Ext.getCmp(prefix + 'role').getValue()
+
                             },
                             success: function (formPanel, action) {
                                 var data = Ext.decode(action.response.responseText);

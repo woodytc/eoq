@@ -51,6 +51,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Pex.Framework, Version=0.94.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="NHibernate, Version=3.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\NHibernate.dll</HintPath>
@@ -98,17 +100,20 @@
     <Compile Include="Map\SupplierMailMap.cs" />
     <Compile Include="Map\SupplierPhoneMap.cs" />
     <Compile Include="Map\SupplierMap.cs" />
+    <Compile Include="Map\UserInBranchsMap.cs" />
     <Compile Include="Map\WithdrawMap.cs" />
     <Compile Include="NhRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\ColorRepository.cs" />
     <Compile Include="Repository\CatelogyRepository.cs" />
     <Compile Include="Repository\CashierRepository.cs" />
+    <Compile Include="Repository\BranchRepository.cs" />
     <Compile Include="Repository\StockRepository.cs" />
     <Compile Include="Repository\SizesRepository.cs" />
     <Compile Include="Repository\BrandRepository.cs" />
     <Compile Include="Repository\UnitRepository.cs" />
     <Compile Include="Repository\IEOQRepository.cs" />
+    <Compile Include="Repository\UserInBranchsRepository.cs" />
     <Compile Include="Repository\WithdrawRepository.cs" />
     <Compile Include="Repository\SupplierPhoneRepository.cs" />
     <Compile Include="Repository\SupplierRepository.cs" />

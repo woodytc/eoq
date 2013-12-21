@@ -2,7 +2,7 @@
     extend: 'Ext.Panel',
     constructor: function (config) {
         var me = this;
-        var prefix = "PurchaseOrderForm-";
+        var prefix = "PurchaseOrder-";
         me.prefix = prefix;
 
         //Define proxy datastore
@@ -17,7 +17,6 @@
             writer: {
                 type: 'json',
                 writeAllFields: false
-                //root: 'data'
             },
             listeners: {
                 exception: function (proxy, response, operation) {
@@ -35,8 +34,7 @@
         purchaseOrderProxy.api = {
             read: window.read_purchaseOrderURL,
             create: window.create_purchaseOrderURL,
-            update: window.update_purchaseOrderURL,
-            destroy: window.destroy_purchaseOrderURL
+            update: window.update_purchaseOrderURL
         };
 
         //cell edit
@@ -63,83 +61,106 @@
             xtype: 'toolbar',
             items: [{
                 iconCls: 'icon-add',
-                text: 'Add',
+                text: 'เพิ่ม',
                 scope: me,
                 handler: me.onAddClick
             }, {
                 iconCls: 'icon-delete',
-                text: 'Delete',
+                text: 'ลบ',
                 disabled: true,
                 itemId: 'delete',
                 scope: me,
                 handler: me.onDeleteClick
+            }, {
+                xtype: 'label',
+                id: 'totalSummary',
+                text: '',
+                margins: '0 0 0 10'
             }, '->', {
                 iconCls: 'icon-save',
-                text: 'Save',
+                text: 'บันทึก',
                 scope: me,
                 iconAlign: 'right',
                 handler: me.onSync
             }, {
                 iconCls: 'icon-cancel',
-                text: 'Cancel',
+                text: 'ยกเลิกทั้งหมด',
                 name: 'button-cancel',
                 handler: function (btn, evt) {
-                    me.intend = "cancel";
-                    //cancel editing current cell
-                    me.cellEditing.cancelEdit();
-                    //remove data model from curent store
-                    if (me.currentRecord != null) {
-                        me.Store.remove(me.currentRecord);
-                    }
+                    me.grid.store.clearData();
+                    me.grid.view.refresh();
                 }
             }]
 
         };
 
+        //Products List data
         var productProxy = proxyOptions;
         productProxy.api = {
             read: window.read_products_list
         };
 
-        //product store
-        var productStore = Ext.create('Ext.data.Store', {
+        me.productStore = Ext.create('Ext.data.Store', {
             model: 'EOQ.Model.ProductsList',
             //sorters: { property: 'MatName', direction: 'ASC' },
             proxy: productProxy
         });
 
+        //Categories List data
         var categoryProxy = proxyOptions;
         categoryProxy.api = {
             read: window.read_categories_list
         };
 
-        var categoryStore = Ext.create('Ext.data.Store', {
+        me.categoryStore = Ext.create('Ext.data.Store', {
             model: 'EOQ.Model.CategoriesList',
             proxy: categoryProxy
+        });
+
+        //Units List data
+        var unitProxy = proxyOptions;
+        unitProxy.api = {
+            read: window.read_units_list
+        };
+
+        me.unitStore = Ext.create('Ext.data.Store', {
+            model: 'EOQ.Model.UnitsList',
+            proxy: unitProxy
         });
 
         var productsField = {
             xtype: 'combobox',
             typeAhead: true,
-            triggerAction: 'all',
+            triggerAction: 'query',
             scope: me,
             id: 'productsField',
-            handler: me.onSelectedProduct,
             displayField: 'ProductName',
             valueField: 'ProductID',
-            store: productStore,
-            allowBlank: false
+            store: me.productStore,
+            allowBlank: false,
+            editable: false
         }, categoriesField = {
             xtype: 'combobox',
             typeAhead: true,
             triggerAction: 'all',
             scope: me,
             id: 'categoriesField',
-            handler: me.onSelectedCategories,
             displayField: 'CategoryName',
             valueField: 'CategoryID',
-            store: categoryStore,
-            allowBlank: false
+            store: me.categoryStore,
+            allowBlank: false,
+            editable: false
+        }, unitsField = {
+            xtype: 'combobox',
+            typeAhead: true,
+            triggerAction: 'all',
+            scope: me,
+            id: 'unitField',
+            displayField: 'UnitName',
+            valueField: 'UnitID',
+            store: me.unitStore,
+            allowBlank: false,
+            editable: false
         };
 
         me.grid = Ext.create('Ext.grid.Panel', {
@@ -151,28 +172,120 @@
             minHeight: 550,
             frame: true,
             autoscroll: true,
+            afteredit: true,
             title: '',
             iconCls: 'icon-grid',
             requires: [
                 'Ext.grid.plugin.CellEditing',
+                'Ext.grid.plugin.RowEditing',
                 'Ext.form.field.Text',
                 'Ext.toolbar.TextItem',
                 'Ext.grid.*',
                 'Ext.data.*',
                 'Ext.util.*',
             ],
+            listeners: {
+                beforeedit: function (editor, context, e) {
+                    var record = context.record;
+                    if (context.value == null) return false;
+                    switch (context.field) {
+                        case "ProductName":
+                            {
+                                //refresh pruduct data
+                                me.productStore.load();
+                                break;
+                            }
+                    }
+                },
+                edit: function (editor, context, e) {
+                    var record = context.record;
+                    if (context.value == null) return false;
+                    switch (context.field) {
+                        case "ProductName":
+                            {
+                                if (typeof context.value == "number") {
+                                    //set product id on store
+                                    record.set("ProductID", context.value);
+                                }
+
+                                //set product name on store
+                                me.productStore.each(function (rec) {
+                                    if (rec.get("ProductID") == context.value) {
+                                        var productName = rec.get("ProductName");
+                                        record.set("ProductName", productName);
+                                    }
+                                });
+
+                                //get product price
+                                me.getProductPrice(record, function (price) {
+                                    if (price == null) price = 0;
+                                    record.set("Price", price);
+                                });
+                                break;
+                            }
+                        case "CategoryName":
+                            {
+                                if (typeof context.value == "number") {
+                                    //set category id on store
+                                    record.set("CategoryID", context.value);
+                                }
+                                //set category name on store 
+                                me.categoryStore.each(function (rec) {
+                                    if (rec.get("CategoryID") == context.value) {
+                                        var categoryName = rec.get("CategoryName");
+                                        record.set("CategoryName", categoryName);
+                                    }
+                                });
+
+                                //get product data
+                                me.productStore.getProxy().extraParams.CategoryId = context.value;
+                                record.set("ProductName", "กรุณาเลือกสินค้า");
+                                record.set("Price", 0);
+
+                                me.productStore.lastQuery = null;
+
+                                //get product price
+                                me.getProductPrice(record, function (price) {
+                                    if (price == null) price = 0;
+                                    record.set("Price", price);
+                                });
+                                break;
+                            }
+                        case "UnitName":
+                            {
+                                if (typeof context.value == "number") {
+                                    //set category id on store
+                                    record.set("UnitID", context.value);
+                                }
+                                //set category name on store 
+                                me.unitStore.each(function (rec) {
+                                    if (rec.get("UnitID") == context.value) {
+                                        var unitName = rec.get("UnitName");
+                                        record.set("UnitName", unitName);
+                                    }
+                                });
+
+                                //get product price
+                                me.getProductPrice(record, function (price) {
+                                    if (price == null) price = 0;
+                                    record.set("Price", price);
+                                });
+                                break;
+                            }
+                    }
+
+                }
+            },
             //renderTo: document.body,
             store: me.Store,
             plugins: [me.cellEditing],
-            selModel: {
-                selType: 'cellmodel'
-            },
+            selModel: Ext.create('Ext.selection.CheckboxModel'),
             region: 'center',
             dockedItems: [headerButtons],
             features: [{
                 id: 'group',
                 ftype: 'groupingsummary',
-                groupHeaderTpl: '{name}',
+                groupHeaderTpl: 'รายการสินค้า : {name}',
                 hideGroupedHeader: false,
                 enableGroupingMenu: false
             }],
@@ -185,24 +298,11 @@
                 dataIndex: 'ProductID',
                 //hideable: false,
                 flex: 1,
-                field: {
-                    xtype: 'textfield',
-                    allowBlank: false
-                },
                 summaryType: 'count',
                 summaryRenderer: function (value, summaryData, dataIndex) {
                     return ((value === 0 || value > 1) ? '(' + value + ' รายการ)' : '(1 รายการ)');
                 }
             }, {
-                header: 'ชื่อสินค้า',
-                width: 180,
-                sortable: true,
-                //tdCls: 'ProductID',
-                dataIndex: 'ProductName',
-                renderer: this.Combo(productsField),
-                editor: productsField
-            },
-            {
                 header: 'หมวดสินค้า',
                 width: 130,
                 sortable: true,
@@ -210,6 +310,14 @@
                 renderer: Ext.ux.renderer.Combo(categoriesField),
                 editor: categoriesField
             }, {
+                header: 'ชื่อสินค้า',
+                width: 180,
+                sortable: true,
+                dataIndex: 'ProductName',
+                renderer: Ext.ux.renderer.Combo(productsField),
+                editor: productsField
+            },
+            {
                 header: 'จำนวน',
                 width: 130,
                 sortable: true,
@@ -224,13 +332,22 @@
                 field: {
                     xtype: 'numberfield'
                 }
-            }, {
+            },
+            {
+                header: 'หน่วย',
+                width: 130,
+                sortable: true,
+                dataIndex: 'UnitName',
+                renderer: Ext.ux.renderer.Combo(unitsField),
+                editor: unitsField
+            },
+            {
                 header: 'ราคา',
                 width: 130,
                 sortable: true,
                 renderer: Ext.util.Format.usMoney,
                 summaryRenderer: Ext.util.Format.usMoney,
-                summaryType : 'sum',
+                summaryType: 'sum',
                 dataIndex: 'Price',
                 field: {
                     xtype: 'numberfield'
@@ -241,18 +358,27 @@
                 sortable: false,
                 groupable: false,
                 renderer: function (value, metaData, record, rowIdx, colIdx, store, view) {
+
+                    var total = 0;
+                    store.each(function (rec) {
+                        total += rec.get('Amount') * rec.get('Price');
+                    });
+
+                    Ext.getCmp('totalSummary').setText('ราคารวม :' + total);
+
                     return Ext.util.Format.usMoney(record.get('Amount') * record.get('Price'));
                 },
                 summaryType: function (records) {
-                    var i = 0,
-                    length = records.length,
+
+                    var length = records.length,
                     total = 0,
                     record;
 
-                    for (; i < length; ++i) {
+                    for (var i = 0; i < length; ++i) {
                         record = records[i];
                         total += record.get('Amount') * record.get('Price');
                     }
+
                     return total;
                 },
                 summaryRenderer: Ext.util.Format.usMoney
@@ -286,30 +412,19 @@
     onSelectChange: function (selModel, selections) {
         this.down('#delete').setDisabled(selections.length === 0);
     },
-    onSelectedCategories: function () {
-        //        var products = Ext.getElementById('productsField');
-        //        var id = this.val();
-        //
-        //        products.store.reload({
-        //            params: { id: id }
-        //        });
-    },
-    onSelctedProduct: function () {
-
-    },
     onAddClick: function () {
-        var rec = new EOQ.model.PurchaseOrder({
+        var rec = new window.EOQ.model.PurchaseOrder({
             ProductID: 0,
             ProductName: '',
             CategoryID: 112,
             CategoryName: '',
             Amount: 0,
             UnitID: 0,
-            UnitName : '',
+            UnitName: '',
             name: 0.00
         }),
-            
-         
+
+
             me = this,
             edit = me.cellEditing;
 
@@ -323,55 +438,51 @@
 
     },
     onSync: function () {
-        this.Store.sync();
+        var me = this;
+        me.Store.sync();
+        Ext.getCmp('totalSummary').setText('ราคารวม :' + 0);
+        me.grid.store.clearData();
+        me.grid.view.refresh();
     },
     onDeleteClick: function () {
         var me = this;
+        Ext.MessageBox.confirm('ยืนยัน', 'คุณต้องการลบแถวข้อมูลหรือไม่?', function (cbtn, bool) {
+            if (cbtn == 'yes') {
 
-        Ext.MessageBox.show({
-            msg: 'Please wait update status items...',
-            width: 300,
-            closable: false
-        });
-
-        var selection = me.grid.getSelectionModel().getSelection();
-        if (selection) {
-            me.Store.remove(selection);
-            //console.log(me.selection);
-        }
-    },
-    onSelectedCombo: function (options) {
-        var value = options.value;
-        var combo = options.combo;
-
-        var returnValue = value;
-        var valueField = combo.valueField;
-
-
-        var idx = combo.store.findBy(function (record) {
-
-            if (record.get(valueField) == value) {
-                returnValue = record.get(combo.displayField);
-                record.set(combo.valueField, value);
-                record.dirty = true;
-                record.editing = true;
-                return true;
+                var selection = me.grid.getSelectionModel().getSelection();
+                if (selection) {
+                    me.Store.remove(selection);
+                }
             }
-            return false;
         });
+    }, getProductPrice: function (record, cb) {
+        var params = {};
+        params.ProductId = record.get("ProductID");
+        params.UnitId = record.get("UnitID");
 
-        // This is our application specific and might need to be removed for your apps
-        if (idx < 0 && value == 0) {
-            returnValue = '';
-        }
+        $.ajax({
+            type: "GET",
+            cache: false,
+            data: params,
+            url: window.get_product_price,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var price;
+                if (typeof result.data[0] == "undefined") {
+                    price = 0;
+                } else {
+                    price = result.data[0].Price;
+                }
+                if (typeof cb == "function") {
+                    cb(price);
+                }
 
-        return returnValue;
-    },
-    Combo: function (combo) {
-        var me = this;
-        return function (value, meta, record) {
-            return me.onSelectedCombo({ value: value, meta: meta, record: record, combo: combo });
-        };
+                return price;
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                return null;
+            }
+        });
     }
-
 });

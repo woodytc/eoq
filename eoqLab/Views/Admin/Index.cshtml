@@ -76,7 +76,8 @@
     window.deleteColor = '@Url.Action("DeleteColor", "Admin")';
     window.gridColorData = '@Url.Action("GridColor", "Admin")';
     window.catelogComboBox = '@Url.Action("GetCatelogy", "Admin")';
-    
+    window.branchCombobox = '@Url.Action("GetBranch", "Admin")';
+
     //brand
     window.createBrand = '@Url.Action("CreateBrand", "Admin")';
     window.updateBrand = '@Url.Action("UpdateBrand", "Admin")';
@@ -137,7 +138,7 @@
 <script src="@Url.Content("~/app/view/windowsadmin/EditSizesWindow.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/windowsadmin/EditCatelogyWindow.js")" type="text/javascript"></script>
 
-<script src="@Url.Content("~/app/view/windowsadmin/ImportWindow.js")" type="text/javascript"></script>
+
 
 <!-- start main app -->
 <script type="text/javascript">
@@ -222,12 +223,11 @@
         var customerForm = new CustomerForm({ id: 'customerform', region: 'north' });
         var supplierFrom = new SupplierFrom({ id: 'suupplierform', region: 'north' });
         var departmentFrom = new DepartmentFrom({ id: 'suupplierform', region: 'north' });
-        var importwindwosFrom = new ImportWindow({ id: 'suupplierform', region: 'north' });
         //var celledit = new CellEdit({ id: 'celleditfrom', region: 'north' });
         //var test1 = new TestFrom({ id: 'TestFrom', region: 'north' });
         //userManagementForm.setStore(userstore);
 
-        var inAdmin = "adminTest"; //"@ViewBag.InAdminRole";
+        var inAdmin = "@ViewBag.InAdminRole";
 
         //Tab Common
         var color = new ColorForm({ id: 'colorform', region: 'north' });
@@ -248,7 +248,7 @@
         //tabItems.push(adminManagementForm);
         tabItems.push(catelogy);
         tabItems.push(meterialForm);
-        tabItems.push(importwindwosFrom);
+        //tabItems.push(importwindwosFrom);
         //tabItems.push(departmentFrom);
         //tabItems.push(supplierFrom);
 
@@ -268,8 +268,8 @@
                         xtype: 'panel',
                         region: 'north',
                         height: 25, // give north and south regions a height
-                        title: 'Device Management [ ' + 'currentUser' + ' : ' + 'CurrentUserRole'
-                                + ' ]<a href=' + 'actionLogoff' + ' style="font-family:verdana;font-size:12px;color:red;text-decoration: none;">   Logoff</a>'
+                        title: 'Device Management [ ' + currentUser + ' : ' + CurrentUserRole
+                                + ' ]<a href=' + actionLogoff + ' style="font-family:verdana;font-size:12px;color:red;text-decoration: none;">   Logoff</a>'
                     },
                     {
                         xtype: 'tabpanel',
