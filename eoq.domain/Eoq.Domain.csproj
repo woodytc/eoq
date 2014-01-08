@@ -75,6 +75,7 @@
     <Compile Include="Domain\Branch.cs" />
     <Compile Include="Domain\Brand.cs" />
     <Compile Include="Domain\Cashier.cs" />
+    <Compile Include="Domain\CashierMaterial.cs" />
     <Compile Include="Domain\Color.cs" />
     <Compile Include="Domain\Catelogy.cs" />
     <Compile Include="Domain\MaterialCat.cs" />

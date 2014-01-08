@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eoqLab", "eoqLab\eoqLab.csproj", "{A0689D01-1412-4736-B2EF-55DCDC60B4C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eoq.Domain", "eoq.domain\Eoq.Domain.csproj", "{839F5D90-FAD8-45F9-A3AD-8C6F668E704A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eoq.Mappings.FluentNh", "Eoq.Mappings.FluentNh\Eoq.Mappings.FluentNh.csproj", "{FDDA6510-4ADE-4E6E-9F69-B7C191934B31}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A0689D01-1412-4736-B2EF-55DCDC60B4C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0689D01-1412-4736-B2EF-55DCDC60B4C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0689D01-1412-4736-B2EF-55DCDC60B4C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0689D01-1412-4736-B2EF-55DCDC60B4C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{839F5D90-FAD8-45F9-A3AD-8C6F668E704A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{839F5D90-FAD8-45F9-A3AD-8C6F668E704A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{839F5D90-FAD8-45F9-A3AD-8C6F668E704A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{839F5D90-FAD8-45F9-A3AD-8C6F668E704A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDDA6510-4ADE-4E6E-9F69-B7C191934B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDDA6510-4ADE-4E6E-9F69-B7C191934B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDDA6510-4ADE-4E6E-9F69-B7C191934B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDDA6510-4ADE-4E6E-9F69-B7C191934B31}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

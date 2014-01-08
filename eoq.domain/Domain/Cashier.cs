@@ -9,7 +9,7 @@ namespace Eoq.Domain
     public class Cashier
     {
         public virtual int Id { get; set; }
-        public virtual int StockId { get; set; }
+        //public virtual int StockId { get; set; }
         public virtual int BranchId { get; set; }
         public virtual string Amount { get; set; }
         public virtual decimal TotalPrice { get; set; }

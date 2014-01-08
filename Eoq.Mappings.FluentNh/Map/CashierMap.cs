@@ -16,7 +16,7 @@ namespace Eoq.Mappings.FluentNh
             Table("Cashier");
             LazyLoad();
             Id(x => x.Id).GeneratedBy.Identity().Column("ID");
-            Map(x => x.StockId).Column("Stock_ID").Not.Nullable();
+            //Map(x => x.StockId).Column("Stock_ID").Not.Nullable();
             Map(x => x.BranchId).Column("Branch_ID").Not.Nullable();
             Map(x => x.Amount).Column("Amount").Not.Nullable();
             Map(x => x.TotalPrice).Column("Total_Price").Not.Nullable();

@@ -65,15 +65,16 @@ namespace eoqLab.Controllers
             _userName = User.Identity.Name;
 
             //check login
+            
             if (string.IsNullOrEmpty(_userName))
             {
                 return RedirectToAction("Logon", "Account");
             }
 
-            RolePrincipal rolePrincipal = (RolePrincipal)User;
-            roleArray = rolePrincipal.GetRoles();
-
-            string role = "";
+            //RolePrincipal rolePrincipal = (RolePrincipal)User;
+//            roleArray[0]= "admin";
+//
+//            string role = "";
             
             ViewBag.AuthPrinciple = false;
             ViewBag.AuthScheme = false;
@@ -82,7 +83,7 @@ namespace eoqLab.Controllers
             ViewBag.AuthQuickDeploy = false;
             ViewBag.InAdminRole = false;
 
-            if (User.IsInRole("admin"))
+            if(true) //(User.IsInRole("admin"))
             {
                 ViewBag.AuthPrinciple = true;
                 ViewBag.AuthScheme = true;
@@ -101,19 +102,19 @@ namespace eoqLab.Controllers
                 return RedirectToAction("AddRoles", "UserManagement");
             }
 
-            foreach (var item in roleArray)
-            {
-                role += item + ",";
-            }
-            if (!role.Equals(""))
-            {
-                role = role.Remove(role.Length - 1);
-            }
+//            foreach (var item in roleArray)
+//            {
+//                role += item + ",";
+//            }
+//            if (!role.Equals(""))
+//            {
+//                role = role.Remove(role.Length - 1);
+//            }
 
             ViewBag.CurrentDateServerSt = DateTime.Now.ToString("dd/MM/yyyy");
             ViewBag.CurrentTimeServerSt = DateTime.Now.ToString("HH:mm");
             ViewBag.CurrentUser = _userName;
-            ViewBag.CurrentUserRole = role;
+            ViewBag.CurrentUserRole = "admin";
 
             return View();
         }

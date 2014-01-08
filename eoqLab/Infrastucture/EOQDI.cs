@@ -125,6 +125,12 @@ namespace eoqLab.Infrastucture
             kernel.Bind<ICashierRepository>()
                 .To<CashierRepository>()
                 .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
+
+            //Cashier Material
+            kernel.Bind<ICashierMaterialRepository>()
+                .To<CashierMaterialRepository>()
+                .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
+
             //UserInBranchs
             kernel.Bind<IUserInBranchsRepository>()
                 .To<UserInBranchsRepository>()
