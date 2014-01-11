@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Eoq.Domain;
 using Eoq.Mappings.FluentNh.Repository;
 using eoqLab.Models;
 
@@ -286,10 +287,11 @@ namespace eoqLab.Controllers
             try
             {
                 var cashier = new Eoq.Domain.Cashier(){ BranchId = this.Branch };
-                if (purchaseOrder != null)
+                if (purchaseOrder != null && purchaseOrders == null)
                 {
                     cashier.Amount        = purchaseOrder.Amount.ToString();
                     cashier.TotalPrice    = purchaseOrder.Amount * purchaseOrder.Price;
+                    cashier.Createdate    = DateTime.Now;
                     CashierRepository.Save(cashier);
                     
                     var cashierMaterial = new Eoq.Domain.CashierMaterial() { 
@@ -308,7 +310,7 @@ namespace eoqLab.Controllers
                         cashier.TotalPrice += purchaseOrderData.Price * purchaseOrderData.Amount;
                         totalAmount += purchaseOrderData.Amount;
                     }
-
+                    cashier.Createdate = DateTime.Now;
                     cashier.Amount = totalAmount.ToString();
                     CashierRepository.Save(cashier);
 
@@ -411,22 +413,78 @@ namespace eoqLab.Controllers
         [HttpPost]
         public JsonResult SaveStock(StockParams stockParams)
         {
-            var ob = new object();
-            return Json(new { data = ob, total = 0 }, JsonRequestBehavior.AllowGet); 
+            try
+            {
+                var p = stockParams;
+                var stock = new Stock()
+                {
+                    Price = p.Price,
+                    Amount = p.Amount,
+                    MeterialId = p.ProductID,
+                    BrandId = p.BrandID,
+                    UnitId = p.UnitID,
+                    Createdate = DateTime.Now
+                };
+
+                StockRepository.Save(stock);
+                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+                
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpPost]
         public JsonResult UpdateStock(StockParams stockParams)
         {
-            var ob = new object();
-            return Json(new { data = ob, total = 0 }, JsonRequestBehavior.AllowGet);    
+            try {
+                var p = stockParams;
+                var stock = new Stock()
+                                {
+                                 Price = p.Price,
+                                 Amount = p.Amount,
+                                 MeterialId = p.ProductID,
+                                 BrandId = p.BrandID,
+                                 UnitId = p.UnitID,
+                                 Createdate = DateTime.Now
+                                };
+                if (!String.IsNullOrEmpty(p.ID.ToString()) && p.ID > 0)
+                {
+                    stock.Id = p.ID;
+                    StockRepository.Update(stock);
+                    return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { success = false, error = "Nothing updated." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message}, JsonRequestBehavior.AllowGet);
+            }
+             
         }
 
         [HttpPost]
         public JsonResult DeleteStock(List<int> ids)
         {
-            var ob = new object();
-            return Json(new { data = ob, total = 0 }, JsonRequestBehavior.AllowGet);
+            try
+            {
+                foreach (var id in ids)
+                {
+                    var stock = new Stock();
+                    stock.Id = id;
+                    StockRepository.Delete(stock);
+                }
+                return Json(new { success = true, message = "Delete Successful" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "This material can not be delete because there are others from using." }, JsonRequestBehavior.AllowGet);
+            }
         }
         #endregion
 

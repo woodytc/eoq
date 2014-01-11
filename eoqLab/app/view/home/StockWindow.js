@@ -1,10 +1,10 @@
 ﻿Ext.define('eoq.view.home.StockWindow', {
     extend: 'Ext.window.Window',
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this,
             prefix = "Stock-",
-            url = window.save_stockURL,
+            url = window.create_stockURL,
             required = '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>';
 
         me.prefix = prefix;
@@ -90,7 +90,7 @@
         });
 
         var productsField = {
-            id: prefix + 'ProductID',
+            id: me.prefix + 'ProductID',
             xtype: 'combobox',
             typeAhead: true,
             triggerAction: 'query',
@@ -108,7 +108,7 @@
             afterLabelTextTpl: required,
             fieldStyle: 'text-align: right'
         }, categoriesField = {
-            id: prefix + 'CategoryID',
+            id: me.prefix + 'CategoryID',
             name: 'CategoryID',
             xtype: 'combobox',
             typeAhead: true,
@@ -131,7 +131,7 @@
                 }
             }
         }, unitsField = {
-            id: prefix + 'UnitID',
+            id: me.prefix + 'UnitID',
             name: 'UnitID',
             anchor: '-10',
             fieldLabel: 'หน่วย',
@@ -150,7 +150,7 @@
             allowBlank: false,
             editable: false
         }, colorsField = {
-            id: prefix + 'ColorID',
+            id: me.prefix + 'ColorID',
             name: 'ColorID',
             xtype: 'combobox',
             typeAhead: true,
@@ -167,7 +167,7 @@
             fieldStyle: 'text-align: right',
             allowBlank: false
         }, brandsField = {
-            id: prefix + 'BrandID',
+            id: me.prefix + 'BrandID',
             name: 'BrandID',
             anchor: '-10',
             fieldLabel: 'ยี่ห้อ',
@@ -207,17 +207,25 @@
                     unitsField,
                     colorsField,
                     brandsField,
-                    { id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
+                    { id: me.prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'numberfield', fieldStyle: 'text-align: right', allowBlank: false
                     },
-                    { id: prefix + 'Price', name: 'Price', fieldLabel: 'ราคา', labelStyle: 'text-align: right'
+                    { id: me.prefix + 'Price', name: 'Price', fieldLabel: 'ราคา', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'numberfield', fieldStyle: 'text-align: right', allowBlank: false
                     }
                 ], buttons: [{
                     text: 'บันทึก',
                     iconCls: 'icon-save',
                     onClick: function (button) {
-
+                        var data = {
+                            ProductID: Ext.getCmp(me.prefix + 'ProductID').getValue(),
+                            CategoryID: Ext.getCmp(prefix + 'CategoryID').getValue(),
+                            ColorID: Ext.getCmp(prefix + 'ColorID').getValue(),
+                            BrandID: Ext.getCmp(prefix + 'BrandID').getValue(),
+                            UnitID: Ext.getCmp(prefix + 'UnitID').getValue(),
+                            Amount: Ext.getCmp(prefix + 'Amount').getValue(),
+                            Price: Ext.getCmp(prefix + 'Price').getValue()
+                        };
                         Ext.Ajax.request({
                             method: 'post',
                             url: url,
@@ -226,7 +234,6 @@
                             dataType: "json",
                             success: function (response) {
                                 var text = response.responseText;
-                                me.Store.load();
                                 Ext.MessageBox.alert('บันทึกข้อมูลเรียบร้อย !!');
                                 // process server response here
                             }
@@ -245,6 +252,6 @@
                     }
                 }]
         }).show();
-        
+
     } //End constructor functional
 });
