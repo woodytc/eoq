@@ -117,7 +117,7 @@ namespace eoqLab.Controllers
                 {
 
                     //return RedirectToAction("Index", "Devices");
-                    return Json(new { success = true, url = "../Devices" }, JsonRequestBehavior.AllowGet);
+                    return Json(new { success = true, url = "../Home" }, JsonRequestBehavior.AllowGet);
 
                 }
                 else if (Roles.IsUserInRole(username, "admin"))
@@ -294,6 +294,7 @@ namespace eoqLab.Controllers
             try
             {
                 var user = Membership.GetUser(username);
+                if (user.IsLockedOut) user.UnlockUser();
                 bool isChangeSuccess = user.ChangePassword(user.ResetPassword(), password);
                 return Json(new { success = isChangeSuccess }, JsonRequestBehavior.AllowGet);
             }
