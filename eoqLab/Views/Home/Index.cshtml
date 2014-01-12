@@ -9,6 +9,7 @@
 <script src="@Url.Content("~/app/model/home/MainproductModel.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/model/home/PurchaseOrderModel.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/model/home/StockModel.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/model/home/SalesItemModel.js")" type="text/javascript"></script>
 
 <!--Combobox rendered-->
 <script src="@Url.Content("~/app/view/home/ComboboxRender.js")" type="text/javascript"></script>
@@ -17,7 +18,8 @@
 <script src="@Url.Content("~/app/view/home/PurchaseOrderForm.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/home/StockForm.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/app/view/home/StockWindow.js")" type="text/javascript"></script>
-
+<script src="@Url.Content("~/app/view/home/SaleItemsForm.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/app/view/home/SaleItemWindow.js")" type="text/javascript"></script>
 <!-- Start script -->
 <script type="text/javascript">
     Ext.Loader.setConfig({ enabled: true });
@@ -50,11 +52,16 @@
     window.create_stockURL = '@Url.Action("SaveStock","Home")';
     window.update_stockURL = '@Url.Action("UpdateStock","Home")';
     window.delete_stockURL = '@Url.Action("DeleteStock","Home")';
+
+    /**Sale Item URLS*/
+    window.read_saleItemsURL = '@Url.Action("SaleItemList","Home")';
+    window.read_saleItemURL = '@Url.Action("SaleItemDetail","Home")';
     
     //create front end view
     var mainProductForm     = new MainProductForm(),
         purchaseOrderForm   = new PurchaseOrderForm(),
-        stockForm           = new StockForm();
+        stockForm           = new StockForm(),
+        saleForm            = new SaleItemForm();
     
     //Create main View
     window.viewport = Ext.create('Ext.Viewport', {
@@ -105,7 +112,7 @@
                                  region: 'north',
                                  title: 'รายการขาย',
                                  minHeight: 450,
-                                 items: []
+                                 items: [saleForm]
                              },
                              {
                                  id: 'tab5',

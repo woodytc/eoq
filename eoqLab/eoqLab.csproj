@@ -180,6 +180,7 @@
     <Content Include="app\model\GpsFirstFix.js" />
     <Content Include="app\model\home\MainproductModel.js" />
     <Content Include="app\model\home\PurchaseOrderModel.js" />
+    <Content Include="app\model\home\SalesItemModel.js" />
     <Content Include="app\model\home\StockModel.js" />
     <Content Include="app\model\ImpactAlert1.js" />
     <Content Include="app\model\ImpactAlert2.js" />
@@ -223,8 +224,11 @@
     <Content Include="app\view\device\SimulationScriptWindow.js" />
     <Content Include="app\view\device\Toolbar.js" />
     <Content Include="app\view\home\ComboboxRender.js" />
+    <Content Include="app\view\home\LiveSearchGridPanel.js" />
     <Content Include="app\view\home\MainProductForm.js" />
     <Content Include="app\view\home\PurchaseOrderForm.js" />
+    <Content Include="app\view\home\SaleItemsForm.js" />
+    <Content Include="app\view\home\SaleItemWindow.js" />
     <Content Include="app\view\home\StockForm.js" />
     <Content Include="app\view\home\StockWindow.js" />
     <Content Include="app\view\users\EditUserManagemantWindow.js" />
@@ -3138,7 +3142,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>4145</DevelopmentServerPort>
+          <DevelopmentServerPort>1451</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

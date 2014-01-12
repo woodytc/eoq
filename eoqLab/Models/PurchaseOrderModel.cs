@@ -7,15 +7,15 @@ namespace eoqLab.Models
 {
     public class PurchaseOrderModel
     {
-
-        public int MaterialId { get; set; }
-        public string MaterialName { get; set; }
-        public string project { get; set; }
-        public int taskId { get; set; }
-        public string description { get; set; }
-        public int estimate { get; set; }
-        public decimal rate { get; set; }
-        public string due { get; set; }
+        public string id { get; set; }
+        public int ProductID { get; set; }
+        public string ProductName { get; set; }
+        public int CategoryID { get; set; }
+        public string CategoryName { get; set; }
+        public int UnitID { get; set; }
+        public string UnitName { get; set; }
+        public int Amount { get; set; }
+        public int Price { get; set; }
 
     }
 }
