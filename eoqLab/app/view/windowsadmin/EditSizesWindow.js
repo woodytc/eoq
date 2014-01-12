@@ -18,7 +18,7 @@
             layout: { type: 'table', columns: 1 },
             defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
             items: [
-                { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'ยี่ห้อ', afterLabelTextTpl: required, labelStyle: 'text-align: right'
+                { id: me.prefix + 'Name', name: 'Name', fieldLabel: 'ขนาดสินค้า', afterLabelTextTpl: required, labelStyle: 'text-align: right'
                     , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false, emptyText: '[นิ้ว,เซนติเมตร]'
                 }
             ]
@@ -70,7 +70,7 @@
                                 var data = Ext.decode(action.response.responseText);
 
 
-                                Ext.MessageBox.alert('Status Register user comple !!');
+                                Ext.MessageBox.alert('Status', 'Save Sucesssful');
                                 me.intend = "save-success";
                                 me.close();
 
@@ -78,7 +78,7 @@
                             failure: function (formPanel, action) {
                                 var data = Ext.decode(action.response.responseText);
 
-                                Ext.MessageBox.alert('Status: failure register user', data.error);
+                                Ext.MessageBox.alert('Status', data.error);
                             }
                         }); // end form.submit
                     } // end isvalid

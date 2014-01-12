@@ -194,7 +194,7 @@ Ext.define('EditEmployeeWindow', {
                                 var data = Ext.decode(action.response.responseText);
 
 
-                                Ext.MessageBox.alert('Status Register user comple !!');
+                                Ext.MessageBox.alert('Status', 'Save Sucesssful');
                                 me.intend = "save-success";
                                 me.close();
 
@@ -202,7 +202,7 @@ Ext.define('EditEmployeeWindow', {
                             failure: function (formPanel, action) {
                                 var data = Ext.decode(action.response.responseText);
 
-                                Ext.MessageBox.alert('Status: failure register user', data.error);
+                                Ext.MessageBox.alert('Status', data.error);
                             }
                         }); // end form.submit
                     } // end isvalid

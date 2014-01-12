@@ -70,7 +70,7 @@
                                 var data = Ext.decode(action.response.responseText);
 
 
-                                Ext.MessageBox.alert('Status Register user comple !!');
+                                Ext.MessageBox.alert('Status');
                                 me.intend = "save-success";
                                 me.close();
 
@@ -78,7 +78,7 @@
                             failure: function (formPanel, action) {
                                 var data = Ext.decode(action.response.responseText);
 
-                                Ext.MessageBox.alert('Status: failure register user', data.error);
+                                Ext.MessageBox.alert('Status', data.error);
                             }
                         }); // end form.submit
                     } // end isvalid

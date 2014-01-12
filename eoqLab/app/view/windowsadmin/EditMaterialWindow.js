@@ -99,7 +99,7 @@
                             success: function (formPanel, action) {
                                 var data = Ext.decode(action.response.responseText);
 
-                                Ext.MessageBox.alert('Status');
+                                Ext.MessageBox.alert('Status', 'Save Sucesssful');
                                 me.intend = "save-success";
                                 me.close();
 
@@ -107,7 +107,7 @@
                             failure: function (formPanel, action) {
                                 var data = Ext.decode(action.response.responseText);
 
-                                Ext.MessageBox.alert('Status: failure register user', data.error);
+                                Ext.MessageBox.alert('Status', data.error);
                             }
                         }); // end form.submit
                     } // end isvalid

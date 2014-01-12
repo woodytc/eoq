@@ -70,20 +70,21 @@ Ext.define('EditUserManagemantWindow', {
             layout: { type: 'table', columns: 1 },
             defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
             items: [
-                { id: me.prefix + 'username', name: 'Username', fieldLabel: 'Username'
+                { id: me.prefix + 'username', name: 'Username', fieldLabel: 'Username', labelStyle: 'text-align: right'
                     , xtype: 'textfield', fieldStyle: 'text-align: right', allowBlank: false
                 },
-                { id: me.prefix + 'email', name: 'E-Mail', fieldLabel: 'E-Mail'
+                { id: me.prefix + 'email', name: 'E-Mail', fieldLabel: 'E-Mail', labelStyle: 'text-align: right'
                     , xtype: 'textfield', vtype: 'email', fieldStyle: 'text-align: right', allowBlank: false
                 },
-                { id: me.prefix + 'password', name: 'Password', fieldLabel: 'Password'
+                { id: me.prefix + 'password', name: 'Password', fieldLabel: 'Password', labelStyle: 'text-align: right'
                     , xtype: 'textfield', inputType: 'password', fieldStyle: 'text-align: right', minLength: 6, allowBlank: false
                 },
-                { id: me.prefix + 'repassword', name: 'Repassword', fieldLabel: 'Repassword'
+                { id: me.prefix + 'repassword', name: 'Repassword', fieldLabel: 'Repassword', labelStyle: 'text-align: right'
                     , xtype: 'textfield', inputType: 'password', fieldStyle: 'text-align: right', minLength: 6, allowBlank: false
                 },
                 { id: me.prefix + 'role',
-                    name: 'Role',
+                    name: 'Role', 
+                    labelStyle: 'text-align: right',
                     xtype: 'combo',
                     mode: 'local',
                     editable: false,
@@ -97,7 +98,7 @@ Ext.define('EditUserManagemantWindow', {
                 { id: prefix + 'branch', name: 'branchID', xtype: 'combo', mode: 'local', editable: false, displayField: 'BranchName', valueField: 'BranchID'
                         , queryMode: 'local', allowBlank: false, emptyText: 'selected'
                     , store: me.branchCombobox,
-                    fieldLabel: 'หมวดสินค้า', labelStyle: 'text-align: right', width: 500
+                    fieldLabel: 'Branch', labelStyle: 'text-align: right', width: 500
                 }
             ]
         };
