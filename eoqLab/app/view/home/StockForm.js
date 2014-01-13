@@ -123,11 +123,6 @@
                 sortable: true,
                 dataIndex: 'ProductName'
             }, {
-                header: 'จำนวน',
-                width: 130,
-                sortable: true,
-                dataIndex: 'Amount'
-            }, {
                 header: 'หน่วย',
                 width: 130,
                 sortable: true,
@@ -154,6 +149,11 @@
                 width: 180,
                 sortable: false,
                 dataIndex: 'BrandName'
+            }, {
+                header: 'จำนวน',
+                width: 130,
+                sortable: true,
+                dataIndex: 'Amount'
             }, {
                 header: 'ราคา',
                 width: 130,

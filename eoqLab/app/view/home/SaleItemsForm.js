@@ -37,6 +37,7 @@
 
         //grid store
         me.Store = Ext.create('Ext.data.Store', {
+            id: me.prefix + 'salesStore',
             model: 'EOQ.Model.SalesItem',
             autoLoad: true,
             pageSize: 25,
@@ -81,7 +82,8 @@
                 text: 'ล้าง',
                 handler: function (btn, evt) {
                     Ext.getCmp('datepicker').setValue('');
-                    //Ext.getCmp(me.prefix + 'role').setValue('All Role');
+                    me.grid.store.clearData();
+                    me.grid.view.refresh();
                 } // end handler
             }]
 
@@ -160,86 +162,84 @@
         window.SaleItemForm.superclass.constructor.apply(this, arguments);
     }, onViewItemClick: function (dataview, record, parent, mode) {
         var saleItemId = record.get('SaleID'),
-            createDate = record.get("CreateDate");
-        console.log(record);
+            createDate = record.get("CreateDate"),
+            me = this,
+            prefix = "SaleItem-";
+
+        me.prefix = prefix;
+
         Ext.MessageBox.show({
             msg: 'กรุณารอสักครู่กำลังโหลดข้อมูล...', width: 300, closable: false
         });
 
+        //Define proxy datastore
+        var proxyOptions = {
+            type: 'ajax',
+            reader: {
+                type: 'json',
+                successProperty: 'success',
+                root: 'data',
+                messageProperty: 'message'
+            },
+            writer: {
+                type: 'json',
+                writeAllFields: false
+            },
+            listeners: {
+                exception: function (proxy, response, operation) {
+                    Ext.MessageBox.show({
+                        title: 'REMOTE EXCEPTION',
+                        msg: operation.getError(),
+                        icon: Ext.MessageBox.ERROR,
+                        buttons: Ext.Msg.OK
+                    });
+                }
+            }
+        };
 
-        var win = new Ext.Window({
-            id: "SaleItemPopup",
-            extend: 'Ext.window.Window',
-            initComponent: function (config) {
-                var me = this,
-                    prefix = "SaleItem-";
+        //Products List data
+        var saleItemProxy = proxyOptions;
+        saleItemProxy.api = {
+            read: window.read_saleItemURL
+        };
 
-                me.prefix = prefix;
+        me.SaleStore = Ext.create('Ext.data.Store', {
+            model: 'EOQ.Model.SalesItem',
+            proxy: saleItemProxy,
+            pageSize: 25,
+            encode: true,
+            autoLoad: true, //disable auto loading func.
+            baseParams: {
+                SaleItemID: saleItemId //, CreateDate: createDate
+            }, listeners: {
+                load: function (store, records) {
+                    
+                    Ext.getCmp(me.prefix + 'viewSaleDetail').loadRecord(store.getAt(0));
+                    
+                }
+            }
+        });
 
-                //Define proxy datastore
-                var proxyOptions = {
-                    type: 'ajax',
-                    reader: {
-                        type: 'json',
-                        successProperty: 'success',
-                        root: 'data',
-                        messageProperty: 'message'
-                    },
-                    writer: {
-                        type: 'json',
-                        writeAllFields: false
-                    },
-                    listeners: {
-                        exception: function (proxy, response, operation) {
-                            Ext.MessageBox.show({
-                                title: 'REMOTE EXCEPTION',
-                                msg: operation.getError(),
-                                icon: Ext.MessageBox.ERROR,
-                                buttons: Ext.Msg.OK
-                            });
-                        }
-                    }
-                };
+        //set params
+        me.SaleStore.getProxy().extraParams.SaleItemID = saleItemId;
 
-                //Products List data
-                var saleItemProxy = proxyOptions;
-                saleItemProxy.api = {
-                    read: window.read_saleItemURL
-                };
-
-                me.SaleStore = Ext.create('Ext.data.Store', {
-                    model: 'EOQ.Model.SalesItem',
-                    proxy: saleItemProxy,
-                    pageSize: 25,
-                    encode: true,
-                    autoLoad: false, //disable auto loading func.
-                    baseParams: {
-                        SaleItemID: saleItemId //, CreateDate: createDate
-                    }
-                });
-
-                //set params
-                me.SaleStore.getProxy().extraParams.SaleItemID = saleItemId;
-                //me.Store.getProxy().extraParams.CreateDate = createDate;
-
-                //create stock form
-                var saleItemWindow = new Ext.Window({
-                    id: prefix + 'view',
-                    store: me.SaleStore,
-                    iconCls: 'icon-details',
-                    title: 'รายละเอียดรายการขายสินค้า :' + createDate,
-                    y: 20,
-                    width: 500,
-                    resizable: false,
-                    modal: true,
-                    buttonAlign: 'center',
-                    xtype: 'fieldset',
-                    defaultType: 'textfield',
-                    layout: { type: 'table', columns: 1 },
-                    defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
-                    items: [{ id: prefix + 'ItemId', name: 'Amount', fieldLabel: 'รหัสสินค้า', labelStyle: 'text-align: right'
+        //create stock form
+        var saleItemWindow = new Ext.form.FormPanel({
+            id: me.prefix + 'viewSaleDetail',
+            store: me.SaleStore,
+            iconCls: 'icon-details',
+            y: 20,
+            width: 500,
+            resizable: false,
+            modal: true,
+            buttonAlign: 'center',
+            xtype: 'fieldset',
+            defaultType: 'textfield',
+            layout: { type: 'table', columns: 1 },
+            defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
+            items: [{ id: prefix + 'ItemId', name: 'Amount', fieldLabel: 'รหัสสินค้า', labelStyle: 'text-align: right'
                     , xtype: 'textfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'SaleID'
-                    },
+            },
                     { id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
                     , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'Amount'
                     },
@@ -248,28 +248,48 @@
                     },
                     { id: prefix + 'Tax', name: 'Tax', fieldLabel: 'ภาษี', labelStyle: 'text-align: right'
                     , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'Tax'
+                    },
+                    { id: prefix + 'CreateDate', name: 'CreateDate', fieldLabel: 'วันเดือนปี', labelStyle: 'text-align: right'
+                    , xtype: 'datefield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'CreateDate'
                     }
-                ], buttons: [
+                ]
+        });
+
+        var win = Ext.widget('window', {
+            title: 'รายละเอียดรายการขายสินค้า :' + createDate,
+            closeAction: 'hide',
+            id: me.prefix + 'saleItemWindow',
+            height: Ext.getBody().getViewSize().height * 0.6, // Change to support labtop screen
+            width: Ext.getBody().getViewSize().width * 0.6,  // Change to support labtop screen
+            layout: 'fit',
+            resizable: true,
+            modal: true,
+            items: saleItemWindow,
+            buttons: [
                     {
                         iconCls: 'icon-cancel',
                         text: 'ปิดหน้าต่าง',
                         name: 'button-cancel',
                         handler: function (btn, evt) {
-                            saleItemWindow.destroy();
+                            win.destroy();
                         }
                     }]
-                }).show();
-
-                //load store
-                me.SaleStore.load();
-
-            } //End constructor functional
         });
 
         Ext.MessageBox.hide();
+        win.show();
 
     }, onSearchClick: function () {
+        var me = this;
+        me.toDate = Ext.getCmp('datepicker').getValue();
+
+        //Call function search load data display grid
+        var prefix = 'SalesItem-';
+        var quickStore = Ext.getStore(prefix + 'salesStore');
+        quickStore.getProxy().api.read = (me.toDate == null || me.toDate == "") ? window.read_saleItemsURL : window.search_saleItemURL;
+        quickStore.getProxy().extraParams.SaleDate = me.toDate;
+        var pagingToolbar = Ext.getCmp(prefix + 'PagingToolbar');
+        pagingToolbar.moveFirst();
 
     }
-
 });

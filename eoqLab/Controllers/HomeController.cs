@@ -493,6 +493,7 @@ namespace eoqLab.Controllers
         [HttpGet]
         public JsonResult SaleItemList()
         {
+            
             var cashierList = this.CashierRepository.GetAll();
             var saleItems = from saleitem in cashierList
                             where saleitem.BranchId == this.Branch
@@ -502,6 +503,26 @@ namespace eoqLab.Controllers
                             {
                                 SaleID      = saleitem.Id,
                                 CreateDate  = dateTime.Value 
+                            };
+
+            return Json(new { data = saleItems, total = saleItems.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult SearchSaleItemList(SaleItemParams saleParams)
+        {
+
+            var cashierList = this.CashierRepository.GetAll();
+            var saleItems = from saleitem in cashierList
+                            where saleitem.BranchId == this.Branch
+                            let dateTime = saleitem.Createdate
+                            where dateTime != null && dateTime.Value.Year == saleParams.SaleDate.Year
+                            && dateTime.Value.Month == saleParams.SaleDate.Month
+                            && dateTime.Value.Day == saleParams.SaleDate.Day
+                            select new
+                            {
+                                SaleID = saleitem.Id,
+                                CreateDate = dateTime.Value
                             };
 
             return Json(new { data = saleItems, total = saleItems.Count() }, JsonRequestBehavior.AllowGet);
