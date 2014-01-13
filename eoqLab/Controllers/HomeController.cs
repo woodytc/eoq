@@ -401,7 +401,7 @@ namespace eoqLab.Controllers
                                ColorID          = color.Id,
                                ColorName        = color.Name,
                                UnitID           = unit.ID,
-                               Unit             = unit.UnitName,
+                               unit.UnitName,
                                BrandID          = brand.Id,
                                BrandName        = brand.Name,
                                stock.Amount,

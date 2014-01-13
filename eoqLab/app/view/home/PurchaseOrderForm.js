@@ -45,9 +45,9 @@
         //grid store
         me.Store = Ext.create('Ext.data.Store', {
             model: 'EOQ.model.PurchaseOrder',
-            autoLoad: true,
+            //autoLoad: true,
             //autoSync: true,
-            data: window.purchaseOrderData,
+            //data: window.purchaseOrderData,
             sorters: { property: 'Total', direction: 'ASC' },
             groupField: 'CategoryName',
             proxy: purchaseOrderProxy
@@ -296,6 +296,7 @@
                 tdCls: 'ProductName',
                 sortable: true,
                 dataIndex: 'ProductID',
+                hidden : true,
                 //hideable: false,
                 flex: 1,
                 summaryType: 'count',
@@ -308,14 +309,25 @@
                 sortable: true,
                 dataIndex: 'CategoryName',
                 renderer: Ext.ux.renderer.Combo(categoriesField),
-                editor: categoriesField
+                editor: categoriesField,
+                flex : 1
             }, {
                 header: 'ชื่อสินค้า',
                 width: 180,
                 sortable: true,
                 dataIndex: 'ProductName',
                 renderer: Ext.ux.renderer.Combo(productsField),
-                editor: productsField
+                editor: productsField,
+                flex: 1
+            },
+            {
+                header: 'หน่วย',
+                width: 130,
+                sortable: true,
+                dataIndex: 'UnitName',
+                renderer: Ext.ux.renderer.Combo(unitsField),
+                editor: unitsField,
+                flex: 1
             },
             {
                 header: 'จำนวน',
@@ -332,14 +344,6 @@
                 field: {
                     xtype: 'numberfield'
                 }
-            },
-            {
-                header: 'หน่วย',
-                width: 130,
-                sortable: true,
-                dataIndex: 'UnitName',
-                renderer: Ext.ux.renderer.Combo(unitsField),
-                editor: unitsField
             },
             {
                 header: 'ราคา',

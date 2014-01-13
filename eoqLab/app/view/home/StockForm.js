@@ -44,7 +44,7 @@
             autoLoad: true,
             //autoSync : true,
             pageSize: 25,
-            data: window.TestStockData,
+            //data: window.TestStockData,
             totalCount: window.TestStockData.length,
             encode: true,
             proxy: stockProxy

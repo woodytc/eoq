@@ -147,19 +147,12 @@
     <Compile Include="Models\CategoryParam.cs" />
     <Compile Include="Models\ProductParams.cs" />
     <Compile Include="Models\PurchaseOrderModel.cs" />
-    <Compile Include="Models\Report01Model.cs" />
     <Compile Include="Models\StockParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Report\CrystalReport1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CrystalReport1.rpt</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Settings.cs" />
   </ItemGroup>
@@ -2669,6 +2662,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\scripts\" />
+    <Folder Include="Report\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Admin\Index.cshtml" />
@@ -2689,7 +2683,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Report\CrystalReport1.mht" />
     <None Include="Scripts\extjs\resources\sass\.sass-cache\084835bc2350a7b91122620a8540fd51fddebd95\_contrast.scssc" />
     <None Include="Scripts\extjs\resources\sass\.sass-cache\17246b5853e6411bd51edb7f917476a1e02878ed\_boundlist.scssc" />
     <None Include="Scripts\extjs\resources\sass\.sass-cache\17246b5853e6411bd51edb7f917476a1e02878ed\_btn-group.scssc" />
@@ -3115,12 +3108,6 @@
       <Project>{FDDA6510-4ADE-4E6E-9F69-B7C191934B31}</Project>
       <Name>Eoq.Mappings.FluentNh</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Report\CrystalReport1.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>CrystalReport1.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
