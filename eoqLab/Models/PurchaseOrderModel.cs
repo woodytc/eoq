@@ -7,7 +7,7 @@ namespace eoqLab.Models
 {
     public class PurchaseOrderModel
     {
-        public string id { get; set; }
+        public int Id { get; set; }
         public int ProductID { get; set; }
         public string ProductName { get; set; }
         public int CategoryID { get; set; }

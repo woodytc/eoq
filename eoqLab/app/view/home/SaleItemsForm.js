@@ -237,25 +237,20 @@
             defaultType: 'textfield',
             layout: { type: 'table', columns: 1 },
             defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
-            items: [{ id: prefix + 'ItemId', name: 'Amount', fieldLabel: 'รหัสสินค้า', labelStyle: 'text-align: right'
-                    , xtype: 'textfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'SaleID'
-            },
-                    { id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
+            items: [
+                    { id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวนรวม', labelStyle: 'text-align: right'
                     , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'Amount'
                     },
                     { id: prefix + 'TotalPrice', name: 'TotalPrice', fieldLabel: 'ราคารวม', labelStyle: 'text-align: right'
                     , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'TotalPrice'
                     },
-                    { id: prefix + 'Tax', name: 'Tax', fieldLabel: 'ภาษี', labelStyle: 'text-align: right'
+                    { id: prefix + 'Tax', name: 'Tax', fieldLabel: 'ภาษีรวม', labelStyle: 'text-align: right'
                     , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'Tax'
-                    },
-                    { id: prefix + 'CreateDate', name: 'CreateDate', fieldLabel: 'วันเดือนปี', labelStyle: 'text-align: right'
-                    , xtype: 'datefield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'CreateDate'
                     }
                 ]
         });
 
-        var win = Ext.widget('window', {
+        window.salewin = Ext.widget('window', {
             title: 'รายละเอียดรายการขายสินค้า :' + createDate,
             closeAction: 'hide',
             id: me.prefix + 'saleItemWindow',
@@ -263,6 +258,7 @@
             width: Ext.getBody().getViewSize().width * 0.6,  // Change to support labtop screen
             layout: 'fit',
             resizable: true,
+            closeable : true,
             modal: true,
             items: saleItemWindow,
             buttons: [
@@ -271,13 +267,13 @@
                         text: 'ปิดหน้าต่าง',
                         name: 'button-cancel',
                         handler: function (btn, evt) {
-                            win.destroy();
+                            window.salewin.destroy();
                         }
                     }]
         });
 
         Ext.MessageBox.hide();
-        win.show();
+        window.salewin.show();
 
     }, onSearchClick: function () {
         var me = this;

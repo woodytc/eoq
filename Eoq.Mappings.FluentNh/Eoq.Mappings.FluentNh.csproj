@@ -81,7 +81,7 @@
     <Compile Include="Map\BranchMap.cs" />
     <Compile Include="Map\BrandMap.cs" />
     <Compile Include="Map\CashierMap.cs" />
-    <Compile Include="Map\CashierMaterialMap.cs" />
+    <Compile Include="Map\CashierHeaderMap.cs" />
     <Compile Include="Map\ColorMap.cs" />
     <Compile Include="Map\CatelogyMap.cs" />
     <Compile Include="Map\SizesMap.cs" />
@@ -109,7 +109,7 @@
     <Compile Include="Repository\CatelogyRepository.cs" />
     <Compile Include="Repository\CashierRepository.cs" />
     <Compile Include="Repository\BranchRepository.cs" />
-    <Compile Include="Repository\CashierMaterialRepository.cs" />
+    <Compile Include="Repository\CashierHeaderRepository.cs" />
     <Compile Include="Repository\StockRepository.cs" />
     <Compile Include="Repository\SizesRepository.cs" />
     <Compile Include="Repository\BrandRepository.cs" />

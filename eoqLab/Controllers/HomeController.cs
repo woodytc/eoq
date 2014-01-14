@@ -19,7 +19,7 @@ namespace eoqLab.Controllers
         public IEmployeePhoneRepository EmployeePhoneRepository { get; set; }
         public IEmployeeMailRepository EmployeeMailRepository { get; set; }
         public ICashierRepository CashierRepository { get; set; }
-        public ICashierMaterialRepository CashierMaterialRepository { get; set; }
+        public ICashierHeaderRepository CashierHeaderRepository { get; set; }
 
         //common
         public IColorRepository ColorRepository { get; set; }
@@ -42,7 +42,7 @@ namespace eoqLab.Controllers
                               , ICatelogyRepository catelogyRepository
                               , IStockRepository stockRepository
                               , ICashierRepository cashierRepository
-                              , ICashierMaterialRepository cashierMaterialRepository
+                              , ICashierHeaderRepository cashierHeaderRepository
             )
         {
             EoqRepository = eoqRepository;
@@ -54,7 +54,7 @@ namespace eoqLab.Controllers
             EmployeeMailRepository = employeeEmailRepository;
 
             this.CashierRepository = cashierRepository;
-            this.CashierMaterialRepository = cashierMaterialRepository;
+            this.CashierHeaderRepository = cashierHeaderRepository;
 
             //common
             this.ColorRepository = colorRepository;
@@ -80,7 +80,10 @@ namespace eoqLab.Controllers
             var stockList = this.StockRepository.GetAll();
             var unitList = this.UnitRepository.GetAll();
             var productList = this.MaterialRepository.GetAll();
-
+            if (stockList == null)
+            {
+                return Json(new { data = stockList, total = 0 }, JsonRequestBehavior.AllowGet);
+            }
             var products = from stock in stockList
                     join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
                     join unit in unitList on stock.UnitId equals unit.ID
@@ -135,7 +138,10 @@ namespace eoqLab.Controllers
                 {
                     var productList = this.MaterialRepository.GetAll();
                     var stockList = this.StockRepository.GetAll();
-
+                    if (stockList == null)
+                    {
+                        return Json(new { data = stockList, total = 0 }, JsonRequestBehavior.AllowGet);
+                    }
                     var price = from stock in stockList
                                    join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
                                    where stock.BranchId == this.Branch
@@ -245,25 +251,59 @@ namespace eoqLab.Controllers
         {
             try
             {
-                if(purchaseOrder != null)
+                var cashier = new Eoq.Domain.CashierHeader
                 {
-                    var stock = new Eoq.Domain.Stock()
-                                    {
+                    Id = purchaseOrder.Id,
+                    BranchId = this.Branch,
+                    Updatedate = DateTime.Now
+                };
 
-                                        Amount = purchaseOrder.Amount
-                                        //Price  = purchaseOrder.price
-                                    };
-                }
-                else if (purchaseOrders != null)
+                if (purchaseOrders == null)
                 {
-                    foreach (var purchaseOrderData in purchaseOrders)
+                    CashierHeaderRepository.Update(cashier);
+
+                    var oldCashierMaterial = new Cashier {Id = purchaseOrder.Id};
+                    CashierRepository.Delete(oldCashierMaterial);
+
+                    var cashierMaterial = new Eoq.Domain.Cashier()
                     {
-                        
-                    }
+                        Id = cashier.Id,
+                        Material_ID = purchaseOrder.ProductID,
+                        Amount = purchaseOrder.Amount.ToString(),
+                        TotalPrice = purchaseOrder.Amount * purchaseOrder.Price,
+                        //Tax           = purchaseOrder.Tax,
+                        //IncudeTax     = purchaseOrder.IncludeTax
+                    };
+
+                    CashierRepository.Save(cashierMaterial);
+
                 }
                 else
                 {
-                    throw new Exception();
+
+                    CashierHeaderRepository.Update(cashier);
+
+                    //delete existing data
+                    var oldCashierMaterial = new Cashier { Material_ID = cashier.Id };
+                    CashierRepository.Delete(oldCashierMaterial);
+
+                    foreach (var purchaseOrderData in purchaseOrders)
+                    {
+                        //create new one
+                        var cashierMaterial = new Eoq.Domain.Cashier()
+                                                  {
+                                                      Id = cashier.Id,
+                                                      Material_ID = purchaseOrderData.ProductID,
+                                                      Amount = purchaseOrderData.Amount.ToString(),
+                                                      TotalPrice = purchaseOrderData.Amount * purchaseOrderData.Price,
+                                                      //Tax           = purchaseOrderData.Tax,
+                                                      //IncudeTax     = purchaseOrderData.IncludeTax
+                                                  };
+
+                        CashierRepository.Save(cashierMaterial);
+                    }
+
+                    return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
                 }
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -286,46 +326,50 @@ namespace eoqLab.Controllers
 
             try
             {
-                var cashier = new Eoq.Domain.Cashier(){ BranchId = this.Branch };
+                var cashier = new Eoq.Domain.CashierHeader
+                                  {
+                                        BranchId = this.Branch , 
+                                        Createdate    = DateTime.Now
+                                  };
+
                 if (purchaseOrder != null && purchaseOrders == null)
                 {
-                    cashier.Amount        = purchaseOrder.Amount.ToString();
-                    cashier.TotalPrice    = purchaseOrder.Amount * purchaseOrder.Price;
-                    cashier.Createdate    = DateTime.Now;
-                    CashierRepository.Save(cashier);
+                    CashierHeaderRepository.Save(cashier);
                     
-                    var cashierMaterial = new Eoq.Domain.CashierMaterial() { 
-                                                                                Id = cashier.Id , 
-                                                                                Material_ID = purchaseOrder.ProductID 
-                                                                            };
-
-                    CashierMaterialRepository.Save(cashierMaterial);
+                    var cashierMaterial = new Eoq.Domain.Cashier() { 
+                                                                        Id = cashier.Id , 
+                                                                        Material_ID = purchaseOrder.ProductID, 
+                                                                        Amount        = purchaseOrder.Amount.ToString(),
+                                                                        TotalPrice    = purchaseOrder.Amount * purchaseOrder.Price,
+                                                                        Tax           = 0,//purchaseOrder.Tax,
+                                                                        IncudeTax     = false//purchaseOrder.IncludeTax
+                                                                    };
+                    CashierRepository.Save(cashierMaterial);
+                    
                     
                 }
                 else if (purchaseOrders != null)
                 {
-                    var totalAmount = 0;
-                    foreach (var purchaseOrderData in purchaseOrders)
-                    {
-                        cashier.TotalPrice += purchaseOrderData.Price * purchaseOrderData.Amount;
-                        totalAmount += purchaseOrderData.Amount;
-                    }
-                    cashier.Createdate = DateTime.Now;
-                    cashier.Amount = totalAmount.ToString();
-                    CashierRepository.Save(cashier);
+                 
+                    CashierHeaderRepository.Save(cashier);
 
 
                     foreach (var purchaseOrderData in purchaseOrders)
                     {
 
-                        var cashierMaterial = new Eoq.Domain.CashierMaterial()
+                        var cashierMaterial = new Eoq.Domain.Cashier()
                         {
                             Id = cashier.Id,
-                            Material_ID = purchaseOrderData.ProductID
+                            Material_ID = purchaseOrderData.ProductID,
+                            Amount = purchaseOrderData.Amount.ToString(),
+                            TotalPrice = purchaseOrderData.Amount * purchaseOrderData.Price,
+                            Tax           = 0,//purchaseOrderData.Tax,
+                            IncudeTax     = false//purchaseOrderData.IncludeTax
                         };
 
-                        CashierMaterialRepository.Save(cashierMaterial);
+                        CashierRepository.Save(cashierMaterial);
                     }
+
                     return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
                 }
                 else
@@ -340,38 +384,6 @@ namespace eoqLab.Controllers
             } 
         }
 
-        //#region Material
-        //[HttpPost]
-        //public JsonResult CreateMaterial(string matName,string matDetail,decimal matPrice,int matReorderPront,int unitID)
-        //{
-        //    try
-        //    {
-        //        Material material = new Material(matName, matDetail, matPrice, matReorderPront, unitID,0);
-        //        //insert
-        //        MaterialRepository.Save(material);
-        //        return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-
-        //[HttpPost]
-        //public JsonResult UpdateMaterial(string matName, string matDetail, decimal matPrice, int matReorderPront, int unitID,int matID)
-        //{
-        //    try
-        //    {
-        //        //Material material = new Material(matName, matDetail, matPrice, matReorderPront, unitID,matID);
-        //        //insert
-        //        //MaterialRepository.Update(material);
-        //        return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
-        //    }
-        //}
 
         #endregion
 
@@ -384,6 +396,10 @@ namespace eoqLab.Controllers
             var categoryList    = this.CatelogyRepository.GetAll();
             var colorList       = this.ColorRepository.GetAll();
             var brandList       = this.BrandRepository.GetAll();
+            if (stockList == null)
+            {
+                return Json(new { data = stockList, total = 0 }, JsonRequestBehavior.AllowGet);
+            }
             var stocks = from stock in stockList
                            join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
                            join unit in unitList on stock.UnitId equals unit.ID
@@ -473,10 +489,8 @@ namespace eoqLab.Controllers
         {
             try
             {
-                foreach (var id in ids)
+                foreach (var stock in ids.Select(id => new Stock {Id = id}))
                 {
-                    var stock = new Stock();
-                    stock.Id = id;
                     StockRepository.Delete(stock);
                 }
                 return Json(new { success = true, message = "Delete Successful" }, JsonRequestBehavior.AllowGet);
@@ -493,59 +507,126 @@ namespace eoqLab.Controllers
         [HttpGet]
         public JsonResult SaleItemList()
         {
-            
-            var cashierList = this.CashierRepository.GetAll();
-            var saleItems = from saleitem in cashierList
-                            where saleitem.BranchId == this.Branch
-                            let dateTime = saleitem.Createdate
-                            where dateTime != null
-                            select new
-                            {
-                                SaleID      = saleitem.Id,
-                                CreateDate  = dateTime.Value 
-                            };
+            try{
+                var cashierList = this.CashierHeaderRepository.GetAll();
+                if(cashierList == null)
+                {
+                    return Json(new { data = cashierList, total = 0 }, JsonRequestBehavior.AllowGet);
+                }
+                var saleItems = from saleitem in cashierList
+                                where saleitem.BranchId == this.Branch
+                                let dateTime = saleitem.Createdate
+                                where dateTime != null
+                                select new
+                                {
+                                    SaleID      = saleitem.Id,
+                                    CreateDate  = dateTime.Value 
+                                };
 
-            return Json(new { data = saleItems, total = saleItems.Count() }, JsonRequestBehavior.AllowGet);
+                return Json(new { data = saleItems, total = saleItems.Count() }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An errors occured." }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpGet]
         public JsonResult SearchSaleItemList(SaleItemParams saleParams)
         {
+            try{
+                var cashiers = this.CashierHeaderRepository.GetAll();
+                if (cashiers == null)
+                {
+                    return Json(new { data = cashiers, total = 0 }, JsonRequestBehavior.AllowGet);
+                }
+                var saleItems = from saleitem in cashiers
+                                where saleitem.BranchId == this.Branch
+                                let dateTime = saleitem.Createdate
+                                where dateTime != null && dateTime.Value.Year == saleParams.SaleDate.Year
+                                && dateTime.Value.Month == saleParams.SaleDate.Month
+                                && dateTime.Value.Day == saleParams.SaleDate.Day
+                                select new
+                                {
+                                    SaleID = saleitem.Id,
+                                    CreateDate = dateTime.Value
+                                };
 
-            var cashierList = this.CashierRepository.GetAll();
-            var saleItems = from saleitem in cashierList
-                            where saleitem.BranchId == this.Branch
-                            let dateTime = saleitem.Createdate
-                            where dateTime != null && dateTime.Value.Year == saleParams.SaleDate.Year
-                            && dateTime.Value.Month == saleParams.SaleDate.Month
-                            && dateTime.Value.Day == saleParams.SaleDate.Day
-                            select new
-                            {
-                                SaleID = saleitem.Id,
-                                CreateDate = dateTime.Value
-                            };
-
-            return Json(new { data = saleItems, total = saleItems.Count() }, JsonRequestBehavior.AllowGet);
+                return Json(new { data = saleItems, total = saleItems.Count() }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An errors occured." }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpGet]
         public JsonResult SaleItemDetail(int saleItemId)
         {
-            var cashierList = this.CashierRepository.GetAll();
-            var saleItemDetail = from saleitem in cashierList
-                            where saleitem.BranchId == this.Branch && saleitem.Id == saleItemId
-                            let dateTime = saleitem.Createdate
-                            where dateTime != null
-                            select new
-                            {
-                                SaleID = saleitem.Id,
-                                saleitem.Amount,
-                                saleitem.TotalPrice,
-                                saleitem.Tax,
-                                CreateDate = dateTime.Value
-                            };
+            try{
+                var cashiers = this.CashierHeaderRepository.GetAll();
+                var cashierMaterials = this.CashierRepository.GetAll();
+                if (cashiers == null || cashierMaterials == null)
+                {
+                    string[] result  = null;
+                    return Json(new { data = result, total = 0 }, JsonRequestBehavior.AllowGet);
+                }
+                var saleItemDetail = from saleitem in cashiers
+                                join cashierMaterial in cashierMaterials.DefaultIfEmpty() on saleitem.Id equals cashierMaterial.Id
+                                where saleitem.BranchId == this.Branch && saleitem.Id == saleItemId
+                                let dateTime = saleitem.Createdate
+                                where dateTime != null
+                                group cashierMaterial by saleitem.Id into g
+                                select new
+                                {
+                                    Amount = g.Sum(@m => int.Parse(@m.Amount)),
+                                    TotalPrice = g.Sum(@m => @m.TotalPrice),
+                                    Tax = g.Sum(@m => @m.Tax)
+                                };
+                
+                return Json(new { data = saleItemDetail, total = saleItemDetail.Count() }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An errors occured." }, JsonRequestBehavior.AllowGet);
+            }
+        }
 
-            return Json(new { data = saleItemDetail, total = saleItemDetail.Count() }, JsonRequestBehavior.AllowGet);
+        [HttpGet]
+        public JsonResult SaleItemMaterialList(int saleItemId)
+        {
+            try
+            {
+                var cashierList = this.CashierHeaderRepository.GetAll();
+                var cashierMaterialList = this.CashierRepository.GetAll();
+                var materialList = this.MaterialRepository.GetAll();
+                var stockList = this.StockRepository.GetAll();
+                if (cashierList == null)
+                {
+                    return Json(new { data = cashierList, total = 0 }, JsonRequestBehavior.AllowGet);
+                }
+                var saleItems = from cashier in cashierList
+                                join cashierMaterial in cashierMaterialList.DefaultIfEmpty() on cashier.Id equals cashierMaterial.Id
+                                join material in materialList.DefaultIfEmpty() on cashierMaterial.Material_ID equals material.MatId
+                                join stock in stockList.DefaultIfEmpty() on cashierMaterial.Material_ID equals stock.MeterialId
+                                where cashier.BranchId == this.Branch && cashierMaterial.Material_ID == saleItemId && stock.BranchId == this.Branch
+                                let dateTime = cashier.Createdate
+                                where dateTime != null
+                                select new
+                                {
+                                    material.MetName,
+                                    cashierMaterial.Amount,
+                                    cashierMaterial.TotalPrice,
+                                    cashierMaterial.IncudeTax,
+                                    cashierMaterial.Tax
+                                };
+
+                return Json(new { data = saleItems, total = saleItems.Count() }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An errors occured." }, JsonRequestBehavior.AllowGet);
+            }
         }
         #endregion
     }//end class
