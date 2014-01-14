@@ -7,8 +7,7 @@
             createDate = "";
 
         me.prefix = prefix;
-
-        console.log(test);
+        
         //Define proxy datastore
         var proxyOptions = {
             type: 'ajax',

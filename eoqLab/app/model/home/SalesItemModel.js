@@ -4,6 +4,7 @@ Ext.define('EOQ.Model.SalesItem', {
     idProperty: 'SaleID',
     fields: [
                     { name: 'SaleID', type: 'int' },
+                    { name: 'MaterialName'},
                     { name: 'Amount' },
                     { name: 'TotalPrice', type: 'float' },
                     { name: 'Tax', type: 'float' },

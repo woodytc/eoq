@@ -35,11 +35,11 @@
             read: window.read_saleItemsURL
         };
 
-        //grid store
+        //form store
         me.Store = Ext.create('Ext.data.Store', {
             id: me.prefix + 'salesStore',
             model: 'EOQ.Model.SalesItem',
-            autoLoad: true,
+            //autoLoad: true,
             pageSize: 25,
             encode: true,
             proxy: saleItemProxy
@@ -81,7 +81,7 @@
                 id: me.prefix + 'clear',
                 text: 'ล้าง',
                 handler: function (btn, evt) {
-                    Ext.getCmp('datepicker').setValue('');
+                    Ext.getCmp('datepicker').setValue(new Date());
                     me.grid.store.clearData();
                     me.grid.view.refresh();
                 } // end handler
@@ -220,6 +220,42 @@
             }
         });
 
+        //**    Sale Item - Materials Grid  **//
+        var saleItemMaterialProxy = proxyOptions;
+        saleItemMaterialProxy.api = {
+            read: window.read_saleItemMaterialURL
+        };
+
+        me.gridStore = Ext.create('Ext.data.Store', {
+            id: me.prefix + 'salesStore',
+            model: 'EOQ.Model.SalesItem',
+            autoLoad: true,
+            pageSize: 25,
+            encode: true,
+            proxy: saleItemMaterialProxy
+        });
+        
+        me.gridStore.getProxy().extraParams.SaleItemID = saleItemId;
+        
+        var saleitemMaterialGrid = Ext.create('Ext.grid.Panel', {
+            xtype: 'grid',
+            title : 'รายการสินค้าที่ขาย',
+            id: prefix + 'stock',
+            store : me.gridStore,
+            height: 300,
+            width: Ext.getBody().getViewSize().width * 0.59,  // Change to support labtop screen
+            flex : 1,
+            columnLines: true,
+            columns: [
+                        { text: 'ชื่อสินค้า', dataIndex: 'MaterialName', flex : 1, sortable: false, align: 'center',editable : false },
+                        { text: 'จำนวน', dataIndex: 'Amount', flex: 1, sortable: false, align: 'center', editable: false },
+                        { text: 'ราคา', dataIndex: 'TotalPrice', flex: 1, sortable: false, align: 'center', editable: false },
+                        { text: 'ภาษี', dataIndex: 'Tax', flex: 1, sortable: false, align: 'center', editable: false },
+                        ]
+        });
+        //**   End of Sale Item - Materials Grid  **//
+
+
         //set params
         me.SaleStore.getProxy().extraParams.SaleItemID = saleItemId;
 
@@ -228,11 +264,12 @@
             id: me.prefix + 'viewSaleDetail',
             store: me.SaleStore,
             iconCls: 'icon-details',
-            y: 20,
-            width: 500,
+            flex : 1,
             resizable: false,
             modal: true,
             buttonAlign: 'center',
+            minwidth : 500,
+            minHeight : 300,
             xtype: 'fieldset',
             defaultType: 'textfield',
             layout: { type: 'table', columns: 1 },
@@ -246,21 +283,23 @@
                     },
                     { id: prefix + 'Tax', name: 'Tax', fieldLabel: 'ภาษีรวม', labelStyle: 'text-align: right'
                     , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'Tax'
-                    }
+                    }, saleitemMaterialGrid
                 ]
         });
-
+        
+        //popup window
         window.salewin = Ext.widget('window', {
             title: 'รายละเอียดรายการขายสินค้า :' + createDate,
             closeAction: 'hide',
             id: me.prefix + 'saleItemWindow',
-            height: Ext.getBody().getViewSize().height * 0.6, // Change to support labtop screen
+            height: Ext.getBody().getViewSize().height * 0.8, // Change to support labtop screen
             width: Ext.getBody().getViewSize().width * 0.6,  // Change to support labtop screen
             layout: 'fit',
             resizable: true,
-            closeable : true,
+            closeable: true,
+            overflowY: 'scroll',
             modal: true,
-            items: saleItemWindow,
+            items: [saleItemWindow],
             buttons: [
                     {
                         iconCls: 'icon-cancel',

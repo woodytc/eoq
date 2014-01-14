@@ -608,16 +608,16 @@ namespace eoqLab.Controllers
                 var saleItems = from cashier in cashierList
                                 join cashierMaterial in cashierMaterialList.DefaultIfEmpty() on cashier.Id equals cashierMaterial.Id
                                 join material in materialList.DefaultIfEmpty() on cashierMaterial.Material_ID equals material.MatId
-                                join stock in stockList.DefaultIfEmpty() on cashierMaterial.Material_ID equals stock.MeterialId
-                                where cashier.BranchId == this.Branch && cashierMaterial.Material_ID == saleItemId && stock.BranchId == this.Branch
+                                //join stock in stockList.DefaultIfEmpty() on cashierMaterial.Material_ID equals stock.MeterialId
+                                where cashier.BranchId == this.Branch && cashierMaterial.Id == saleItemId
                                 let dateTime = cashier.Createdate
                                 where dateTime != null
                                 select new
                                 {
-                                    material.MetName,
+                                    MaterialName = material.MetName,
                                     cashierMaterial.Amount,
                                     cashierMaterial.TotalPrice,
-                                    cashierMaterial.IncudeTax,
+                                    //cashierMaterial.IncudeTax,
                                     cashierMaterial.Tax
                                 };
 
