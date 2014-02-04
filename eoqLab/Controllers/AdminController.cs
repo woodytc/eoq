@@ -83,7 +83,7 @@ namespace eoqLab.Controllers
             ViewBag.AuthQuickDeploy = false;
             ViewBag.InAdminRole = false;
 
-            if(true) //(User.IsInRole("admin"))
+            if(User.IsInRole("admin"))
             {
                 ViewBag.AuthPrinciple = true;
                 ViewBag.AuthScheme = true;
@@ -93,14 +93,23 @@ namespace eoqLab.Controllers
 
                 ViewBag.InAdminRole = true;
             }
-            else if (User.IsInRole("Member"))
+            else if (User.IsInRole("memeber"))
             {
-                ViewBag.AuthQuickDeploy = true;
+                return RedirectToAction("Index", "Home");
             }
-            else if (User.IsInRole("Manage"))
+            else
             {
-                return RedirectToAction("AddRoles", "UserManagement");
+                return RedirectToAction("Logon", "Account");
             }
+
+            //else if (User.IsInRole("Member"))
+            //{
+            //    ViewBag.AuthQuickDeploy = true;
+            //}
+            //else if (User.IsInRole("Manage"))
+            //{
+            //    return RedirectToAction("AddRoles", "UserManagement");
+            //}
 
 //            foreach (var item in roleArray)
 //            {

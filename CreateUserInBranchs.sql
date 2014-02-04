@@ -1,0 +1,27 @@
+USE [EOQ]
+GO
+
+/****** Object:  Table [dbo].[UserInBranchs]    Script Date: 02/04/2014 20:34:28 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[UserInBranchs](
+	[Username] [varchar](50) NOT NULL,
+	[Branch_ID] [int] NULL,
+ CONSTRAINT [PK_UserInBranchs] PRIMARY KEY CLUSTERED 
+(
+	[Username] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+

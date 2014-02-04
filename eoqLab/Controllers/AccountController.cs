@@ -117,7 +117,6 @@ namespace eoqLab.Controllers
                 {
 
                     //return RedirectToAction("Index", "Devices");
-                    return Json(new { success = true, url = "../Devices" }, JsonRequestBehavior.AllowGet);
                     return Json(new { success = true, url = "../Home" }, JsonRequestBehavior.AllowGet);
 
                 }
