@@ -64,6 +64,7 @@ namespace eoqLab.Controllers
         {
             _userName = User.Identity.Name;
 
+
             //check login
             
             if (string.IsNullOrEmpty(_userName))

@@ -276,13 +276,13 @@
             defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
             items: [
                     { id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวนรวม', labelStyle: 'text-align: right'
-                    , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'Amount'
+                    , xtype: 'numberfield', fieldStyle: 'text-align: right', disabled: true, editable: false, dataIndex: 'Amount'
                     },
                     { id: prefix + 'TotalPrice', name: 'TotalPrice', fieldLabel: 'ราคารวม', labelStyle: 'text-align: right'
-                    , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'TotalPrice'
+                    , xtype: 'numberfield', fieldStyle: 'text-align: right', disabled: true, editable: false, dataIndex: 'TotalPrice'
                     },
                     { id: prefix + 'Tax', name: 'Tax', fieldLabel: 'ภาษีรวม', labelStyle: 'text-align: right'
-                    , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false, dataIndex: 'Tax'
+                    , xtype: 'numberfield', fieldStyle: 'text-align: right', disabled: true, editable: false, dataIndex: 'Tax'
                     }, saleitemMaterialGrid
                 ]
         });

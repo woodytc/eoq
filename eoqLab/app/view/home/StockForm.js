@@ -150,10 +150,21 @@
                 sortable: false,
                 dataIndex: 'BrandName'
             }, {
+                header: 'ขนาด',
+                width: 180,
+                sortable: false,
+                dataIndex: 'SizeName'
+            }, {
                 header: 'จำนวน',
                 width: 130,
                 sortable: true,
                 dataIndex: 'Amount'
+            }, {
+                header: 'ReorderPoint',
+                width: 200,
+                sortable: true,
+                flex: 1,
+                dataIndex: 'ReorderPoint'
             }, {
                 header: 'ราคา',
                 width: 130,
@@ -168,7 +179,7 @@
                 , emptyMsg: "ขออภัยยังไม่มีรายการแสดงขณะนี้"
             }),
             listener: {
-                itemdbclick: me.popupEditItem
+                //itemdbclick: me.popupEditItem
             }
 
         }); //end grid setting
@@ -258,8 +269,11 @@
         data.unitName = record.get("UnitName");
         data.brandID = record.get("BrandID");
         data.brandName = record.get("BrandName");
+        data.sizeID = record.get("SizeID");
+        data.sizeName = record.get("SizeName");
         data.amount = record.get("Amount");
         data.price = record.get("Price");
+        data.reorderPoint = record.get("ReorderPoint");
 
         var prefix = 'updateStock-',
             url = window.update_stockURL,
@@ -345,6 +359,17 @@
         me.brandStore = Ext.create('Ext.data.Store', {
             model: 'EOQ.Model.Brands',
             proxy: brandProxy
+        });
+
+        //Size List data
+        var sizeProxy = proxyOptions;
+        sizeProxy.api = {
+            read: window.read_size_list
+        };
+
+        me.sizeStore = Ext.create('Ext.data.Store', {
+            model: 'EOQ.Model.Size',
+            proxy: sizeProxy
         });
 
         var productsField = {
@@ -461,6 +486,25 @@
             store: me.brandStore,
             allowBlank: false,
             editable: false
+        }, sizeField = {
+            id: prefix + 'SizeID',
+            name: 'SizeID',
+            anchor: '-10',
+            fieldLabel: 'ขนาด',
+            afterLabelTextTpl: required,
+            labelStyle: 'text-align: right',
+            fieldStyle: 'text-align: right',
+            value: 'กรุณาเลือก',
+            queryMode: 'remote',
+            xtype: 'combobox',
+            typeAhead: true,
+            triggerAction: 'all',
+            scope: me,
+            displayField: 'SizeName',
+            valueField: 'SizeID',
+            store: me.sizeStore,
+            allowBlank: false,
+            editable: false
         };
 
         me.win = new Ext.Window({
@@ -481,7 +525,11 @@
                     unitsField,
                     colorsField,
                     brandsField,
+                    sizeField,
                     { id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
+                    , afterLabelTextTpl: required, xtype: 'numberfield', fieldStyle: 'text-align: right', allowBlank: false
+                    },
+                    { id: prefix + 'ReorderPoint', name: 'ReorderPoint', fieldLabel: 'ReorderPoint', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'numberfield', fieldStyle: 'text-align: right', allowBlank: false
                     },
                     { id: prefix + 'Price', name: 'Price', fieldLabel: 'ราคา', labelStyle: 'text-align: right'
@@ -492,17 +540,32 @@
                     iconCls: 'icon-save',
                     onClick: function (button) {
 
+                        console.log(Ext.getCmp(prefix + 'ProductID'));
+                        var params = {};
+                        params.ID = record.get('ID');
+                        params.ProductID = Ext.getCmp(prefix + 'ProductID').getValue();
+                        params.CategoryID = Ext.getCmp(prefix + 'CategoryID').getValue();
+                        params.ColorID = Ext.getCmp(prefix + 'ColorID').getValue();
+                        params.UnitID = Ext.getCmp(prefix + 'UnitID').getValue();
+                        params.BrandID = Ext.getCmp(prefix + 'BrandID').getValue();
+                        params.SizeID = Ext.getCmp(prefix + 'SizeID').getValue();
+                        params.Amount = Ext.getCmp(prefix + 'Amount').getValue();
+                        params.Price = Ext.getCmp(prefix + 'Price').getValue();
+                        params.ReorderPoint = Ext.getCmp(prefix + 'ReorderPoint').getValue();
+
                         Ext.Ajax.request({
                             method: 'post',
                             url: url,
-                            params: data,
+                            //params: params,
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
                                 var text = response.responseText;
-                                me.Store.load();
-                                Ext.MessageBox.alert('บันทึกข้อมูลเรียบร้อย !!');
                                 // process server response here
+                                //                                
+                                //me.Store.load();
+                                Ext.MessageBox.alert('บันทึกข้อมูลเรียบร้อย !!', "Save complete");
+
                             }
                         });
 
@@ -525,16 +588,19 @@
         me.setSelectedCombo(prefix + 'ProductID', 'ProductName', data.productName);
         me.setSelectedCombo(prefix + 'ColorID', 'ColorName', data.colorName);
         me.setSelectedCombo(prefix + 'BrandID', 'BrandName', data.brandName);
-
+        me.setSelectedCombo(prefix + 'SizeID', 'SizeName', data.sizeName);
         Ext.getCmp(prefix + 'Amount').setValue(data.amount);
         Ext.getCmp(prefix + 'Price').setValue(data.price);
+        Ext.getCmp(prefix + 'ReorderPoint').setValue(data.reorderPoint);
 
     }, setSelectedCombo: function (id, name, data) {
         var combo = Ext.getCmp(id);
         combo.select(data);
-        if (id == 'updateStock-CategoryID') return false;
-        var rec = combo.getStore().findRecord(name, data);
-        combo.fireEvent('select', combo, [rec]);
+        if (id != 'updateStock-CategoryID') {
+            //combo.getStore().load();
+            var rec = combo.getStore().findExact(name, data, 0);
+            combo.fireEvent('select', combo, [rec]);
+        }
     }, getProductPrice: function (params, cb) {
         var data = {};
         data.ProductId = params.ProductID;

@@ -212,11 +212,15 @@
                     },
                     { id: me.prefix + 'Price', name: 'Price', fieldLabel: 'ราคา', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'numberfield', fieldStyle: 'text-align: right', allowBlank: false
+                    },
+                    { id: prefix + 'ReorderPoint', name: 'ReorderPoint', fieldLabel: 'ReorderPoint', labelStyle: 'text-align: right'
+                    , afterLabelTextTpl: required, xtype: 'numberfield', fieldStyle: 'text-align: right', allowBlank: false
                     }
                 ], buttons: [{
                     text: 'บันทึก',
                     iconCls: 'icon-save',
                     onClick: function (button) {
+                        //prepare data to save
                         var data = {
                             ProductID: Ext.getCmp(me.prefix + 'ProductID').getValue(),
                             CategoryID: Ext.getCmp(prefix + 'CategoryID').getValue(),
@@ -224,8 +228,10 @@
                             BrandID: Ext.getCmp(prefix + 'BrandID').getValue(),
                             UnitID: Ext.getCmp(prefix + 'UnitID').getValue(),
                             Amount: Ext.getCmp(prefix + 'Amount').getValue(),
-                            Price: Ext.getCmp(prefix + 'Price').getValue()
+                            Price: Ext.getCmp(prefix + 'Price').getValue(),
+                            ReorderPoint: Ext.getCmp(prefix + 'ReorderPoint').getValue()
                         };
+                        //send ajax request to save stock data
                         Ext.Ajax.request({
                             method: 'post',
                             url: url,

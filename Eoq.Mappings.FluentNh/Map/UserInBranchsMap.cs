@@ -17,7 +17,7 @@ namespace Eoq.Mappings.FluentNh
             Table("UserInBranchs");
             LazyLoad();
             Id(x => x.Username).GeneratedBy.Assigned().Column("Username");
-            Map(x => x.BranchID).Column("Branch_ID");
+            Map(x => x.BranchID).Column("Branch_ID").CustomType("int");
         }
     }
 }

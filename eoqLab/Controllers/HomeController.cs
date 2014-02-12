@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 using Eoq.Domain;
+using Eoq.Domain.Domain;
 using Eoq.Mappings.FluentNh.Repository;
 using eoqLab.Models;
 
@@ -10,7 +12,7 @@ namespace eoqLab.Controllers
 {
     public class HomeController : Controller
     {
-
+        private string _userName = "";
         public IEOQRepository EoqRepository { get; set; }
         public IMaterialRepository MaterialRepository { get; set; }
         public IUnitRepository UnitRepository { get; set; }
@@ -27,8 +29,8 @@ namespace eoqLab.Controllers
         public ISizesRepository SizesRepository { get; set; }
         public ICatelogyRepository CatelogyRepository { get; set; }
         public IStockRepository StockRepository { get; set; }
+        public IUserInBranchsRepository UserBranch { get; set; }
 
-        public int Branch { get; set; }
         public HomeController(IEOQRepository eoqRepository
                               , IMaterialRepository materialRepository
                               , IUnitRepository unit
@@ -43,6 +45,7 @@ namespace eoqLab.Controllers
                               , IStockRepository stockRepository
                               , ICashierRepository cashierRepository
                               , ICashierHeaderRepository cashierHeaderRepository
+                              , IUserInBranchsRepository userBranch
             )
         {
             EoqRepository = eoqRepository;
@@ -62,13 +65,47 @@ namespace eoqLab.Controllers
             this.SizesRepository = sizesRepository;
             this.CatelogyRepository = catelogyRepository;
             this.StockRepository = stockRepository;
-
-            Branch = 1;
+            this.UserBranch = userBranch;
 
         }
 
         public ActionResult Index()
         {
+            _userName = User.Identity.Name;
+            //check login
+            if (string.IsNullOrEmpty(_userName))
+            {
+                return RedirectToAction("Logon", "Account");
+            }
+
+            
+
+            var userBranchs = this.UserBranch.GetAll();
+            var firstOrDefault = (from user in userBranchs
+                                  where user.Username == this._userName
+                                  select user).FirstOrDefault<UserInBranchs>();
+ 
+            var httpSessionStateBase = this.HttpContext.Session;
+            if (httpSessionStateBase != null)
+            {
+                httpSessionStateBase["UserName"] = User.Identity.Name;
+                if(firstOrDefault != null) httpSessionStateBase["BranchId"] = firstOrDefault.BranchID ;
+            }
+            //RolePrincipal rolePrincipal = (RolePrincipal)User;
+            //            roleArray[0]= "admin";
+            //
+            //            string role = "";
+
+            ViewBag.AuthPrinciple = false;
+            ViewBag.AuthScheme = false;
+            ViewBag.AuthGeneration = false;
+            ViewBag.AuthDeploy = false;
+            ViewBag.AuthQuickDeploy = false;
+            ViewBag.InAdminRole = false;
+            ViewBag.CurrentDateServerSt = DateTime.Now.ToString("dd/MM/yyyy");
+            ViewBag.CurrentTimeServerSt = DateTime.Now.ToString("HH:mm");
+            ViewBag.CurrentUser = _userName;
+            ViewBag.CurrentUserRole = "member";
             return View();
         }
         #region Purchase Order
@@ -87,7 +124,7 @@ namespace eoqLab.Controllers
             var products = from stock in stockList
                     join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
                     join unit in unitList on stock.UnitId equals unit.ID
-                    where stock.Amount <= stock.Reorderpoint && stock.BranchId == this.Branch 
+                    where stock.Amount <= stock.Reorderpoint && stock.BranchId == this.GetBranchId() 
                     select new
                             {
                                 ProductID   = product.MatId,
@@ -144,7 +181,7 @@ namespace eoqLab.Controllers
                     }
                     var price = from stock in stockList
                                    join product in productList.DefaultIfEmpty() on stock.MeterialId equals product.MatId
-                                   where stock.BranchId == this.Branch
+                                   where stock.BranchId == this.GetBranchId()
                                    && stock.MeterialId == productParams.ProductId
                                    && stock.UnitId == productParams.UnitId
                                    select new
@@ -192,6 +229,21 @@ namespace eoqLab.Controllers
                                    };
 
             return Json(new { data = unitsResult, total = unitsResult.Count() }, JsonRequestBehavior.AllowGet);
+        }
+
+        //get size list
+        [HttpGet]
+        public JsonResult SizeList()
+        {
+            var allSize = this.SizesRepository.GetAll();
+            var sizeResult = from size in allSize
+                              select new
+                              {
+                                  SizeID    = size.Id,
+                                  SizeName  = size.Name
+                              };
+
+            return Json(new { data = sizeResult, total = sizeResult.Count() }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -254,8 +306,9 @@ namespace eoqLab.Controllers
                 var cashier = new Eoq.Domain.CashierHeader
                 {
                     Id = purchaseOrder.Id,
-                    BranchId = this.Branch,
-                    Updatedate = DateTime.Now
+                    BranchId = this.GetBranchId(),
+                    Updatedate = DateTime.Now ,
+                    Updateby = this.GetUserName()
                 };
 
                 if (purchaseOrders == null)
@@ -270,7 +323,7 @@ namespace eoqLab.Controllers
                         Id = cashier.Id,
                         Material_ID = purchaseOrder.ProductID,
                         Amount = purchaseOrder.Amount.ToString(),
-                        TotalPrice = purchaseOrder.Amount * purchaseOrder.Price,
+                        TotalPrice = purchaseOrder.Amount * purchaseOrder.Price
                         //Tax           = purchaseOrder.Tax,
                         //IncudeTax     = purchaseOrder.IncludeTax
                     };
@@ -326,10 +379,12 @@ namespace eoqLab.Controllers
 
             try
             {
-                var cashier = new Eoq.Domain.CashierHeader
+                var cashier = new CashierHeader
                                   {
-                                        BranchId = this.Branch , 
-                                        Createdate    = DateTime.Now
+                                        BranchId        = this.GetBranchId() , 
+                                        Createdate      = DateTime.Now , 
+                                        Createby        = this.GetUserName(),
+                                        Updateby        = ""
                                   };
 
                 if (purchaseOrder != null && purchaseOrders == null)
@@ -346,6 +401,11 @@ namespace eoqLab.Controllers
                                                                     };
                     CashierRepository.Save(cashierMaterial);
                     
+                    var httpSessionStateBase = this.HttpContext.Session;
+                    if (httpSessionStateBase != null) httpSessionStateBase["CashierId"] = cashier.Id;
+
+                    //save completed
+                    return Json(new { success = true, cashierID = cashier.Id, error = "" }, JsonRequestBehavior.AllowGet);
                     
                 }
                 else if (purchaseOrders != null)
@@ -370,13 +430,17 @@ namespace eoqLab.Controllers
                         CashierRepository.Save(cashierMaterial);
                     }
 
-                    return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
+                    
+                    var httpSessionStateBase = this.HttpContext.Session;
+                    if (httpSessionStateBase != null) httpSessionStateBase["CashierId"] = cashier.Id;
+                    //save completed
+                    return Json(new { success = true, cashierID = cashier.Id , error = "" }, JsonRequestBehavior.AllowGet);
+                
                 }
                 else
                 {
                     throw new Exception();
                 }
-                return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -385,6 +449,12 @@ namespace eoqLab.Controllers
         }
 
 
+        public void checkStock()
+        {
+            
+
+        }
+
         #endregion
 
         #region Stock
@@ -392,6 +462,7 @@ namespace eoqLab.Controllers
         {
             var stockList       = this.StockRepository.GetAll();
             var unitList        = this.UnitRepository.GetAll();
+            var sizeList        = this.SizesRepository.GetAll(); 
             var productList     = this.MaterialRepository.GetAll();
             var categoryList    = this.CatelogyRepository.GetAll();
             var colorList       = this.ColorRepository.GetAll();
@@ -406,7 +477,8 @@ namespace eoqLab.Controllers
                            join category in categoryList on product.CatelogyId equals category.Id
                            join color in colorList on stock.ColorId equals color.Id
                            join brand in brandList on stock.BrandId equals brand.Id
-                           where stock.Amount <= stock.Reorderpoint && stock.BranchId == this.Branch
+                           join size in sizeList on stock.SizeId equals size.Id
+                           where  stock.BranchId == this.GetBranchId() //&& stock.Amount <= stock.Reorderpoint 
                            select new
                            {
                                ID               = stock.Id,
@@ -420,8 +492,11 @@ namespace eoqLab.Controllers
                                unit.UnitName,
                                BrandID          = brand.Id,
                                BrandName        = brand.Name,
+                               SizeID           = stock.SizeId,
+                               SizeName         = size.Name,
                                stock.Amount,
-                               stock.Price
+                               stock.Price,
+                               ReorderPoint     = stock.Reorderpoint
                            };
 
             return Json(new { data = stocks, total = stocks.Count() }, JsonRequestBehavior.AllowGet);
@@ -431,18 +506,24 @@ namespace eoqLab.Controllers
         {
             try
             {
+                //check
+
+
                 var p = stockParams;
                 var stock = new Stock()
                 {
                     Price = p.Price,
                     Amount = p.Amount,
                     MeterialId = p.ProductID,
+                    ColorId = p.ColorID,
                     BrandId = p.BrandID,
                     UnitId = p.UnitID,
-                    Createdate = DateTime.Now
+                    BranchId = this.GetBranchId(),
+                    Createdate = DateTime.Now , 
+                    Createby = this.GetUserName()
                 };
 
-                StockRepository.Save(stock);
+                StockRepository.SaveOrUpdate(stock);
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
                 
             }
@@ -464,8 +545,12 @@ namespace eoqLab.Controllers
                                  MeterialId = p.ProductID,
                                  BrandId = p.BrandID,
                                  UnitId = p.UnitID,
-                                 Createdate = DateTime.Now
+                                 ColorId = p.ColorID,
+                                 BranchId = this.GetBranchId(),
+                                 Updatedate = DateTime.Now,
+                                 Updateby = this.GetUserName()
                                 };
+
                 if (!String.IsNullOrEmpty(p.ID.ToString()) && p.ID > 0)
                 {
                     stock.Id = p.ID;
@@ -514,7 +599,7 @@ namespace eoqLab.Controllers
                     return Json(new { data = cashierList, total = 0 }, JsonRequestBehavior.AllowGet);
                 }
                 var saleItems = from saleitem in cashierList
-                                where saleitem.BranchId == this.Branch
+                                where saleitem.BranchId == this.GetBranchId()
                                 let dateTime = saleitem.Createdate
                                 where dateTime != null
                                 select new
@@ -541,7 +626,7 @@ namespace eoqLab.Controllers
                     return Json(new { data = cashiers, total = 0 }, JsonRequestBehavior.AllowGet);
                 }
                 var saleItems = from saleitem in cashiers
-                                where saleitem.BranchId == this.Branch
+                                where saleitem.BranchId == this.GetBranchId()
                                 let dateTime = saleitem.Createdate
                                 where dateTime != null && dateTime.Value.Year == saleParams.SaleDate.Year
                                 && dateTime.Value.Month == saleParams.SaleDate.Month
@@ -573,7 +658,7 @@ namespace eoqLab.Controllers
                 }
                 var saleItemDetail = from saleitem in cashiers
                                 join cashierMaterial in cashierMaterials.DefaultIfEmpty() on saleitem.Id equals cashierMaterial.Id
-                                where saleitem.BranchId == this.Branch && saleitem.Id == saleItemId
+                                where saleitem.BranchId == this.GetBranchId() && saleitem.Id == saleItemId
                                 let dateTime = saleitem.Createdate
                                 where dateTime != null
                                 group cashierMaterial by saleitem.Id into g
@@ -609,7 +694,7 @@ namespace eoqLab.Controllers
                                 join cashierMaterial in cashierMaterialList.DefaultIfEmpty() on cashier.Id equals cashierMaterial.Id
                                 join material in materialList.DefaultIfEmpty() on cashierMaterial.Material_ID equals material.MatId
                                 //join stock in stockList.DefaultIfEmpty() on cashierMaterial.Material_ID equals stock.MeterialId
-                                where cashier.BranchId == this.Branch && cashierMaterial.Id == saleItemId
+                                where cashier.BranchId == this.GetBranchId() && cashierMaterial.Id == saleItemId
                                 let dateTime = cashier.Createdate
                                 where dateTime != null
                                 select new
@@ -627,6 +712,19 @@ namespace eoqLab.Controllers
             {
                 return Json(new { success = false, message = "An errors occured." }, JsonRequestBehavior.AllowGet);
             }
+        }
+        #endregion
+
+        #region Get Session Value
+        public int GetBranchId()
+        {
+            var httpSessionStateBase = this.HttpContext.Session;
+            return httpSessionStateBase != null ? int.Parse(httpSessionStateBase["BranchId"].ToString()) : 0;
+        }
+        public string GetUserName()
+        {
+            var httpSessionStateBase = this.HttpContext.Session;
+            return httpSessionStateBase != null ? httpSessionStateBase["UserName"].ToString() : "";
         }
         #endregion
     }//end class

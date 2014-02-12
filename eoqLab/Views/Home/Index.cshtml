@@ -26,7 +26,12 @@
     Ext.Loader.setPath('Ext.ux', '@Url.Content("~/Scripts/extjs/ux")');
     Ext.require(['*']);
     Ext.QuickTips.init();
-
+    //Acount control ---------------------------------------------------------------
+    var currentUser = '@ViewBag.CurrentUser';
+    var CurrentUserRole = '@ViewBag.CurrentUserRole';
+    var actionLogoff = "@Url.Action("Logoff", "Account")";
+    window.ContentPath = '@Url.Content("~/Content/")';
+    
     window.read_mainProductURL = '@Url.Action("ProductsList","Home")';
     
     /**Purchase Order URLs**/
@@ -46,7 +51,8 @@
     window.read_colors_list = '@Url.Action("ColorsList","Home")';
     //brands combobox
     window.read_brand_list = '@Url.Action("BrandList","Home")';
-    
+    //sizes combobox
+    window.read_size_list = '@Url.Action("SizeList","Home")';
     /**Stock URLs**/
     window.read_stockURL = '@Url.Action("StockList","Home")';
     window.create_stockURL = '@Url.Action("SaveStock","Home")';
@@ -74,8 +80,8 @@
                         xtype: 'panel',
                         region: 'north',
                         height: 25, // give north and south regions a height
-                        title: 'Device Management [ ' + 'currentUser' + ' : ' + 'CurrentUserRole'
-                                + ' ]<a href=' + 'actionLogoff' + ' style="font-family:verdana;font-size:12px;color:red;text-decoration: none;">   Logoff</a>'
+                        title: 'Device Management [ ' + currentUser + ' : ' + CurrentUserRole
+                                + ' ]<a href=' + actionLogoff + ' style="font-family:verdana;font-size:12px;color:red;text-decoration: none;">   Logoff</a>'
                     },
                     {
                         xtype: 'tabpanel',
@@ -116,14 +122,14 @@
                                  minHeight: 450,
                                  items: [saleForm]
                              },
-                             {
+                             /*{
                                  id: 'tab5',
                                  xtype: 'panel',
                                  region: 'north',
                                  title: 'รายงาน',
                                  minHeight: 450,
                                  items: []
-                             }
+                             }*/
                         ]
                     }
             ]

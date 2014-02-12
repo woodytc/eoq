@@ -14,6 +14,6 @@ namespace Eoq.Domain.Domain
     public partial class UserInBranchs
     {
         public virtual string Username { get; set; }
-        public virtual int? BranchID { get; set; }
+        public virtual int BranchID { get; set; }
     }
 }

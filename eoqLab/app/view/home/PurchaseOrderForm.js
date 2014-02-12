@@ -1,5 +1,6 @@
 ﻿Ext.define('PurchaseOrderForm', {
     extend: 'Ext.Panel',
+    LastSaleID: 0,
     constructor: function (config) {
         var me = this;
         var prefix = "PurchaseOrder-";
@@ -77,18 +78,49 @@
                 text: '',
                 margins: '0 0 0 10'
             }, '->', {
+                iconCls: 'icon-print',
+                text: 'Print',
+                id: 'Print',
+                scope: me,
+                iconAlign: 'right',
+                disabled: true,
+                handler: function (btn, evt) {
+
+                    Ext.Ajax.request({
+                        method: 'post',
+                        url: '../SalesReport/SetId/',
+                        params: { "saleId": me.LastSaleID },
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            me.onPrint();
+                            //open print page
+                            window.open('../SalesReport/ShowSimple/', '_blank');
+                        }
+                    });
+
+                }
+            }, {
                 iconCls: 'icon-save',
                 text: 'บันทึก',
+                id: 'save',
                 scope: me,
+                disabled: true,
                 iconAlign: 'right',
                 handler: me.onSync
             }, {
                 iconCls: 'icon-cancel',
                 text: 'ยกเลิกทั้งหมด',
                 name: 'button-cancel',
+                id: 'cancel',
+                disabled: true,
                 handler: function (btn, evt) {
                     me.grid.store.clearData();
                     me.grid.view.refresh();
+                    //disable print button
+                    Ext.getCmp('Print').setDisabled(true);
+                    Ext.getCmp('save').setDisabled(true);
+                    Ext.getCmp('cancel').setDisabled(true);
                 }
             }]
 
@@ -296,7 +328,7 @@
                 tdCls: 'ProductName',
                 sortable: true,
                 dataIndex: 'ProductID',
-                hidden : true,
+                hidden: true,
                 //hideable: false,
                 flex: 1,
                 summaryType: 'count',
@@ -310,7 +342,7 @@
                 dataIndex: 'CategoryName',
                 renderer: Ext.ux.renderer.Combo(categoriesField),
                 editor: categoriesField,
-                flex : 1
+                flex: 1
             }, {
                 header: 'ชื่อสินค้า',
                 width: 180,
@@ -417,6 +449,10 @@
         this.down('#delete').setDisabled(selections.length === 0);
     },
     onAddClick: function () {
+        //enable- buttons
+        Ext.getCmp('save').setDisabled(false);
+        Ext.getCmp('cancel').setDisabled(false);
+
         var rec = new window.EOQ.model.PurchaseOrder({
             ProductID: 0,
             ProductName: '',
@@ -443,10 +479,20 @@
     },
     onSync: function () {
         var me = this;
+        //send data to save 
         me.Store.sync();
+
+        //enable print button
+        Ext.getCmp('Print').setDisabled(false);
+
+    },
+    onPrint: function () {
+        var me = this;
+
         Ext.getCmp('totalSummary').setText('ราคารวม :' + 0);
         me.grid.store.clearData();
         me.grid.view.refresh();
+
     },
     onDeleteClick: function () {
         var me = this;
@@ -459,6 +505,12 @@
                 }
             }
         });
+    }, onStoreWrite: function (aStore, aOperation) {
+
+        var iRecord = aOperation.response.result.data;
+        console.log(iRecord);
+        this.LastSaleID = iRecord.cashierID;
+
     }, getProductPrice: function (record, cb) {
         var params = {};
         params.ProductId = record.get("ProductID");

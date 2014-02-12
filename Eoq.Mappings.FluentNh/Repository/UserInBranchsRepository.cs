@@ -22,6 +22,8 @@ namespace Eoq.Mappings.FluentNh.Repository
         int CountAll();
 
         void Delete(UserInBranchs UserInBranchs);
+
+        UserInBranchs GetByID(string username);
     }
 
     public class UserInBranchsRepository : NhRepository, IUserInBranchsRepository
@@ -60,9 +62,9 @@ namespace Eoq.Mappings.FluentNh.Repository
             //using (session.BeginTransaction(System.Data.IsolationLevel.ReadUncommitted))
             using (var session = SessionFactory.OpenStatelessSession())
             {
-                var results = session.QueryOver<UserInBranchs>().List() as List<UserInBranchs>;
+                var results = session.QueryOver<UserInBranchs>().List<UserInBranchs>();// TList<UserInBranchs>;
                 //session.Close();
-                return results;
+                return results.ToList();
             }
         }
 
@@ -94,6 +96,14 @@ namespace Eoq.Mappings.FluentNh.Repository
             using (var session = SessionFactory.OpenStatelessSession())
             {
                 session.Delete(UserInBranchs);
+            }
+        }
+
+        public UserInBranchs GetByID(string username)
+        {
+            using(var session = SessionFactory.OpenStatelessSession())
+            {
+                return session.Get<UserInBranchs>(username);
             }
         }
 

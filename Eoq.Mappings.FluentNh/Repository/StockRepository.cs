@@ -96,6 +96,24 @@ namespace Eoq.Mappings.FluentNh.Repository
             }
         }
 
+        public bool IsExist(Stock Stock)
+        {
+
+            using (var session = SessionFactory.OpenStatelessSession())
+            {
+//                var results = from x in session.QueryOver<Stock>()
+//                              where x.BranchId == Stock.BranchId
+//                                    && x.MeterialId == Stock.MeterialId
+//                                    && x.ColorId == Stock.ColorId
+//                                    && x.BrandId == Stock.BrandId
+//                                    && x.UnitId == Stock.UnitId
+//                                    && x.SizeId == Stock.SizeId
+//                              
+//                //session.Close();
+//                return results;
+            }
+            return false;
+        }
         #endregion
     }
 }
