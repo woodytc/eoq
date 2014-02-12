@@ -89,6 +89,17 @@
             proxy: brandProxy
         });
 
+        //Size List data
+        var sizeProxy = proxyOptions;
+        sizeProxy.api = {
+            read: window.read_size_list
+        };
+
+        me.sizeStore = Ext.create('Ext.data.Store', {
+            model: 'EOQ.Model.Size',
+            proxy: sizeProxy
+        });
+
         var productsField = {
             id: me.prefix + 'ProductID',
             xtype: 'combobox',
@@ -185,9 +196,28 @@
             store: me.brandStore,
             allowBlank: false,
             editable: false
+        }, sizeField = {
+            id: prefix + 'SizeID',
+            name: 'SizeID',
+            anchor: '-10',
+            fieldLabel: 'ขนาด',
+            afterLabelTextTpl: required,
+            labelStyle: 'text-align: right',
+            fieldStyle: 'text-align: right',
+            value: 'กรุณาเลือก',
+            queryMode: 'remote',
+            xtype: 'combobox',
+            typeAhead: true,
+            triggerAction: 'all',
+            scope: me,
+            displayField: 'SizeName',
+            valueField: 'SizeID',
+            store: me.sizeStore,
+            allowBlank: false,
+            editable: false
         };
 
-
+        console.log(StockForm.reloadSaleList());
         //create stock form
         var win = new Ext.Window({
             id: prefix + 'update',
@@ -207,6 +237,7 @@
                     unitsField,
                     colorsField,
                     brandsField,
+                    sizeField,
                     { id: me.prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'numberfield', fieldStyle: 'text-align: right', allowBlank: false
                     },
@@ -226,6 +257,7 @@
                             CategoryID: Ext.getCmp(prefix + 'CategoryID').getValue(),
                             ColorID: Ext.getCmp(prefix + 'ColorID').getValue(),
                             BrandID: Ext.getCmp(prefix + 'BrandID').getValue(),
+                            SizeID: Ext.getCmp(prefix + 'SizeID').getValue(),
                             UnitID: Ext.getCmp(prefix + 'UnitID').getValue(),
                             Amount: Ext.getCmp(prefix + 'Amount').getValue(),
                             Price: Ext.getCmp(prefix + 'Price').getValue(),
@@ -240,8 +272,9 @@
                             dataType: "json",
                             success: function (response) {
                                 var text = response.responseText;
-                                Ext.MessageBox.alert('บันทึกข้อมูลเรียบร้อย !!');
+                                Ext.MessageBox.alert('บันทึกข้อมูลเรียบร้อย !!', "Save Completed");
                                 // process server response here
+                                window.StockForm.reloadSaleList();
                             }
                         });
 

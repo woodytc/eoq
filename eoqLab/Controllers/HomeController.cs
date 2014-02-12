@@ -519,11 +519,14 @@ namespace eoqLab.Controllers
                     BrandId = p.BrandID,
                     UnitId = p.UnitID,
                     BranchId = this.GetBranchId(),
+                    SizeId = p.SizeID,
+                    Reorderpoint = p.ReorderPoint,
                     Createdate = DateTime.Now , 
+                    Updatedate = DateTime.Now ,
                     Createby = this.GetUserName()
                 };
 
-                StockRepository.SaveOrUpdate(stock);
+                StockRepository.Save(stock);
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
                 
             }

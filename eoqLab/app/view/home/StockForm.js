@@ -540,7 +540,7 @@
                     iconCls: 'icon-save',
                     onClick: function (button) {
 
-                        console.log(Ext.getCmp(prefix + 'ProductID'));
+                        //console.log(Ext.getCmp(prefix + 'ProductID'));
                         var params = {};
                         params.ID = record.get('ID');
                         params.ProductID = Ext.getCmp(prefix + 'ProductID').getValue();
@@ -593,6 +593,9 @@
         Ext.getCmp(prefix + 'Price').setValue(data.price);
         Ext.getCmp(prefix + 'ReorderPoint').setValue(data.reorderPoint);
 
+    }, reloadSaleList: function () {
+        var me = this;
+        me.grid.view.refresh();
     }, setSelectedCombo: function (id, name, data) {
         var combo = Ext.getCmp(id);
         combo.select(data);
