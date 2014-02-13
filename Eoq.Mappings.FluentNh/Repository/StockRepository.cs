@@ -11,6 +11,8 @@ namespace Eoq.Mappings.FluentNh.Repository
     using System.Linq;
     using System.Text;
     using Eoq.Domain;
+using NHibernate;
+using NHibernate.Criterion;
 
     public interface IStockRepository
     {
@@ -114,6 +116,31 @@ namespace Eoq.Mappings.FluentNh.Repository
             }
             return false;
         }
+
         #endregion
+
+        public IList<Stock> ExecuteICriteria(Stock enitity)
+        {
+            using(var Session = SessionFactory.OpenSession())
+            using (ITransaction transaction = Session.BeginTransaction())
+            {
+                try
+                {
+                    IList<Stock> result = Session.CreateCriteria(typeof(Stock))
+                        .Add(Restrictions.Eq("id", enitity))
+                        .Add(Restrictions.Eq("", enitity))
+                        .Add(Restrictions.Eq("", enitity))
+                        .List<Stock>();
+                       
+                    transaction.Commit();
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
     }
 }
