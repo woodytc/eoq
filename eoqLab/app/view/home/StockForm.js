@@ -207,14 +207,31 @@
 
     }, onSelectChange: function (selModel, selections) {
         this.down('#delete').setDisabled(selections.length === 0);
-    }, onAddClick: function () {
+    }, onAddClick: function (me) {
+        console.log(this);
         Ext.MessageBox.show({
             msg: 'กรุณารอสักครู่กำลังโหลดข้อมูล...', width: 300, closable: false
         });
 
         //create new popup
-        var stockWindow = new window.eoq.view.home.StockWindow();
+        var stockWindow = new window.eoq.view.home.StockWindow(
+             {
+                 listeners: {
+                     close: function (panel, eOpts) {
 
+                         if (panel.intend === 'save-success') {
+                             console.log('insave success');
+                             var quickStore = Ext.getStore(this.Store);
+                             quickStore.proxy.url = window.read_stockURL;
+                          //   StockForm.search(window.read_stockURL);
+                         }
+                     }
+                 }
+                 //,
+                 //animateTarget: btn
+             }
+        );
+        //this.search(window.read_stockURL);
         Ext.MessageBox.hide();
 
     }, onDeleteClick: function () {
@@ -635,5 +652,28 @@
         });
     }, isNullOrUndefined: function (val) {
         return (val == null || typeof val == 'undefined');
+    }, search: function (url) {
+
+        console.log(url);
+
+        var quickStore = Ext.getStore(me.Store);
+        quickStore.proxy.url = window.read_stockURL;
+        //quickStore.getProxy().extraParams.name = name;    
+        //var pagingToolbar = Ext.getCmp(prefix + 'PagingToolbar');
+        //pagingToolbar.moveFirst();
+
     }
+
 });
+
+StockForm.prototype.search = function (url) {
+
+    console.log(url);
+
+    var quickStore = Ext.getStore(me.Store);
+    quickStore.proxy.url = window.read_stockURL;
+    //quickStore.getProxy().extraParams.name = name;    
+    //var pagingToolbar = Ext.getCmp(prefix + 'PagingToolbar');
+    //pagingToolbar.moveFirst();
+
+};

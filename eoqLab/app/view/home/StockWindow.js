@@ -217,7 +217,7 @@
             editable: false
         };
 
-        console.log(StockForm.reloadSaleList());
+        //console.log(StockForm.reloadSaleList());
         //create stock form
         var win = new Ext.Window({
             id: prefix + 'update',
@@ -274,11 +274,13 @@
                                 var text = response.responseText;
                                 Ext.MessageBox.alert('บันทึกข้อมูลเรียบร้อย !!', "Save Completed");
                                 // process server response here
-                                window.StockForm.reloadSaleList();
+                                //window.StockForm.reloadSaleList();
+                                me.intend = "save-success";
+                                me.close();
                             }
                         });
 
-                        win.destroy();
+                        //win.destroy();
 
                     }
                 },
