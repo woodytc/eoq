@@ -8,6 +8,12 @@
         { name: 'Amount', type: 'int' },
         { name: 'UnitID', type: 'int' },
         { name: 'UnitName' },
+        { name: 'ColorID', type: 'int' },
+        { name: 'ColorName' },
+        { name: 'BrandID', type: 'int' },
+        { name: 'BrandName' },
+        { name: 'SizeID', type: 'int' },
+        { name: 'SizeName' },
         { name: 'Price', type: 'float' }
     ]
 });
@@ -39,6 +45,26 @@ Ext.define('EOQ.Model.UnitsList', {
     fields: [
                     { name: 'UnitID', type: 'int' },
                     { name: 'UnitName', type: 'string' },
+            ]
+});
+
+
+Ext.define('EOQ.Model.Brands', {
+    extend: 'Ext.data.Model',
+    idProperty: 'BrandID',
+    fields: [
+                    { name: 'BrandID', type: 'int' },
+                    { name: 'BrandName', type: 'string' },
+            ]
+});
+
+//Size
+Ext.define('EOQ.Model.Size', {
+    extend: 'Ext.data.Model',
+    idProperty: 'BrandID',
+    fields: [
+                    { name: 'SizeID', type: 'int' },
+                    { name: 'SizeName', type: 'string' },
             ]
 });
 

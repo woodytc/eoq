@@ -184,8 +184,12 @@ namespace eoqLab.Controllers
                                    where stock.BranchId == this.GetBranchId()
                                    && stock.MeterialId == productParams.ProductId
                                    && stock.UnitId == productParams.UnitId
+                                   && stock.BrandId == productParams.BrandId
+                                   && stock.ColorId == productParams.ColorId
+                                   && stock.SizeId == productParams.SizeId
                                    select new
                                    {
+                                       stock.Id,
                                        stock.Price
                                    };
 
@@ -305,7 +309,7 @@ namespace eoqLab.Controllers
             {
                 var cashier = new Eoq.Domain.CashierHeader
                 {
-                    Id = purchaseOrder.Id,
+                    Id = purchaseOrder.id,
                     BranchId = this.GetBranchId(),
                     Updatedate = DateTime.Now ,
                     Updateby = this.GetUserName()
@@ -315,7 +319,7 @@ namespace eoqLab.Controllers
                 {
                     CashierHeaderRepository.Update(cashier);
 
-                    var oldCashierMaterial = new Cashier {Id = purchaseOrder.Id};
+                    var oldCashierMaterial = new Cashier {Id = purchaseOrder.id};
                     CashierRepository.Delete(oldCashierMaterial);
 
                     var cashierMaterial = new Eoq.Domain.Cashier()
@@ -389,63 +393,72 @@ namespace eoqLab.Controllers
 
                 if (purchaseOrder != null && purchaseOrders == null)
                 {
-                    CashierHeaderRepository.Save(cashier);
-                    
-                    var cashierMaterial = new Eoq.Domain.Cashier() { 
-                                                                        Id = cashier.Id , 
-                                                                        Material_ID = purchaseOrder.ProductID, 
-                                                                        Amount        = purchaseOrder.Amount.ToString(),
-                                                                        TotalPrice    = purchaseOrder.Amount * purchaseOrder.Price,
-                                                                        Tax           = 0,//purchaseOrder.Tax,
-                                                                        IncudeTax     = false//purchaseOrder.IncludeTax
-                                                                    };
-                    //this.StockRepository.IsExist();
-                    CashierRepository.Save(cashierMaterial);
-                    
-                    var httpSessionStateBase = this.HttpContext.Session;
-                    if (httpSessionStateBase != null) httpSessionStateBase["CashierId"] = cashier.Id;
-
-                    //save completed
-                    return Json(new { success = true, cashierID = cashier.Id, error = "" }, JsonRequestBehavior.AllowGet);
-                    
-                }
-                else if (purchaseOrders != null)
-                {
-                 
-                    CashierHeaderRepository.Save(cashier);
-
-
-                    foreach (var purchaseOrderData in purchaseOrders)
+                    var success = DecreaseStock(purchaseOrder.id, purchaseOrder.Amount);
+                    if (success)
                     {
+                        CashierHeaderRepository.Save(cashier);
 
                         var cashierMaterial = new Eoq.Domain.Cashier()
                         {
                             Id = cashier.Id,
-                            Material_ID = purchaseOrderData.ProductID,
-                            Amount = purchaseOrderData.Amount.ToString(),
-                            TotalPrice = purchaseOrderData.Amount * purchaseOrderData.Price,
-                            Tax           = 0,//purchaseOrderData.Tax,
-                            IncudeTax     = false//purchaseOrderData.IncludeTax
+                            Material_ID = purchaseOrder.id,
+                            Amount = purchaseOrder.Amount.ToString(),
+                            TotalPrice = purchaseOrder.Amount * purchaseOrder.Price,
+                            Tax = 0,//purchaseOrder.Tax,
+                            IncudeTax = false//purchaseOrder.IncludeTax
                         };
+                        //this.StockRepository.IsExist();
+
 
                         CashierRepository.Save(cashierMaterial);
+
+                        var httpSessionStateBase = this.HttpContext.Session;
+                        if (httpSessionStateBase != null) httpSessionStateBase["CashierId"] = cashier.Id;
+
+                        //save completed
+                        return Json(new { success = true, cashierID = cashier.Id, error = "" }, JsonRequestBehavior.AllowGet);
                     }
 
-                    
-                    var httpSessionStateBase = this.HttpContext.Session;
-                    if (httpSessionStateBase != null) httpSessionStateBase["CashierId"] = cashier.Id;
-                    //save completed
-                    return Json(new { success = true, cashierID = cashier.Id , error = "" }, JsonRequestBehavior.AllowGet);
-                
+                    return Json(new { success = false, isError = true, error = "Out of stock." }, JsonRequestBehavior.AllowGet);
                 }
-                else
+
+                if (purchaseOrders != null)
                 {
-                    throw new Exception();
+                        //bug decrease stock # happen when one of stock was empty 
+
+                        CashierHeaderRepository.Save(cashier);
+                        foreach (var purchaseOrderData in purchaseOrders)
+                        {
+
+                            var cashierMaterial = new Cashier()
+                                                      {
+                                                          Id = cashier.Id,
+                                                          Material_ID = purchaseOrderData.id,
+                                                          Amount = purchaseOrderData.Amount.ToString(),
+                                                          TotalPrice = purchaseOrderData.Amount*purchaseOrderData.Price,
+                                                          Tax = 0,
+                                                          //purchaseOrderData.Tax,
+                                                          IncudeTax = false //purchaseOrderData.IncludeTax
+                                                      };
+
+                            DecreaseStock(purchaseOrderData.id, purchaseOrderData.Amount);
+                            CashierRepository.Save(cashierMaterial);
+                        }
+
+                        var httpSessionStateBase = this.HttpContext.Session;
+                        if (httpSessionStateBase != null) httpSessionStateBase["CashierId"] = cashier.Id;
+                        //save completed
+                        return Json(new {success = true, cashierID = cashier.Id, error = ""},
+                                    JsonRequestBehavior.AllowGet);
+                    
+                    
                 }
+
+                throw new Exception();
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false,isError = true, error = ex.Message.ToString() }, JsonRequestBehavior.AllowGet);
             } 
         }
 
@@ -507,27 +520,51 @@ namespace eoqLab.Controllers
         {
             try
             {
-                //check
-
-
                 var p = stockParams;
-                var stock = new Stock()
-                {
-                    Price = p.Price,
-                    Amount = p.Amount,
-                    MeterialId = p.ProductID,
-                    ColorId = p.ColorID,
-                    BrandId = p.BrandID,
-                    UnitId = p.UnitID,
-                    BranchId = this.GetBranchId(),
-                    SizeId = p.SizeID,
-                    Reorderpoint = p.ReorderPoint,
-                    Createdate = DateTime.Now , 
-                    Updatedate = DateTime.Now ,
-                    Createby = this.GetUserName()
-                };
+                var isExist = StockRepository.IsExist(new Stock()
+                                            {
+                                                MeterialId = p.ProductID,
+                                                ColorId = p.ColorID,
+                                                BrandId = p.BrandID,
+                                                UnitId = p.UnitID,
+                                                BranchId = this.GetBranchId(),
+                                                SizeId = p.SizeID,
+                                            });
+                var oldStock = (from stock in StockRepository.GetAll()
+                            join product in this.MaterialRepository.GetAll().DefaultIfEmpty() on stock.MeterialId equals product.MatId
+                            where stock.BranchId == this.GetBranchId()
+                            && stock.MeterialId == p.ProductID
+                            && stock.UnitId == p.UnitID
+                            && stock.BrandId ==  this.GetBranchId()
+                            && stock.ColorId == p.ColorID
+                            && stock.SizeId == p.SizeID
+                            select stock
+                            ).First<Stock>();
+                 
+                 var newStock = new Stock()
+                    {
+                        Price = p.Price,
+                        Amount = p.Amount,
+                        MeterialId = p.ProductID,
+                        ColorId = p.ColorID,
+                        BrandId = p.BrandID,
+                        UnitId = p.UnitID,
+                        BranchId = this.GetBranchId(),
+                        SizeId = p.SizeID,
+                        Reorderpoint = p.ReorderPoint,
+                        Createdate = DateTime.Now,
+                        Updatedate = DateTime.Now,
+                        Createby = this.GetUserName()
+                    };
 
-                StockRepository.Save(stock);
+                 if (isExist)
+                 {
+                     newStock.Id = oldStock.Id;
+                 }
+
+                 StockRepository.SaveOrUpdate(newStock);
+                
+
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
                 
             }
@@ -600,6 +637,24 @@ namespace eoqLab.Controllers
             {
                 return Json(new { success = false, message = "This material can not be delete because there are others from using." }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public bool DecreaseStock(int stockId,int amount)
+        {
+            try
+            {
+                var stock = (from s in this.StockRepository.GetAll() where s.Id.Equals(stockId) && s.Amount >= s.Reorderpoint select s).First<Stock>();
+                if(  stock != null )
+                {
+                    stock.Amount -= amount;
+                    return StockRepository.Update(stock) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return false;
         }
         #endregion
 

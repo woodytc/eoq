@@ -1,4 +1,7 @@
-﻿Ext.define('PurchaseOrderForm', {
+﻿window.GlobalVal = {
+    StockID : 0
+};
+Ext.define('PurchaseOrderForm', {
     extend: 'Ext.Panel',
     LastSaleID: 0,
     constructor: function (config) {
@@ -160,6 +163,39 @@
             proxy: unitProxy
         });
 
+        //Colors List data
+        var colorProxy = proxyOptions;
+        colorProxy.api = {
+            read: window.read_colors_list
+        };
+
+        me.colorStore = Ext.create('Ext.data.Store', {
+            model: 'EOQ.Model.Colors',
+            proxy: colorProxy
+        });
+
+        //Brands List data
+        var brandProxy = proxyOptions;
+        brandProxy.api = {
+            read: window.read_brand_list
+        };
+
+        me.brandStore = Ext.create('Ext.data.Store', {
+            model: 'EOQ.Model.Brands',
+            proxy: brandProxy
+        });
+
+        //Size List data
+        var sizeProxy = proxyOptions;
+        sizeProxy.api = {
+            read: window.read_size_list
+        };
+
+        me.sizeStore = Ext.create('Ext.data.Store', {
+            model: 'EOQ.Model.Size',
+            proxy: sizeProxy
+        });
+
         var productsField = {
             xtype: 'combobox',
             typeAhead: true,
@@ -191,6 +227,39 @@
             displayField: 'UnitName',
             valueField: 'UnitID',
             store: me.unitStore,
+            allowBlank: false,
+            editable: false
+        }, colorsField = {
+            id: prefix + 'ColorID',
+            xtype: 'combobox',
+            typeAhead: true,
+            triggerAction: 'all',
+            scope: me,
+            displayField: 'ColorName',
+            valueField: 'ColorID',
+            store: me.colorStore,
+            allowBlank: false,
+            editable: false
+        }, brandsField = {
+            id: 'BrandField',
+            xtype: 'combobox',
+            typeAhead: true,
+            triggerAction: 'all',
+            scope: me,
+            displayField: 'BrandName',
+            valueField: 'BrandID',
+            store: me.brandStore,
+            allowBlank: false,
+            editable: false
+        }, sizeField = {
+            id: 'SizeField',
+            xtype: 'combobox',
+            typeAhead: true,
+            triggerAction: 'all',
+            scope: me,
+            displayField: 'SizeName',
+            valueField: 'SizeID',
+            store: me.sizeStore,
             allowBlank: false,
             editable: false
         };
@@ -249,9 +318,9 @@
                                 });
 
                                 //get product price
-                                me.getProductPrice(record, function (price) {
-                                    if (price == null) price = 0;
-                                    record.set("Price", price);
+                                me.getProductPrice(record, function (stock) {
+                                    record.set("Price", stock.Price);
+                                    record.set("id", stock.Id);
                                 });
                                 break;
                             }
@@ -277,9 +346,9 @@
                                 me.productStore.lastQuery = null;
 
                                 //get product price
-                                me.getProductPrice(record, function (price) {
-                                    if (price == null) price = 0;
-                                    record.set("Price", price);
+                                me.getProductPrice(record, function (stock) {
+                                    record.set("Price", stock.Price);
+                                    record.set("id", stock.Id);
                                 });
                                 break;
                             }
@@ -298,9 +367,75 @@
                                 });
 
                                 //get product price
-                                me.getProductPrice(record, function (price) {
-                                    if (price == null) price = 0;
-                                    record.set("Price", price);
+                                me.getProductPrice(record, function (stock) {
+                                    record.set("Price", stock.Price);
+                                    record.set("id", stock.Id);
+                                });
+                                break;
+                            }
+                        case "ColorName":
+                            {
+                                if (typeof context.value == "number") {
+                                    //set product id on store
+                                    record.set("ColorID", context.value);
+                                }
+
+                                //set product name on store
+                                me.colorStore.each(function (rec) {
+                                    if (rec.get("ColorID") == context.value) {
+                                        var colorName = rec.get("ColorName");
+                                        record.set("ColorName", colorName);
+                                    }
+                                });
+
+                                //get product price
+                                me.getProductPrice(record, function (stock) {
+                                    record.set("Price", stock.Price);
+                                    record.set("id", stock.Id);
+                                });
+                                break;
+                            }
+                        case "BrandName":
+                            {
+                                if (typeof context.value == "number") {
+                                    //set product id on store
+                                    record.set("BrandID", context.value);
+                                }
+
+                                //set product name on store
+                                me.brandStore.each(function (rec) {
+                                    if (rec.get("BrandID") == context.value) {
+                                        var brandName = rec.get("BrandName");
+                                        record.set("BrandName", brandName);
+                                    }
+                                });
+
+                                //get product price
+                                me.getProductPrice(record, function (stock) {
+                                    record.set("Price", stock.Price);
+                                    record.set("id", stock.Id);
+                                });
+                                break;
+                            }
+                        case "SizeName":
+                            {
+                                if (typeof context.value == "number") {
+                                    //set product id on store
+                                    record.set("SizeID", context.value);
+                                }
+
+                                //set product name on store
+                                me.sizeStore.each(function (rec) {
+                                    if (rec.get("SizeID") == context.value) {
+                                        var sizeName = rec.get("SizeName");
+                                        record.set("SizeName", sizeName);
+                                    }
+                                });
+
+                                //get product price
+                                me.getProductPrice(record, function (stock) {
+                                    record.set("Price", stock.Price);
+                                    record.set("id", stock.Id);
                                 });
                                 break;
                             }
@@ -354,11 +489,34 @@
             },
             {
                 header: 'หน่วย',
-                width: 130,
                 sortable: true,
                 dataIndex: 'UnitName',
                 renderer: Ext.ux.renderer.Combo(unitsField),
                 editor: unitsField,
+                flex: 1
+            },
+            {
+                header: 'สี',
+                sortable: true,
+                dataIndex: 'ColorName',
+                renderer: Ext.ux.renderer.Combo(colorsField),
+                editor: colorsField,
+                flex: 1
+            },
+            {
+                header: 'ยี่ห้อ',
+                sortable: true,
+                dataIndex: 'BrandName',
+                renderer: Ext.ux.renderer.Combo(brandsField),
+                editor: brandsField,
+                flex: 1
+            },
+            {
+                header: 'ขนาด',
+                sortable: true,
+                dataIndex: 'SizeName',
+                renderer: Ext.ux.renderer.Combo(sizeField),
+                editor: sizeField,
                 flex: 1
             },
             {
@@ -461,7 +619,13 @@
             Amount: 0,
             UnitID: 0,
             UnitName: '',
-            name: 0.00
+            ColorID: 0,
+            ColorName: '',
+            BrandID: 0,
+            BrandName: '',
+            SizeID: 0,
+            SizeName: '',
+            Price: 0.00
         }),
 
 
@@ -479,6 +643,7 @@
     },
     onSync: function () {
         var me = this;
+
         //send data to save 
         me.Store.sync();
 
@@ -508,37 +673,44 @@
     }, onStoreWrite: function (aStore, aOperation) {
 
         var iRecord = aOperation.response.result.data;
-        console.log(iRecord);
+        //console.log(iRecord);
         this.LastSaleID = iRecord.cashierID;
 
     }, getProductPrice: function (record, cb) {
         var params = {};
         params.ProductId = record.get("ProductID");
         params.UnitId = record.get("UnitID");
+        params.BrandId = record.get("BrandID");
+        params.ColorId = record.get("ColorID");
+        params.SizeId = record.get("SizeID");
 
-        $.ajax({
-            type: "GET",
-            cache: false,
-            data: params,
-            url: window.get_product_price,
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (result) {
-                var price;
-                if (typeof result.data[0] == "undefined") {
-                    price = 0;
-                } else {
-                    price = result.data[0].Price;
-                }
-                if (typeof cb == "function") {
-                    cb(price);
-                }
+        if (params.BrandId != 0 && params.ColorId != 0 && params.ProductId != 0 && params.UnitId != 0 && params.SizeId != 0) {
+            $.ajax({
+                type: "GET",
+                cache: false,
+                data: params,
+                url: window.get_product_price,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var stock = {};
+                    if (typeof result.data[0] != "undefined") {
+                        stock = result.data[0];
+                    } else {
+                        stock.Price = 0;
+                        stock.Id = 0;
+                    }
+                    console.log(stock);
+                    if (typeof cb == "function") {
+                        cb(stock);
+                    }
 
-                return price;
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                return null;
-            }
-        });
+                    return stock;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    return null;
+                }
+            });
+        }
     }
 });
