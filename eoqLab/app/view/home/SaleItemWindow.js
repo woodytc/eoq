@@ -7,7 +7,7 @@
             createDate = "";
 
         me.prefix = prefix;
-        
+
         //Define proxy datastore
         var proxyOptions = {
             type: 'ajax',
@@ -52,21 +52,21 @@
 
         //create stock form
         var win = new Ext.Window({
-                id: prefix + 'view',
-                iconCls: 'icon-details',
-                title: 'รายละเอียดรายการขายสินค้า :' + createDate,
-                y: 20,
-                width: 500,
-                resizable: false,
-                modal: true,
-                buttonAlign: 'center',
-                xtype: 'fieldset',
-                defaultType: 'textfield',
-                layout: { type: 'table', columns: 1 },
-                defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
-                items: [{ id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
+            id: prefix + 'view',
+            iconCls: 'icon-details',
+            title: 'รายละเอียดรายการขายสินค้า :' + createDate,
+            y: 20,
+            width: 500,
+            resizable: false,
+            modal: true,
+            buttonAlign: 'center',
+            xtype: 'fieldset',
+            defaultType: 'textfield',
+            layout: { type: 'table', columns: 1 },
+            defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
+            items: [{ id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
                     , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false
-                },
+            },
                     { id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
                     , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false
                     },
@@ -81,11 +81,11 @@
                         iconCls: 'icon-cancel',
                         text: 'ปิดหน้าต่าง',
                         name: 'button-cancel',
-                        handler: function(btn, evt) {
+                        handler: function (btn, evt) {
                             win.destroy();
                         }
                     }]
-            });
+        });
 
     } //End constructor functional
 });

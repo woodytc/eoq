@@ -399,6 +399,7 @@ namespace eoqLab.Controllers
                                                                         Tax           = 0,//purchaseOrder.Tax,
                                                                         IncudeTax     = false//purchaseOrder.IncludeTax
                                                                     };
+                    //this.StockRepository.IsExist();
                     CashierRepository.Save(cashierMaterial);
                     
                     var httpSessionStateBase = this.HttpContext.Session;
@@ -541,15 +542,27 @@ namespace eoqLab.Controllers
         {
             try {
                 var p = stockParams;
+                
+                // [ luck kai ] get Value from Name
+                var unit = (from u in UnitRepository.GetAll() where u.UnitName.Equals(p.UnitName) select u).First<Unit>();
+                var mat = (from m in MaterialRepository.GetAll() where m.MetName.Equals(p.ProductName) select m).First<Material>();
+                var brand = (from b in BrandRepository.GetAll() where b.Name.Equals(p.BrandName) select b).First<Brand>();
+                var color = (from c in ColorRepository.GetAll() where c.Name.Equals(p.ColorName) select c).First<Color>();
+                var size = (from s in SizesRepository.GetAll() where s.Name.Equals(p.ProductName) select s).First<Sizes>();
+                
                 var stock = new Stock()
                                 {
                                  Price = p.Price,
                                  Amount = p.Amount,
-                                 MeterialId = p.ProductID,
-                                 BrandId = p.BrandID,
-                                 UnitId = p.UnitID,
-                                 ColorId = p.ColorID,
+
+                                 MeterialId = mat.MatId,
+                                 BrandId = brand.Id,
+                                 UnitId = unit.ID,
+                                 ColorId = color.Id,
+                                 SizeId = size.Id,
+
                                  BranchId = this.GetBranchId(),
+                                 Reorderpoint = p.ReorderPoint,
                                  Updatedate = DateTime.Now,
                                  Updateby = this.GetUserName()
                                 };
@@ -567,7 +580,7 @@ namespace eoqLab.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, error = ex.Message}, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, isError = true , error = ex.Message}, JsonRequestBehavior.AllowGet);
             }
              
         }

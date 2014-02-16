@@ -14,6 +14,7 @@
         public int BrandID { get; set; }
         public string BrandName { get; set; }
         public int SizeID { get; set; }
+        public string SizeName { get; set; }
         public decimal Amount { get; set; }
         public decimal Price { get; set; }
         public decimal ReorderPoint { get; set; }

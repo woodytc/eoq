@@ -1,4 +1,20 @@
-﻿Ext.define('StockForm', {
+﻿var GlobalStockValue = {
+    Store: null,
+    setStore: function (store) {
+        var me = this;
+        me.Store = Ext.getStore(store);
+        me.Store.proxy.url = window.read_stockURL;
+    },
+    reloadStore: function () {
+        var me = this;
+        
+        if (me.Store != null) {
+            me.Store.load();
+        }
+    }
+};
+
+Ext.define('StockForm', {
     extend: 'Ext.Panel',
     constructor: function (config) {
         var me = this;
@@ -57,7 +73,11 @@
                 iconCls: 'icon-add',
                 text: 'เพิ่ม',
                 scope: me,
-                handler: me.onAddClick
+                handler: function (btn, evt) {
+                    var store = me.Store;
+                    GlobalStockValue.setStore(store);
+                    me.onAddClick();
+                }
             }, {
                 iconCls: 'icon-edit',
                 text: 'แก้ไข',
@@ -67,6 +87,8 @@
                     var gridpanel = btn.up().up();
                     var recordSelected = gridpanel.getSelectionModel().getSelection();
                     if (recordSelected.length == 1) {
+                        var store = me.Store;
+                        GlobalStockValue.setStore(store);
                         me.popupEditItem(recordSelected[0]);
                     }
                 } //end handler
@@ -207,31 +229,15 @@
 
     }, onSelectChange: function (selModel, selections) {
         this.down('#delete').setDisabled(selections.length === 0);
-    }, onAddClick: function (me) {
-        console.log(this);
+    }, onAddClick: function () {
+
         Ext.MessageBox.show({
             msg: 'กรุณารอสักครู่กำลังโหลดข้อมูล...', width: 300, closable: false
         });
 
         //create new popup
-        var stockWindow = new window.eoq.view.home.StockWindow(
-             {
-                 listeners: {
-                     close: function (panel, eOpts) {
+        var stockWindow = new window.eoq.view.home.StockWindow();
 
-                         if (panel.intend === 'save-success') {
-                             console.log('insave success');
-                             var quickStore = Ext.getStore(this.Store);
-                             quickStore.proxy.url = window.read_stockURL;
-                          //   StockForm.search(window.read_stockURL);
-                         }
-                     }
-                 }
-                 //,
-                 //animateTarget: btn
-             }
-        );
-        //this.search(window.read_stockURL);
         Ext.MessageBox.hide();
 
     }, onDeleteClick: function () {
@@ -560,12 +566,12 @@
                         //console.log(Ext.getCmp(prefix + 'ProductID'));
                         var params = {};
                         params.ID = record.get('ID');
-                        params.ProductID = Ext.getCmp(prefix + 'ProductID').getValue();
-                        params.CategoryID = Ext.getCmp(prefix + 'CategoryID').getValue();
-                        params.ColorID = Ext.getCmp(prefix + 'ColorID').getValue();
-                        params.UnitID = Ext.getCmp(prefix + 'UnitID').getValue();
-                        params.BrandID = Ext.getCmp(prefix + 'BrandID').getValue();
-                        params.SizeID = Ext.getCmp(prefix + 'SizeID').getValue();
+                        params.ProductName = Ext.getCmp(prefix + 'ProductID').getValue();
+                        params.CategoryName = Ext.getCmp(prefix + 'CategoryID').getValue();
+                        params.ColorName = Ext.getCmp(prefix + 'ColorID').getValue();
+                        params.UnitName = Ext.getCmp(prefix + 'UnitID').getValue();
+                        params.BrandName = Ext.getCmp(prefix + 'BrandID').getValue();
+                        params.SizeName = Ext.getCmp(prefix + 'SizeID').getValue();
                         params.Amount = Ext.getCmp(prefix + 'Amount').getValue();
                         params.Price = Ext.getCmp(prefix + 'Price').getValue();
                         params.ReorderPoint = Ext.getCmp(prefix + 'ReorderPoint').getValue();
@@ -573,14 +579,12 @@
                         Ext.Ajax.request({
                             method: 'post',
                             url: url,
-                            //params: params,
+                            params: params,
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
-                                var text = response.responseText;
-                                // process server response here
-                                //                                
-                                //me.Store.load();
+                                
+                                GlobalStockValue.reloadStore();
                                 Ext.MessageBox.alert('บันทึกข้อมูลเรียบร้อย !!', "Save complete");
 
                             }
@@ -652,28 +656,6 @@
         });
     }, isNullOrUndefined: function (val) {
         return (val == null || typeof val == 'undefined');
-    }, search: function (url) {
-
-        console.log(url);
-
-        var quickStore = Ext.getStore(me.Store);
-        quickStore.proxy.url = window.read_stockURL;
-        //quickStore.getProxy().extraParams.name = name;    
-        //var pagingToolbar = Ext.getCmp(prefix + 'PagingToolbar');
-        //pagingToolbar.moveFirst();
-
     }
 
 });
-
-StockForm.prototype.search = function (url) {
-
-    console.log(url);
-
-    var quickStore = Ext.getStore(me.Store);
-    quickStore.proxy.url = window.read_stockURL;
-    //quickStore.getProxy().extraParams.name = name;    
-    //var pagingToolbar = Ext.getCmp(prefix + 'PagingToolbar');
-    //pagingToolbar.moveFirst();
-
-};

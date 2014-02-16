@@ -21,8 +21,8 @@ using NHibernate.Criterion;
         List<Stock> GetAll();
         int Update(Stock oldUnit);
         int CountAll();
-
-        void Delete(Stock Stock);
+        bool IsExist(Stock stock);
+        void Delete(Stock stock);
     }
 
     public class StockRepository : NhRepository, IStockRepository
@@ -90,31 +90,31 @@ using NHibernate.Criterion;
 
         }
 
-        public void Delete(Stock Stock)
+        public void Delete(Stock stock)
         {
             using (var session = SessionFactory.OpenStatelessSession())
             {
-                session.Delete(Stock);
+                session.Delete(stock);
             }
         }
 
-        public bool IsExist(Stock Stock)
+        public bool IsExist(Stock stock)
         {
 
             using (var session = SessionFactory.OpenStatelessSession())
             {
-//                var results = from x in session.QueryOver<Stock>()
-//                              where x.BranchId == Stock.BranchId
-//                                    && x.MeterialId == Stock.MeterialId
-//                                    && x.ColorId == Stock.ColorId
-//                                    && x.BrandId == Stock.BrandId
-//                                    && x.UnitId == Stock.UnitId
-//                                    && x.SizeId == Stock.SizeId
-//                              
-//                //session.Close();
-//                return results;
+                var results = (from x in session.QueryOver<Stock>()
+                               where x.BranchId == stock.BranchId
+                                    && x.MeterialId == stock.MeterialId
+                                    && x.ColorId == stock.ColorId
+                                    && x.BrandId == stock.BrandId
+                                    && x.UnitId == stock.UnitId
+                                    && x.SizeId == stock.SizeId
+                               select x);
+                              
+                //session.Close();
+                return results.RowCount() > 0;
             }
-            return false;
         }
 
         #endregion
