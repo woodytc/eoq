@@ -530,16 +530,8 @@ namespace eoqLab.Controllers
                                                 BranchId = this.GetBranchId(),
                                                 SizeId = p.SizeID,
                                             });
-                var oldStock = (from stock in StockRepository.GetAll()
-                            join product in this.MaterialRepository.GetAll().DefaultIfEmpty() on stock.MeterialId equals product.MatId
-                            where stock.BranchId == this.GetBranchId()
-                            && stock.MeterialId == p.ProductID
-                            && stock.UnitId == p.UnitID
-                            && stock.BrandId ==  this.GetBranchId()
-                            && stock.ColorId == p.ColorID
-                            && stock.SizeId == p.SizeID
-                            select stock
-                            ).First<Stock>();
+
+
                  
                  var newStock = new Stock()
                     {
@@ -559,10 +551,22 @@ namespace eoqLab.Controllers
 
                  if (isExist)
                  {
-                     newStock.Id = oldStock.Id;
+                     var oldStock = (from stock in StockRepository.GetAll()
+                                     join product in this.MaterialRepository.GetAll().DefaultIfEmpty()
+                                         on stock.MeterialId equals product.MatId
+                                     where stock.BranchId == this.GetBranchId()
+                                           && stock.MeterialId == p.ProductID
+                                           && stock.UnitId == p.UnitID
+                                           && stock.BrandId == p.BrandID
+                                           && stock.ColorId == p.ColorID
+                                           && stock.SizeId == p.SizeID
+                                     select stock
+                                    ).ToList();
+                     var firstOrDefault = oldStock.FirstOrDefault();
+                     if (firstOrDefault != null) newStock.Id = firstOrDefault.Id;
                  }
 
-                 StockRepository.SaveOrUpdate(newStock);
+                StockRepository.SaveOrUpdate(newStock);
                 
 
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
