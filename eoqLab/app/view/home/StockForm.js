@@ -57,6 +57,7 @@ Ext.define('StockForm', {
         //grid store
         me.Store = Ext.create('Ext.data.Store', {
             model: 'EOQ.model.Stock',
+            id: me.prefix + 'gridstore',
             autoLoad: true,
             //autoSync : true,
             pageSize: 25,
@@ -66,6 +67,8 @@ Ext.define('StockForm', {
             proxy: stockProxy
         });
 
+        console.log(me.Store);
+        
         var headerButtons = {
             dock: 'top',
             xtype: 'toolbar',
@@ -75,8 +78,26 @@ Ext.define('StockForm', {
                 scope: me,
                 handler: function (btn, evt) {
                     var store = me.Store;
-                    GlobalStockValue.setStore(store);
-                    me.onAddClick();
+                    //GlobalStockValue.setStore(store);
+                    //me.onAddClick();
+                    Ext.MessageBox.show({
+                        msg: 'Please wait generate items...', width: 300, closable: false
+                    });
+                    var quickConfWindow = new window.eoq.view.home.StockWindow({
+                        listeners: {
+                            close: function (panel, eOpts) {
+                                if (panel.intend === 'save-success') {
+                                    console.log('insave success');
+                                    me.search(window.read_stockURL, "fuck");
+                                }
+                            }
+                        },
+                        animateTarget: btn
+                    });
+                    //quickConfWindow.create();
+                    // quickConfWindow.saveService = window.SaveQuickDeploymentAct;
+                    Ext.MessageBox.hide();
+                    //quickConfWindow.show();
                 }
             }, {
                 iconCls: 'icon-edit',
@@ -583,7 +604,7 @@ Ext.define('StockForm', {
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (response) {
-                                
+
                                 GlobalStockValue.reloadStore();
                                 Ext.MessageBox.alert('บันทึกข้อมูลเรียบร้อย !!', "Save complete");
 
@@ -659,3 +680,16 @@ Ext.define('StockForm', {
     }
 
 });
+
+//fn search
+StockForm.prototype.search = function (url, name) {
+    var prefix = 'StockForm-';
+    var store = Ext.getStore(prefix + 'gridstore');
+    //console.log(store);
+    //var quickStore = Ext.getStore(prefix + 'gridStore');
+    store.proxy.url = url;
+    //quickStore.getProxy().extraParams.name = name;
+    var pagingToolbar = Ext.getCmp(prefix + 'PagingToolbar');
+    pagingToolbar.moveFirst();
+
+};
