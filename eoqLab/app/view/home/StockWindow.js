@@ -276,8 +276,9 @@
                                 // process server response here
                                 //window.StockForm.reloadSaleList();
                                 me.intend = "save-success";
-                                GlobalStockValue.reloadStore();
+                                //GlobalStockValue.reloadStore();
                                 me.close();
+                                console.log(me);
                             }
                         });
 
