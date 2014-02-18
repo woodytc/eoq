@@ -277,11 +277,11 @@
                                 //window.StockForm.reloadSaleList();
                                 me.intend = "save-success";
                                 GlobalStockValue.reloadStore();
-                                me.close();
+                                
                             }
                         });
 
-                        //win.destroy();
+                        win.destroy();
 
                     }
                 },
