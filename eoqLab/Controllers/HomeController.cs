@@ -563,7 +563,11 @@ namespace eoqLab.Controllers
                                      select stock
                                     ).ToList();
                      var firstOrDefault = oldStock.FirstOrDefault();
-                     if (firstOrDefault != null) newStock.Id = firstOrDefault.Id;
+                     if (firstOrDefault != null)
+                     {
+                         newStock.Id = firstOrDefault.Id;
+                         newStock.Amount = firstOrDefault.Amount + p.Amount;
+                     }
                  }
 
                 StockRepository.SaveOrUpdate(newStock);
