@@ -67,8 +67,6 @@ Ext.define('StockForm', {
             proxy: stockProxy
         });
 
-        console.log(me.Store);
-        
         var headerButtons = {
             dock: 'top',
             xtype: 'toolbar',
@@ -302,6 +300,9 @@ Ext.define('StockForm', {
             }
         });
     }, popupEditItem: function (record) {
+
+        console.log(record);
+
         var data = {};
         data.productID = record.get('ProductID');
         data.productName = record.get("ProductName");
@@ -356,7 +357,9 @@ Ext.define('StockForm', {
         };
 
         me.productStore = Ext.create('Ext.data.Store', {
-            model: 'EOQ.Model.ProductsList',
+            //model: 'EOQ.Model.ProductsList',
+            fields: ['ProductID', 'ProductName'],
+            autoLoad: true,
             proxy: productProxy
         });
 
@@ -379,7 +382,8 @@ Ext.define('StockForm', {
         };
 
         me.unitStore = Ext.create('Ext.data.Store', {
-            model: 'EOQ.Model.UnitsList',
+            fields: ['UnitID', 'UnitName'],
+            autoLoad: true,
             proxy: unitProxy
         });
 
@@ -391,6 +395,7 @@ Ext.define('StockForm', {
 
         me.colorStore = Ext.create('Ext.data.Store', {
             model: 'EOQ.Model.Colors',
+            autoLoad: true,
             proxy: colorProxy
         });
 
@@ -402,6 +407,7 @@ Ext.define('StockForm', {
 
         me.brandStore = Ext.create('Ext.data.Store', {
             model: 'EOQ.Model.Brands',
+            autoLoad: true,
             proxy: brandProxy
         });
 
@@ -413,28 +419,48 @@ Ext.define('StockForm', {
 
         me.sizeStore = Ext.create('Ext.data.Store', {
             model: 'EOQ.Model.Size',
+            autoLoad: true,
             proxy: sizeProxy
         });
 
+        console.log(me.productStore);
+
+        //var productsField = {
+        //    id: prefix + 'ProductID',
+        //    xtype: 'combobox',
+        //    typeAhead: true,
+        //    triggerAction: 'query',
+        //    scope: me,
+        //    displayField: 'ProductName',
+        //    valueField: 'ProductID',
+        //    store: me.productStore,
+        //    queryMode: 'remote',
+        //    allowBlank: false,
+        //    editable: false,
+        //    disabled: true,
+        //    name: 'ProductID',
+        //    fieldLabel: 'ชื่อสินค้า',
+        //    labelStyle: 'text-align: right',
+        //    afterLabelTextTpl: required,
+        //    fieldStyle: 'text-align: right'
+        //}, 
         var productsField = {
             id: prefix + 'ProductID',
-            xtype: 'combobox',
+            name: 'ProductID',
+            xtype: 'combo',
             typeAhead: true,
-            triggerAction: 'query',
+            triggerAction: 'all',
             scope: me,
             displayField: 'ProductName',
             valueField: 'ProductID',
-            store: me.productStore,
-            queryMode: 'remote',
-            allowBlank: false,
+            store: me.unitStore,
             editable: false,
-            disabled: true,
-            name: 'ProductID',
-            fieldLabel: 'ชื่อสินค้า',
+            fieldLabel: 'yy',
             labelStyle: 'text-align: right',
             afterLabelTextTpl: required,
-            fieldStyle: 'text-align: right'
-        }, categoriesField = {
+            fieldStyle: 'text-align: right',
+            allowBlank: false
+        },categoriesField = {
             id: prefix + 'CategoryID',
             name: 'CategoryID',
             xtype: 'combobox',
@@ -449,53 +475,74 @@ Ext.define('StockForm', {
             fieldLabel: 'หมวดหมู่',
             labelStyle: 'text-align: right',
             afterLabelTextTpl: required,
-            fieldStyle: 'text-align: right',
-            listeners: {
-                // public event change - when selection1 dropdown is changed
-                select: function (combo, rec, index) {
-                    var productCombobox = Ext.getCmp(prefix + 'ProductID');
-                    productCombobox.setDisabled(false);
-                    me.productStore.getProxy().extraParams.CategoryId = combo.value;
-                }
-            }
-        }, unitsField = {
+            fieldStyle: 'text-align: right'
+            //,
+            //listeners: {
+            //    // public event change - when selection1 dropdown is changed
+            //    select: function (combo, rec, index) {
+            //        var productCombobox = Ext.getCmp(prefix + 'ProductID');
+            //        productCombobox.setDisabled(false);
+            //        me.productStore.getProxy().extraParams.CategoryId = combo.value;
+            //    }
+            //}
+        }
+        //, unitsField = {
+        //    id: prefix + 'UnitID',
+        //    name: 'UnitID',
+        //    anchor: '-10',
+        //    fieldLabel: 'หน่วย',
+        //    afterLabelTextTpl: required,
+        //    labelStyle: 'text-align: right',
+        //    fieldStyle: 'text-align: right',
+        //    value: 'Plese Select',
+        //    queryMode: 'remote',
+        //    xtype: 'combobox',
+        //    typeAhead: true,
+        //    triggerAction: 'all',
+        //    scope: me,
+        //    displayField: 'UnitName',
+        //    valueField: 'UnitID',
+        //    store: me.unitStore,
+        //    allowBlank: false,
+        //    editable: false
+        //    //,
+        //    //listeners: {
+        //    //    change: function (field, newValue, oldValue) {
+
+        //    //        var combop = Ext.getCmp(prefix + 'ProductID'),
+        //    //            params = {};
+        //    //        params.ProductID = combop.getValue();
+        //    //        params.UnitID = newValue;
+        //    //        if (!me.isNullOrUndefined(params.ProductID) && !me.isNullOrUndefined(params.UnitID)) {
+        //    //            //get product price
+        //    //            me.getProductPrice(params, function (price) {
+        //    //                if (price == null) price = 0;
+        //    //                var priceField = Ext.getCmp(prefix + 'Price');
+        //    //                priceField.setValue(price);
+        //    //            });
+        //    //        }
+
+        //    //    }
+        //    //}
+        //},
+        unitsField = {
             id: prefix + 'UnitID',
             name: 'UnitID',
-            anchor: '-10',
-            fieldLabel: 'หน่วย',
-            afterLabelTextTpl: required,
-            labelStyle: 'text-align: right',
-            fieldStyle: 'text-align: right',
-            value: 'Plese Select',
-            queryMode: 'remote',
-            xtype: 'combobox',
+            xtype: 'combo',
             typeAhead: true,
             triggerAction: 'all',
             scope: me,
             displayField: 'UnitName',
             valueField: 'UnitID',
             store: me.unitStore,
-            allowBlank: false,
             editable: false,
-            listeners: {
-                change: function (field, newValue, oldValue) {
-
-                    var combop = Ext.getCmp(prefix + 'ProductID'),
-                        params = {};
-                    params.ProductID = combop.getValue();
-                    params.UnitID = newValue;
-                    if (!me.isNullOrUndefined(params.ProductID) && !me.isNullOrUndefined(params.UnitID)) {
-                        //get product price
-                        me.getProductPrice(params, function (price) {
-                            if (price == null) price = 0;
-                            var priceField = Ext.getCmp(prefix + 'Price');
-                            priceField.setValue(price);
-                        });
-                    }
-
-                }
-            }
-        }, colorsField = {
+            fieldLabel: 'xx',
+            labelStyle: 'text-align: right',
+            afterLabelTextTpl: required,
+            fieldStyle: 'text-align: right',
+            allowBlank: false
+        },
+        colorsField = {
             id: prefix + 'ColorID',
             name: 'ColorID',
             xtype: 'combobox',
@@ -587,12 +634,12 @@ Ext.define('StockForm', {
                         //console.log(Ext.getCmp(prefix + 'ProductID'));
                         var params = {};
                         params.ID = record.get('ID');
-                        params.ProductName = Ext.getCmp(prefix + 'ProductID').getValue();
-                        params.CategoryName = Ext.getCmp(prefix + 'CategoryID').getValue();
-                        params.ColorName = Ext.getCmp(prefix + 'ColorID').getValue();
-                        params.UnitName = Ext.getCmp(prefix + 'UnitID').getValue();
-                        params.BrandName = Ext.getCmp(prefix + 'BrandID').getValue();
-                        params.SizeName = Ext.getCmp(prefix + 'SizeID').getValue();
+                        params.ProductID = Ext.getCmp(prefix + 'ProductID').getValue();
+                        params.CategoryID = Ext.getCmp(prefix + 'CategoryID').getValue();
+                        params.ColorID = Ext.getCmp(prefix + 'ColorID').getValue();
+                        params.UnitID = Ext.getCmp(prefix + 'UnitID').getValue();
+                        params.BrandID = Ext.getCmp(prefix + 'BrandID').getValue();
+                        params.SizeID = Ext.getCmp(prefix + 'SizeID').getValue();
                         params.Amount = Ext.getCmp(prefix + 'Amount').getValue();
                         params.Price = Ext.getCmp(prefix + 'Price').getValue();
                         params.ReorderPoint = Ext.getCmp(prefix + 'ReorderPoint').getValue();
@@ -625,12 +672,20 @@ Ext.define('StockForm', {
                 }]
         }).show();
 
-        me.setSelectedCombo(prefix + 'CategoryID', 'CategoryName', data.categoryName);
-        me.setSelectedCombo(prefix + 'UnitID', 'UnitName', data.unitName);
-        me.setSelectedCombo(prefix + 'ProductID', 'ProductName', data.productName);
-        me.setSelectedCombo(prefix + 'ColorID', 'ColorName', data.colorName);
-        me.setSelectedCombo(prefix + 'BrandID', 'BrandName', data.brandName);
-        me.setSelectedCombo(prefix + 'SizeID', 'SizeName', data.sizeName);
+        //me.setSelectedCombo(prefix + 'CategoryID', 'CategoryName', data.categoryName);
+        //me.setSelectedCombo(prefix + 'UnitID', 'UnitName', data.unitName);
+        //me.setSelectedCombo(prefix + 'ProductID', 'ProductName', data.productName);
+        //me.setSelectedCombo(prefix + 'ColorID', 'ColorName', data.colorName);
+        //me.setSelectedCombo(prefix + 'BrandID', 'BrandName', data.brandName);
+        //me.setSelectedCombo(prefix + 'SizeID', 'SizeName', data.sizeName);
+            console.log(record.get("UnitID"));
+        Ext.getCmp(prefix + 'CategoryID').setValue(record.get("CategoryID"));
+        Ext.getCmp(prefix + 'ProductID').setValue(record.get("ProductID"));
+        Ext.getCmp(prefix + 'UnitID').setValue(record.get("UnitID"));
+        Ext.getCmp(prefix + 'ColorID').setValue(record.get("ColorID"));
+        Ext.getCmp(prefix + 'BrandID').setValue(record.get("BrandID"));
+        Ext.getCmp(prefix + 'SizeID').setValue(record.get("SizeID"));
+
         Ext.getCmp(prefix + 'Amount').setValue(data.amount);
         Ext.getCmp(prefix + 'Price').setValue(data.price);
         Ext.getCmp(prefix + 'ReorderPoint').setValue(data.reorderPoint);
