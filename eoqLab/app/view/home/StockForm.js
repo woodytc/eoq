@@ -87,15 +87,17 @@ Ext.define('StockForm', {
                                 if (panel.intend === 'save-success') {
                                     console.log('insave success');
                                     me.search(window.read_stockURL, "fuck");
+                                    panel.window.destroy();
+                                    
                                 }
                             }
                         },
                         animateTarget: btn
                     });
-                    //quickConfWindow.create();
+                    quickConfWindow.create();
                     // quickConfWindow.saveService = window.SaveQuickDeploymentAct;
                     Ext.MessageBox.hide();
-                    //quickConfWindow.show();
+                    quickConfWindow.show();
                 }
             }, {
                 iconCls: 'icon-edit',
@@ -425,25 +427,6 @@ Ext.define('StockForm', {
 
         console.log(me.productStore);
 
-        //var productsField = {
-        //    id: prefix + 'ProductID',
-        //    xtype: 'combobox',
-        //    typeAhead: true,
-        //    triggerAction: 'query',
-        //    scope: me,
-        //    displayField: 'ProductName',
-        //    valueField: 'ProductID',
-        //    store: me.productStore,
-        //    queryMode: 'remote',
-        //    allowBlank: false,
-        //    editable: false,
-        //    disabled: true,
-        //    name: 'ProductID',
-        //    fieldLabel: 'ชื่อสินค้า',
-        //    labelStyle: 'text-align: right',
-        //    afterLabelTextTpl: required,
-        //    fieldStyle: 'text-align: right'
-        //}, 
         var productsField = {
             id: prefix + 'ProductID',
             name: 'ProductID',
@@ -460,7 +443,7 @@ Ext.define('StockForm', {
             afterLabelTextTpl: required,
             fieldStyle: 'text-align: right',
             allowBlank: false
-        },categoriesField = {
+        }, categoriesField = {
             id: prefix + 'CategoryID',
             name: 'CategoryID',
             xtype: 'combobox',
@@ -476,55 +459,7 @@ Ext.define('StockForm', {
             labelStyle: 'text-align: right',
             afterLabelTextTpl: required,
             fieldStyle: 'text-align: right'
-            //,
-            //listeners: {
-            //    // public event change - when selection1 dropdown is changed
-            //    select: function (combo, rec, index) {
-            //        var productCombobox = Ext.getCmp(prefix + 'ProductID');
-            //        productCombobox.setDisabled(false);
-            //        me.productStore.getProxy().extraParams.CategoryId = combo.value;
-            //    }
-            //}
-        }
-        //, unitsField = {
-        //    id: prefix + 'UnitID',
-        //    name: 'UnitID',
-        //    anchor: '-10',
-        //    fieldLabel: 'หน่วย',
-        //    afterLabelTextTpl: required,
-        //    labelStyle: 'text-align: right',
-        //    fieldStyle: 'text-align: right',
-        //    value: 'Plese Select',
-        //    queryMode: 'remote',
-        //    xtype: 'combobox',
-        //    typeAhead: true,
-        //    triggerAction: 'all',
-        //    scope: me,
-        //    displayField: 'UnitName',
-        //    valueField: 'UnitID',
-        //    store: me.unitStore,
-        //    allowBlank: false,
-        //    editable: false
-        //    //,
-        //    //listeners: {
-        //    //    change: function (field, newValue, oldValue) {
-
-        //    //        var combop = Ext.getCmp(prefix + 'ProductID'),
-        //    //            params = {};
-        //    //        params.ProductID = combop.getValue();
-        //    //        params.UnitID = newValue;
-        //    //        if (!me.isNullOrUndefined(params.ProductID) && !me.isNullOrUndefined(params.UnitID)) {
-        //    //            //get product price
-        //    //            me.getProductPrice(params, function (price) {
-        //    //                if (price == null) price = 0;
-        //    //                var priceField = Ext.getCmp(prefix + 'Price');
-        //    //                priceField.setValue(price);
-        //    //            });
-        //    //        }
-
-        //    //    }
-        //    //}
-        //},
+        },
         unitsField = {
             id: prefix + 'UnitID',
             name: 'UnitID',
@@ -536,7 +471,7 @@ Ext.define('StockForm', {
             valueField: 'UnitID',
             store: me.unitStore,
             editable: false,
-            fieldLabel: 'xx',
+            fieldLabel: 'หน่วยสินค้า',
             labelStyle: 'text-align: right',
             afterLabelTextTpl: required,
             fieldStyle: 'text-align: right',
@@ -611,8 +546,14 @@ Ext.define('StockForm', {
             defaultType: 'textfield',
             layout: { type: 'table', columns: 1 },
             defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
-            items: [categoriesField,
-                    productsField,
+            items: [
+                    { id: prefix + 'ProductID', name: 'ProductID', fieldLabel: 'รหัสสินค้า', labelStyle: 'text-align: right'
+                    , afterLabelTextTpl: required, fieldStyle: 'text-align: right', allowBlank: true, readOnly: true
+                    },
+                    categoriesField,
+                    { id: prefix + 'ProductName', name: 'ProductName', fieldLabel: 'ชื่อสินค้า', labelStyle: 'text-align: right'
+                    , afterLabelTextTpl: required, fieldStyle: 'text-align: right', allowBlank: true, readOnly: true
+                    },
                     unitsField,
                     colorsField,
                     brandsField,
@@ -652,7 +593,8 @@ Ext.define('StockForm', {
                             dataType: "json",
                             success: function (response) {
 
-                                GlobalStockValue.reloadStore();
+                                //GlobalStockValue.reloadStore();
+                                me.search(window.read_stockURL, "fuck");
                                 Ext.MessageBox.alert('บันทึกข้อมูลเรียบร้อย !!', "Save complete");
 
                             }
@@ -672,15 +614,9 @@ Ext.define('StockForm', {
                 }]
         }).show();
 
-        //me.setSelectedCombo(prefix + 'CategoryID', 'CategoryName', data.categoryName);
-        //me.setSelectedCombo(prefix + 'UnitID', 'UnitName', data.unitName);
-        //me.setSelectedCombo(prefix + 'ProductID', 'ProductName', data.productName);
-        //me.setSelectedCombo(prefix + 'ColorID', 'ColorName', data.colorName);
-        //me.setSelectedCombo(prefix + 'BrandID', 'BrandName', data.brandName);
-        //me.setSelectedCombo(prefix + 'SizeID', 'SizeName', data.sizeName);
-            console.log(record.get("UnitID"));
         Ext.getCmp(prefix + 'CategoryID').setValue(record.get("CategoryID"));
         Ext.getCmp(prefix + 'ProductID').setValue(record.get("ProductID"));
+        Ext.getCmp(prefix + 'ProductName').setValue(record.get("ProductName"));
         Ext.getCmp(prefix + 'UnitID').setValue(record.get("UnitID"));
         Ext.getCmp(prefix + 'ColorID').setValue(record.get("ColorID"));
         Ext.getCmp(prefix + 'BrandID').setValue(record.get("BrandID"));

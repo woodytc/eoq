@@ -100,11 +100,11 @@
                             store: me.gridStore
                             , displayInfo: true
                             , displayMsg: 'รายการสินค้า {0} - {1} of {2}'
-                            , emptyMsg: "ไม่มีรายการสินค้า",
+                            , emptyMsg: "ไม่มีรายการสินค้า"
                         }),
                         viewConfig: {
                         listeners: {
-                        itemdblclick: me.popUpEditItem,
+                        itemdblclick: me.popUpEditItem//,
                     //    itemclick: me.manageRedeployBtn
                      }
             }, //end view config

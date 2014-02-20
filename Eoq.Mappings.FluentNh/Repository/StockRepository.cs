@@ -23,6 +23,7 @@ using NHibernate.Criterion;
         int CountAll();
         bool IsExist(Stock stock);
         void Delete(Stock stock);
+        Stock getPreviouSave(Stock stock);
     }
 
     public class StockRepository : NhRepository, IStockRepository
@@ -110,13 +111,28 @@ using NHibernate.Criterion;
                                     && x.BrandId == stock.BrandId
                                     && x.UnitId == stock.UnitId
                                     && x.SizeId == stock.SizeId
-                               select x);
-                              
-                //session.Close();
-                return results.RowCount() > 0;
+                               select x).RowCount();
+                return (results == 0) ? false : true;
             }
         }
 
+
+        public Stock getPreviouSave(Stock stock)
+        {
+
+            using (var session = SessionFactory.OpenStatelessSession())
+            {
+                var results = (from x in session.QueryOver<Stock>()
+                               where x.BranchId == stock.BranchId
+                                    && x.MeterialId == stock.MeterialId
+                                    && x.ColorId == stock.ColorId
+                                    && x.BrandId == stock.BrandId
+                                    && x.UnitId == stock.UnitId
+                                    && x.SizeId == stock.SizeId
+                               select x).List<Stock>().First<Stock>();
+                return results;
+            }
+        }
         #endregion
 
         public IList<Stock> ExecuteICriteria(Stock enitity)

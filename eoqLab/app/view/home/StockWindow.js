@@ -1,7 +1,7 @@
 ﻿Ext.define('eoq.view.home.StockWindow', {
-    extend: 'Ext.window.Window',
-
+    extend: 'Ext.Window',
     initComponent: function () {
+        //=============================== new ==============================================
         var me = this,
             prefix = "Stock-",
             url = window.create_stockURL,
@@ -217,22 +217,30 @@
             editable: false
         };
 
-        //console.log(StockForm.reloadSaleList());
-        //create stock form
-        var win = new Ext.Window({
-            id: prefix + 'update',
+        //Display
+        Ext.apply(this, {
             iconCls: 'icon-details',
-            title: 'ปรับปรุงรายการคลังสินค้า',
+            title: 'New Department',
             y: 20,
-            width: 500,
             resizable: false,
             modal: true,
             buttonAlign: 'center',
-            xtype: 'fieldset',
-            defaultType: 'textfield',
-            layout: { type: 'table', columns: 1 },
-            defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
-            items: [categoriesField,
+            //            autoScroll: true,
+            layout: 'vbox',
+            items: [
+            {
+                xtype: 'form',
+                id: me.prefix + 'form-info',
+                //frame: true,
+                //maxHeight: 800,
+                //width: 750,
+                defaultType: 'textfield',
+                buttonAlign: 'center',
+                autoScroll: true,
+                //                layout: 'vbox',
+                //                layout: { type: 'table' }
+                defaults: { style: 'margin:5px 5px 2px 10px;', labelWidth: 180, anchor: '100%' },
+                items: [categoriesField,
                     productsField,
                     unitsField,
                     colorsField,
@@ -247,54 +255,76 @@
                     { id: prefix + 'ReorderPoint', name: 'ReorderPoint', fieldLabel: 'ReorderPoint', labelStyle: 'text-align: right'
                     , afterLabelTextTpl: required, xtype: 'numberfield', fieldStyle: 'text-align: right', allowBlank: false
                     }
-                ], buttons: [{
-                    text: 'บันทึก',
-                    iconCls: 'icon-save',
-                    onClick: function (button) {
-                        //prepare data to save
-                        var data = {
-                            ProductID: Ext.getCmp(me.prefix + 'ProductID').getValue(),
-                            CategoryID: Ext.getCmp(prefix + 'CategoryID').getValue(),
-                            ColorID: Ext.getCmp(prefix + 'ColorID').getValue(),
-                            BrandID: Ext.getCmp(prefix + 'BrandID').getValue(),
-                            SizeID: Ext.getCmp(prefix + 'SizeID').getValue(),
-                            UnitID: Ext.getCmp(prefix + 'UnitID').getValue(),
-                            Amount: Ext.getCmp(prefix + 'Amount').getValue(),
-                            Price: Ext.getCmp(prefix + 'Price').getValue(),
-                            ReorderPoint: Ext.getCmp(prefix + 'ReorderPoint').getValue()
-                        };
-                        //send ajax request to save stock data
-                        Ext.Ajax.request({
-                            method: 'post',
-                            url: url,
-                            params: data,
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            success: function (response) {
-                                var text = response.responseText;
-                                Ext.MessageBox.alert('บันทึกข้อมูลเรียบร้อย !!', "Save Completed");
-                                // process server response here
-                                //window.StockForm.reloadSaleList();
+                ]
+            }],
+            buttons: [
+            {
+                iconCls: 'icon-save',
+                text: 'Save',
+                id: prefix + 'conf-button-save',
+                handler: function (btn, evt) {
+                    var form = me.down('form').getForm();
+                    if (true) {
+                        Ext.MessageBox.show({ msg: 'Please wait save items...', width: 300, closable: false });
+
+                        form.submit({
+                            //url from
+                            url: window.create_stockURL,
+                            timeout: 999999,
+                            params:{
+                                ProductID: Ext.getCmp(me.prefix + 'ProductID').getValue(),
+                                CategoryID: Ext.getCmp(prefix + 'CategoryID').getValue(),
+                                ColorID: Ext.getCmp(prefix + 'ColorID').getValue(),
+                                BrandID: Ext.getCmp(prefix + 'BrandID').getValue(),
+                                SizeID: Ext.getCmp(prefix + 'SizeID').getValue(),
+                                UnitID: Ext.getCmp(prefix + 'UnitID').getValue(),
+                                Amount: Ext.getCmp(prefix + 'Amount').getValue(),
+                                Price: Ext.getCmp(prefix + 'Price').getValue(),
+                                ReorderPoint: Ext.getCmp(prefix + 'ReorderPoint').getValue()
+                            },
+                            success: function (formPanel, action) {
+                                var data = Ext.decode(action.response.responseText);
+
+                                Ext.MessageBox.alert('Status', 'Save Sucesssful');
                                 me.intend = "save-success";
-                                //GlobalStockValue.reloadStore();
-                                //me.close();
-                                console.log(me);
+                                me.close();
+
+                            }, //success
+                            failure: function (formPanel, action) {
+                                var data = Ext.decode(action.response.responseText);
+
+                                Ext.MessageBox.alert('Status', data.error);
                             }
-                        });
-
-                        win.destroy();
-
+                        }); // end form.submit
+                    } // end isvalid
+                    else {
+                        Ext.MessageBox.alert('Status', "Error: Please check valid data!!");
                     }
-                },
-                {
-                    iconCls: 'icon-cancel',
-                    text: 'ยกเลิก',
-                    name: 'button-cancel',
-                    handler: function (btn, evt) {
-                        win.destroy();
-                    }
-                }]
-        }).show();
+                } // end handler
+            }, {
+                iconCls: 'icon-cancel',
+                text: 'Cancel',
+                name: 'button-cancel',
+                handler: function (btn, evt) {
+                    me.intend = "cancel";
+                    me.close();
+                }
+            }]
+        }); // end Ext.apply
+        eoq.view.home.StockWindow.superclass.initComponent.apply(me, arguments);
+    } // end initComponent
+});                                                                        // end Ext.define('StockWindow
 
-    } //End constructor functional
-});
+
+eoq.view.home.StockWindow.prototype.create = function () {
+    var prefix = this.prefix;
+
+    console.log('create');
+    // Ext.getCmp(prefix + 'principle-code').setValue("");
+    // Ext.getCmp(prefix + 'status').setValue("Creating");
+    // Ext.getCmp(prefix + 'effective-date').setValue(currentDateServerSt);
+}
+
+
+
+

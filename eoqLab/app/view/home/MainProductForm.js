@@ -48,9 +48,23 @@
                         { text: 'หน่วย', dataIndex: 'Unit', width: 250, sortable: false, align: 'center' },
                         ]
                     }//end Header
-                   ]//end items
+            ]
+                   //end items
         }); //end apply
 
         window.MainProductForm.superclass.constructor.apply(this, arguments);
     } // end constructor
 });
+
+window.MainProductForm.prototype.search = function () {
+    var url = window.read_mainProductURL;
+    var prefix = 'MainProductForm-';
+    var store = Ext.getStore(prefix + 'gridstore');
+    console.log(store);
+
+    store.proxy.url = url;
+
+    var pagingToolbar = Ext.getCmp(prefix + 'PagingToolbar');
+    pagingToolbar.moveFirst();
+
+};

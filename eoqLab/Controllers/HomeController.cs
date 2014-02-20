@@ -551,23 +551,21 @@ namespace eoqLab.Controllers
 
                  if (isExist)
                  {
-                     var oldStock = (from stock in StockRepository.GetAll()
-                                     join product in this.MaterialRepository.GetAll().DefaultIfEmpty()
-                                         on stock.MeterialId equals product.MatId
-                                     where stock.BranchId == this.GetBranchId()
-                                           && stock.MeterialId == p.ProductID
-                                           && stock.UnitId == p.UnitID
-                                           && stock.BrandId == p.BrandID
-                                           && stock.ColorId == p.ColorID
-                                           && stock.SizeId == p.SizeID
-                                     select stock
-                                    ).ToList();
-                     var firstOrDefault = oldStock.FirstOrDefault();
-                     if (firstOrDefault != null) newStock.Id = firstOrDefault.Id;
-                 }
+                     var oldStock = StockRepository.getPreviouSave(newStock);
+                     
+                     //update data in table 
+                     oldStock.Updatedate = DateTime.Now;
+                     oldStock.Amount = oldStock.Amount + newStock.Amount;
+                     oldStock.Reorderpoint = newStock.Reorderpoint;
+                     oldStock.Updateby = _userName;
 
-                StockRepository.SaveOrUpdate(newStock);
-                
+                     StockRepository.SaveOrUpdate(oldStock);
+                     
+                 }
+                 else
+                 {
+                    StockRepository.Save(newStock);
+                 }
 
                 return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
                 
@@ -584,34 +582,28 @@ namespace eoqLab.Controllers
             try {
                 var p = stockParams;
                 
-                // [ luck kai ] get Value from Name
-                var unit = (from u in UnitRepository.GetAll() where u.UnitName.Equals(p.UnitName) select u).First<Unit>();
-                var mat = (from m in MaterialRepository.GetAll() where m.MetName.Equals(p.ProductName) select m).First<Material>();
-                var brand = (from b in BrandRepository.GetAll() where b.Name.Equals(p.BrandName) select b).First<Brand>();
-                var color = (from c in ColorRepository.GetAll() where c.Name.Equals(p.ColorName) select c).First<Color>();
-                var size = (from s in SizesRepository.GetAll() where s.Name.Equals(p.ProductName) select s).First<Sizes>();
-                
                 var stock = new Stock()
                                 {
-                                 Price = p.Price,
-                                 Amount = p.Amount,
+                                    Id = p.ID,
+                                    Price = p.Price,
+                                    Amount = p.Amount,
+                                    MeterialId = 1,//mat.MatId,
+                                    BrandId = p.BrandID,//brand.Id,
+                                    UnitId = p.UnitID,//unit.ID,
+                                    ColorId = p.ColorID,//color.Id,
+                                    SizeId = p.SizeID,//size.Id,
 
-                                 MeterialId = mat.MatId,
-                                 BrandId = brand.Id,
-                                 UnitId = unit.ID,
-                                 ColorId = color.Id,
-                                 SizeId = size.Id,
-
-                                 BranchId = this.GetBranchId(),
-                                 Reorderpoint = p.ReorderPoint,
-                                 Updatedate = DateTime.Now,
-                                 Updateby = this.GetUserName()
+                                    BranchId = this.GetBranchId(),
+                                    Reorderpoint = p.ReorderPoint,
+                                    Updatedate = DateTime.Now,
+                                    Updateby = this.GetUserName()
                                 };
+                StockRepository.Update(stock);
 
                 if (!String.IsNullOrEmpty(p.ID.ToString()) && p.ID > 0)
                 {
                     stock.Id = p.ID;
-                    StockRepository.Update(stock);
+                    //StockRepository.Update(stock);
                     return Json(new { success = true, error = "" }, JsonRequestBehavior.AllowGet);
                 }
                 else

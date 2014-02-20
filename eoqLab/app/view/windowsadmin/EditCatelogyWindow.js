@@ -25,9 +25,10 @@
         };
 
         //Display
+        //Display
         Ext.apply(me, {
             iconCls: 'icon-details',
-            title: 'New Catelogy',
+            title: 'New Department',
             y: 20,
             resizable: false,
             modal: true,
