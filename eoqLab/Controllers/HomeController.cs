@@ -587,7 +587,7 @@ namespace eoqLab.Controllers
                                     Id = p.ID,
                                     Price = p.Price,
                                     Amount = p.Amount,
-                                    MeterialId = 1,//mat.MatId,
+                                    MeterialId = p.ProductID,//mat.MatId,
                                     BrandId = p.BrandID,//brand.Id,
                                     UnitId = p.UnitID,//unit.ID,
                                     ColorId = p.ColorID,//color.Id,
@@ -753,20 +753,33 @@ namespace eoqLab.Controllers
                 var cashierMaterialList = this.CashierRepository.GetAll();
                 var materialList = this.MaterialRepository.GetAll();
                 var stockList = this.StockRepository.GetAll();
+                var unitList = this.UnitRepository.GetAll();
+                var colorList = this.ColorRepository.GetAll();
+                var brandList = this.BrandRepository.GetAll();
+                var sizeList = this.SizesRepository.GetAll();
+
                 if (cashierList == null)
                 {
                     return Json(new { data = cashierList, total = 0 }, JsonRequestBehavior.AllowGet);
                 }
                 var saleItems = from cashier in cashierList
                                 join cashierMaterial in cashierMaterialList.DefaultIfEmpty() on cashier.Id equals cashierMaterial.Id
-                                join material in materialList.DefaultIfEmpty() on cashierMaterial.Material_ID equals material.MatId
-                                //join stock in stockList.DefaultIfEmpty() on cashierMaterial.Material_ID equals stock.MeterialId
+                                join stock in stockList.DefaultIfEmpty() on cashierMaterial.Material_ID equals stock.Id
+                                join material in materialList.DefaultIfEmpty() on stock.MeterialId equals material.MatId
+                                join unit in unitList.DefaultIfEmpty() on stock.UnitId equals unit.ID
+                                join color in colorList.DefaultIfEmpty() on stock.ColorId equals color.Id
+                                join brand in brandList.DefaultIfEmpty() on stock.BrandId equals brand.Id
+                                join size in sizeList.DefaultIfEmpty() on stock.SizeId equals size.Id
                                 where cashier.BranchId == this.GetBranchId() && cashierMaterial.Id == saleItemId
                                 let dateTime = cashier.Createdate
                                 where dateTime != null
                                 select new
                                 {
                                     MaterialName = material.MetName,
+                                    unit.UnitName,
+                                    ColorName = color.Name,
+                                    BrandName = brand.Name,
+                                    SizeName = size.Name,
                                     cashierMaterial.Amount,
                                     cashierMaterial.TotalPrice,
                                     //cashierMaterial.IncudeTax,

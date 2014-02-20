@@ -247,10 +247,13 @@
             flex : 1,
             columnLines: true,
             columns: [
-                        { text: 'ชื่อสินค้า', dataIndex: 'MaterialName', flex : 1, sortable: false, align: 'center',editable : false },
+                        { text: 'ชื่อสินค้า', dataIndex: 'MaterialName', flex: 1, sortable: false, align: 'center', editable: false },
+                        { text: 'หน่วย', dataIndex: 'UnitName', flex: 1, sortable: false, align: 'center', editable: false },
+                        { text: 'สี', dataIndex: 'ColorName', flex: 1, sortable: false, align: 'center', editable: false },
+                        { text: 'ยี่ห้อ', dataIndex: 'BrandName', flex: 1, sortable: false, align: 'center', editable: false },
+                        { text: 'ขนาด', dataIndex: 'SizeName', flex: 1, sortable: false, align: 'center', editable: false },
                         { text: 'จำนวน', dataIndex: 'Amount', flex: 1, sortable: false, align: 'center', editable: false },
-                        { text: 'ราคา', dataIndex: 'TotalPrice', flex: 1, sortable: false, align: 'center', editable: false },
-                        { text: 'ภาษี', dataIndex: 'Tax', flex: 1, sortable: false, align: 'center', editable: false },
+                        { text: 'ราคา', dataIndex: 'TotalPrice', flex: 1, sortable: false, align: 'center', editable: false }
                         ]
         });
         //**   End of Sale Item - Materials Grid  **//
