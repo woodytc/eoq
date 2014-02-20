@@ -66,7 +66,7 @@
             defaults: { style: 'margin:2px 5px;', labelWidth: 170 },
             items: [{ id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
                     , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false
-            },
+                    },
                     { id: prefix + 'Amount', name: 'Amount', fieldLabel: 'จำนวน', labelStyle: 'text-align: right'
                     , xtype: 'numberfield', fieldStyle: 'text-align: right', editable: false
                     },

@@ -14,18 +14,20 @@ namespace eoqLab.Controllers
         public ICashierRepository CashierRepository { get; set; }
         public ICashierHeaderRepository CashierHeaderRepository { get; set; }
         public IMaterialRepository MaterialRepository { get; set; }
+        public IStockRepository StockRepository { get; set; }
         private string UserName {get; set;}
         private int BranchID { get; set; }
         //
         // GET: /SalesReport/
         public SalesReportController(  ICashierRepository cashierRepository,
                                     ICashierHeaderRepository cashierHeaderRepository,
-                                    IMaterialRepository materialRepository)
+                                    IMaterialRepository materialRepository,
+                                    IStockRepository stockRepository)
         {
             CashierRepository = cashierRepository;
             CashierHeaderRepository = cashierHeaderRepository;
             MaterialRepository = materialRepository;
-            
+            StockRepository = stockRepository;
         }
         public ActionResult Index()
         {
@@ -88,9 +90,11 @@ namespace eoqLab.Controllers
             var cashiers = this.CashierHeaderRepository.GetAll();
             var cashierMaterials = this.CashierRepository.GetAll();
             var materials = this.MaterialRepository.GetAll();
+            var stocks = this.StockRepository.GetAll();
             var saleItemDetail = (from saleitem in cashiers
                                  join cashierMaterial in cashierMaterials.DefaultIfEmpty() on saleitem.Id equals cashierMaterial.Id
-                                 join material in materials on cashierMaterial.Material_ID equals material.MatId
+                                 join stock in stocks on cashierMaterial.Material_ID equals stock.Id
+                                 join material in materials on stock.MeterialId equals material.MatId
                                  where saleitem.Id == saleItemId //&& saleitem.BranchId == BranchID 
                                  select new SaleItemReport()
                                  {
