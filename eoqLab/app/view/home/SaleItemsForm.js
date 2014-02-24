@@ -124,7 +124,7 @@
                 xtype: 'datecolumn',
                 editable: false,
                 flex: 1,
-                renderer: Ext.util.Format.dateRenderer('d/m/Y')//' H:i')
+                renderer: Ext.util.Format.dateRenderer('d/m/Y H:i:s')//' H:i')
             }],
             bbar: Ext.create('Ext.PagingToolbar', {
                 id: me.prefix + 'PagingToolbar',
@@ -291,7 +291,7 @@
         });
         
         //popup window
-        window.salewin = Ext.widget('window', {
+        window.salewin = new Ext.Window({
             title: 'รายละเอียดรายการขายสินค้า :' + createDate,
             closeAction: 'hide',
             id: me.prefix + 'saleItemWindow',
@@ -312,10 +312,10 @@
                             window.salewin.destroy();
                         }
                     }]
-        });
+        }).show();
 
         Ext.MessageBox.hide();
-        window.salewin.show();
+      //  window.salewin.show();
 
     }, onSearchClick: function () {
         var me = this;

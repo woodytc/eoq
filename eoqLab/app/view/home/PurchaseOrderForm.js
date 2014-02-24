@@ -80,30 +80,33 @@ Ext.define('PurchaseOrderForm', {
                 id: 'totalSummary',
                 text: '',
                 margins: '0 0 0 10'
-            }, '->', {
-                iconCls: 'icon-print',
-                text: 'Print',
-                id: 'Print',
-                scope: me,
-                iconAlign: 'right',
-                disabled: true,
-                handler: function (btn, evt) {
-
-                    Ext.Ajax.request({
-                        method: 'post',
-                        url: '../SalesReport/SetId/',
-                        params: { "saleId": me.LastSaleID },
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (response) {
-                            me.onPrint();
-                            //open print page
-                            window.open('../SalesReport/ShowSimple/', '_blank');
-                        }
-                    });
-
-                }
-            }, {
+            }, '->', 
+//                {
+//                iconCls: 'icon-print',
+//                text: 'Print',
+//                id: 'Print',
+//                scope: me,
+//                iconAlign: 'right',
+//                disabled: true,
+//                
+//                handler: function (btn, evt) {
+//
+//                    Ext.Ajax.request({
+//                        method: 'post',
+//                        url: '../SalesReport/SetId/',
+//                        params: { "saleId": me.LastSaleID },
+//                        contentType: "application/json; charset=utf-8",
+//                        dataType: "json",
+//                        success: function (response) {
+//                            me.onPrint();
+//                            //open print page
+//                            window.open('../SalesReport/ShowSimple/', '_blank');
+//                        }
+//                    });
+//
+//                }
+//            },
+            {
                 iconCls: 'icon-save',
                 text: 'บันทึก',
                 id: 'save',
@@ -302,28 +305,7 @@ Ext.define('PurchaseOrderForm', {
                     var record = context.record;
                     if (context.value == null) return false;
                     switch (context.field) {
-                        case "ProductName":
-                            {
-                                if (typeof context.value == "number") {
-                                    //set product id on store
-                                    record.set("ProductID", context.value);
-                                }
 
-                                //set product name on store
-                                me.productStore.each(function (rec) {
-                                    if (rec.get("ProductID") == context.value) {
-                                        var productName = rec.get("ProductName");
-                                        record.set("ProductName", productName);
-                                    }
-                                });
-
-                                //get product price
-                                me.getProductPrice(record, function (stock) {
-                                    record.set("Price", stock.Price);
-                                    record.set("id", stock.Id);
-                                });
-                                break;
-                            }
                         case "CategoryName":
                             {
                                 if (typeof context.value == "number") {
@@ -344,6 +326,28 @@ Ext.define('PurchaseOrderForm', {
                                 record.set("Price", 0);
 
                                 me.productStore.lastQuery = null;
+
+                                //get product price
+                                me.getProductPrice(record, function (stock) {
+                                    record.set("Price", stock.Price);
+                                    record.set("id", stock.Id);
+                                });
+                                break;
+                            }
+                        case "ProductName":
+                            {
+                                if (typeof context.value == "number") {
+                                    //set product id on store
+                                    record.set("ProductID", context.value);
+                                }
+
+                                //set product name on store
+                                me.productStore.each(function (rec) {
+                                    if (rec.get("ProductID") == context.value) {
+                                        var productName = rec.get("ProductName");
+                                        record.set("ProductName", productName);
+                                    }
+                                });
 
                                 //get product price
                                 me.getProductPrice(record, function (stock) {
@@ -542,10 +546,7 @@ Ext.define('PurchaseOrderForm', {
                 renderer: Ext.util.Format.usMoney,
                 summaryRenderer: Ext.util.Format.usMoney,
                 summaryType: 'sum',
-                dataIndex: 'Price',
-                field: {
-                    xtype: 'numberfield'
-                }
+                dataIndex: 'Price'
             }, {
                 header: 'ราคารวม',
                 width: 130,
@@ -645,7 +646,36 @@ Ext.define('PurchaseOrderForm', {
         var me = this;
 
         //send data to save 
-        me.Store.sync();
+        me.Store.sync({
+            success: function (conn, response, options) {
+                Ext.MessageBox.show({
+                    title: 'Status',
+                    msg: 'ขายเรียบร้อยแล้ว',
+                    buttons: Ext.Msg.OK
+                });
+
+                Ext.Ajax.request({
+                    method: 'post',
+                    url: '../SalesReport/SetId/',
+                    params: { "saleId": me.LastSaleID },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        me.onPrint();
+                        //open print page
+                        window.open('../SalesReport/ShowSimple/', '_blank');
+                    }
+                });
+
+            },
+            failure: function (response, options) {
+                Ext.MessageBox.show({
+                    title: 'Status',
+                    msg: 'การซื้อขายผิดพลาด กรุณาตรวจสอบข้อมูล',
+                    buttons: Ext.Msg.OK
+                });
+            }
+        });
 
         //enable print button
         Ext.getCmp('Print').setDisabled(false);
