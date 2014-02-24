@@ -23,7 +23,7 @@
             id: 'simpleForm',
             url: 'save-form.php',
             frame: true,
-            title: 'LOGIN',
+            title: 'ชนะชัย ชนาภา อลูมินั่ม C.N.A ยินดีต้อนรับเข้าสู่ระบบ',
             align: 'certer',
             bodyPadding: '5 5 0',
             width: 350,

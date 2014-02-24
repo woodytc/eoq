@@ -120,6 +120,15 @@ Ext.define('StockForm', {
                 itemId: 'delete',
                 scope: me,
                 handler: me.onDeleteClick
+            }, '->',
+             {
+                 iconCls: 'icon-refresh-blue',
+                text: 'โหลดคลังสินค้า',
+                itemId: 'refresh',
+                scope: me,
+                handler: function (btn, evt) {
+                    me.search(window.read_stockURL, "fuck");
+                } //end handler
             }]
 
         };

@@ -673,8 +673,8 @@ Ext.define('PurchaseOrderForm', {
     }, onStoreWrite: function (aStore, aOperation) {
 
         var iRecord = aOperation.response.result.data;
-        //console.log(iRecord);
-        this.LastSaleID = iRecord.cashierID;
+        console.log(iRecord);
+        this.LastSaleID = iRecord.Id;
 
     }, getProductPrice: function (record, cb) {
         var params = {};

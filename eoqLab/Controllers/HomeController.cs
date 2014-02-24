@@ -385,10 +385,10 @@ namespace eoqLab.Controllers
             {
                 var cashier = new CashierHeader
                                   {
-                                        BranchId        = this.GetBranchId() , 
-                                        Createdate      = DateTime.Now , 
-                                        Createby        = this.GetUserName(),
-                                        Updateby        = ""
+                                        BranchId = this.GetBranchId() , 
+                                        Createdate = DateTime.Now , 
+                                        Createby = this.GetUserName(),
+                                        Updateby = this.GetUserName(),
                                   };
 
                 if (purchaseOrder != null && purchaseOrders == null)
@@ -639,7 +639,7 @@ namespace eoqLab.Controllers
         {
             try
             {
-                var stock = (from s in this.StockRepository.GetAll() where s.Id.Equals(stockId) && s.Amount >= s.Reorderpoint select s).First<Stock>();
+                var stock = (from s in this.StockRepository.GetAll() where s.Id.Equals(stockId) && s.Amount >= amount select s).First<Stock>();
                 if(  stock != null )
                 {
                     stock.Amount -= amount;
