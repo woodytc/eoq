@@ -48,6 +48,7 @@ namespace eoqLab.Controllers
             var httpSessionStateBase = this.HttpContext.Session;
             if (httpSessionStateBase != null)
             {
+                //load sale items from session [sale id]
                 httpSessionStateBase["rptSource"] = this.GetSaleItems(int.Parse(httpSessionStateBase["CashierId"].ToString()));
             }
         }
