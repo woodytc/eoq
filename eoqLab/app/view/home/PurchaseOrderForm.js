@@ -584,21 +584,14 @@ Ext.define('PurchaseOrderForm', {
         me.grid.getSelectionModel().on('selectionchange', this.onSelectChange, this);
 
         //Display
-        Ext.apply(me, {
-            buttonAlign: 'center',
-            //            autoScroll: true,
-            layout: 'vbox',
-            items: [
-                    {
-                        xtype: 'form',
-                        id: me.prefix + 'form-info',
-                        defaultType: 'textfield',
-                        buttonAlign: 'center',
-                        autoScroll: true,
-                        defaults: { style: 'margin:5px 5px 2px 10px;', labelWidth: 180, anchor: '100%' },
-                        items: [me.grid]
-                    }]
-
+        Ext.apply(this, {
+             iconCls: 'icon-tabs',
+             title: 'ขาย',
+             layout: 'border',
+             //autoScroll: true,
+             border: true,
+             items: [me.grid]
+        
         }); // end Ext.apply
 
         window.PurchaseOrderForm.superclass.constructor.apply(this, arguments);

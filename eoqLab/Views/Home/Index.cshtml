@@ -66,78 +66,33 @@
     window.search_saleItemURL = '@Url.Action("SearchSaleItemList","Home")'; 
     
     //create front end view
-    var mainProductForm     = new MainProductForm(),
-        purchaseOrderForm   = new PurchaseOrderForm(),
-        stockForm           = new StockForm(),
-        saleForm            = new SaleItemForm();
-    
+    var mainProductForm     = new MainProductForm({ id: 'mainProductForm', region: 'north' }),
+        purchaseOrderForm   = new PurchaseOrderForm({ id: 'purchaseOrderForm', region: 'north' }),
+        stockForm           = new StockForm({ id: 'stockForm', region: 'north' }),
+        saleForm            = new SaleItemForm({ id: 'saleItemForm', region: 'north' });
+    var tabItems = [];
+
+    tabItems.push(mainProductForm);
+    tabItems.push(purchaseOrderForm);
+    tabItems.push(stockForm);
+    tabItems.push(saleForm);
+
     //Create main View
-    window.viewport = Ext.create('Ext.Viewport', {
-        id: 'viewport',
-        layout: 'border',
+    var viewport = Ext.create('Ext.Viewport', {
+            id: 'viewport',
+            layout: 'border',
         items: [
                     {
                         xtype: 'panel',
                         region: 'north',
                         height: 25, // give north and south regions a height
-                        title: 'Device Management [ ' + currentUser + ' : ' + CurrentUserRole
+                        title: 'ชนะชัย ชนาภา อลูมินั่ม C.N.A [ ' + currentUser + ' : ' + CurrentUserRole
                                 + ' ]<a href=' + actionLogoff + ' style="font-family:verdana;font-size:12px;color:red;text-decoration: none;">   Logoff</a>'
                     },
                     {
                         xtype: 'tabpanel',
                         region: 'center',
-                        height: Ext.getBody().getViewSize().height * 0.95, // Change to support labtop screen
-                        width: Ext.getBody().getViewSize().width * 1,  // Change to support labtop screen
-                        minWidth  : 500,
-                        minHeight :  600,
-                        items: [
-                             {
-                                 id: 'tab1',
-                                 xtype: 'panel',
-                                 title: 'หน้าหลัก',
-                                 minHeight: 450,
-                                 items: [mainProductForm]
-                             },
-                             {
-                                 id: 'tab2',
-                                 xtype: 'panel',
-                                 region: 'north',
-                                 title: 'ขาย',
-                                 minHeight: 450 ,
-                                 items: [purchaseOrderForm]
-                             },
-                             {
-                                 id: 'tab3',
-                                 xtype: 'panel',
-                                 region: 'north',
-                                 title: 'คลังสินค้า',
-                                 minHeight: 450,
-                                 items: [stockForm]
-                             },
-                             {
-                                 id: 'tab4',
-                                 xtype: 'panel',
-                                 region: 'north',
-                                 title: 'รายการขาย',
-                                 minHeight: 450,
-                                 items: [saleForm]
-                             },
-                             /*{
-                                 id: 'tab5',
-                                 xtype: 'panel',
-                                 region: 'north',
-                                 title: 'รายงาน',
-                                 minHeight: 450,
-                                 items: []
-                             }*/
-                        ]
-                        //,
-                        //listeners: {
-                        //    'tabchange': function (tabPanel, tab) {
-                        //        console.log(tabPanel.id + ' ' + tab.id);
-                        //        mainProductForm.search();
-                        //    }
-                        //}
+                        items: tabItems
                     }
             ]
     });

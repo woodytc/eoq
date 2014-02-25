@@ -48,46 +48,46 @@
         me.todate = new Date();
 
         //grid buttons
-        var headerButtons = {
-            dock: 'top',
-            xtype: 'toolbar',
-            items: [{
-                xtype: 'datefield',
-                fieldLabel: 'วันที่ทำรายการ ',
-                cls: 'x-border-box, x-border-box',
-                id: 'datepicker',
-                maxValue: new Date(),
-                value: me.todate,
-                renderer: Ext.util.Format.dateRenderer('d/m/Y'),
-                padding: 5,
-                layout: 'form',
-                width: 230,
-                labelWidth: 130,
-                margins: '0 0 0 10',
-                listeners: {
-                    select: function (combo, value) {
-                        me.todate = value;
-                    }
-                }
-            }, {
-                iconCls: 'icon-find',
-                text: 'ค้นหา',
-                id: me.prefix + 'search',
-                itemId: 'search',
-                scope: me,
-                handler: me.onSearchClick
-            }, {
-                iconCls: 'icon-reload',
-                id: me.prefix + 'clear',
-                text: 'ล้าง',
-                handler: function (btn, evt) {
-                    Ext.getCmp('datepicker').setValue(new Date());
-                    me.grid.store.clearData();
-                    me.grid.view.refresh();
-                } // end handler
-            }]
+        //var headerButtons = {
+        //    dock: 'top',
+        //    xtype: 'toolbar',
+        //    items: [{
+        //        xtype: 'datefield',
+        //        fieldLabel: 'วันที่ทำรายการ ',
+        //        cls: 'x-border-box, x-border-box',
+        //        id: 'datepicker',
+        //        maxValue: new Date(),
+        //        value: me.todate,
+        //        renderer: Ext.util.Format.dateRenderer('d/m/Y'),
+        //        padding: 5,
+        //        layout: 'form',
+        //        width: 230,
+        //        labelWidth: 130,
+        //        margins: '0 0 0 10',
+        //        listeners: {
+        //            select: function (combo, value) {
+        //                me.todate = value;
+        //            }
+        //        }
+        //    }, {
+        //        iconCls: 'icon-find',
+        //        text: 'ค้นหา',
+        //        id: me.prefix + 'search',
+        //        itemId: 'search',
+        //        scope: me,
+        //        handler: me.onSearchClick
+        //    }, {
+        //        iconCls: 'icon-reload',
+        //        id: me.prefix + 'clear',
+        //        text: 'ล้าง',
+        //        handler: function (btn, evt) {
+        //            Ext.getCmp('datepicker').setValue(new Date());
+        //            me.grid.store.clearData();
+        //            me.grid.view.refresh();
+        //        } // end handler
+        //    }]
 
-        };
+        //};
 
         //grid components
         me.grid = Ext.create('Ext.grid.Panel', {
@@ -107,13 +107,10 @@
                 'Ext.data.*',
                 'Ext.util.*',
             ],
-            //renderTo: document.body,
             store: me.Store,
-            //selModel: Ext.create('Ext.selection.CheckboxModel'),
             region: 'center',
-            dockedItems: [headerButtons],
             columns: [{
-                header: 'รหัสสินค้า',
+                header: 'รหัสการขาย',
                 sortable: true,
                 dataIndex: 'SaleID',
                 flex: 1,
@@ -142,21 +139,70 @@
         }); //end grid setting
 
         //Display
-        Ext.apply(me, {
-            buttonAlign: 'center',
-            layout: 'vbox',
-            items: [
-                    {
-                        xtype: 'form',
-                        id: me.prefix + 'form',
-                        defaultType: 'textfield',
-                        buttonAlign: 'center',
-                        autoScroll: true,
-                        defaults: { style: 'margin:5px 5px 2px 10px;', labelWidth: 180, anchor: '100%' },
-                        items: [me.grid]
-                    }]
-
-        }); // end Ext.apply
+       Ext.apply(this, {
+             iconCls: 'icon-tabs',
+             title: 'รายการขาย',
+             layout: 'border',
+             //autoScroll: true,
+             border: true,
+             items: [
+                         {
+                            //Header                
+                            xtype: 'panel',
+                            title: 'ประวัติรายการขาย',
+                            bodyStyle: 'padding:5px 5px 0',
+                            region: 'north',
+                            border: true,
+                            defaults: { xtype: 'container', flex: 1, layout: 'anchor' },
+                            buttonAlign: 'center',
+                            layout: 'hbox',
+                            items: [
+                                    {   // column 1
+                                        defaults: { labelWidth: 500 },
+                                        defaultType: 'textfield',
+                                        margins: '10 5 0 20',
+                                        fieldDefaults: { labelAlign: 'right' },
+                                        labelStyle: 'text-align: right',
+                                        items: [
+                                        {
+                                            xtype: 'datefield',
+                                            fieldLabel: 'วันที่ทำรายการ ',
+                                            labelStyle: 'text-align: right',
+                                            id: 'datepicker',
+                                            maxValue: new Date(),
+                                            value: me.todate,
+                                            renderer: Ext.util.Format.dateRenderer('d/m/Y'),
+                                            layout: 'form',
+                                            listeners: {
+                                                select: function (combo, value) {
+                                                    me.todate = value;
+                                                }
+                                            }
+                                        }
+                                    ]
+                                    }
+                            ]//end main item in header
+                            , buttons: [ //buttons
+                                    {
+                                            iconCls: 'icon-find',
+                                            text: 'ค้นหา',
+                                            id: me.prefix + 'search',
+                                            itemId: 'search',
+                                            scope: me,
+                                            handler: me.onSearchClick
+                                    }, {
+                                        iconCls: 'icon-reload',
+                                        id: me.prefix + 'user-btn-Reset',
+                                        text: 'ล้าง',
+                                        handler: function (btn, evt) {
+                                            Ext.getCmp(me.prefix + 'Name').setValue('');
+                                        } // end handler
+                                    }
+                              ] // end buttons Header
+                        },//end Header
+                    me.grid
+             ]
+       }); // end Ext.apply
 
         //call to constuctor
         window.SaleItemForm.superclass.constructor.apply(this, arguments);

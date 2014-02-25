@@ -76,97 +76,95 @@
                     }//end Header
             
             , {
-            xtype: 'grid',
-            id: me.prefix + 'grid',
-            title: 'รายการ แบรนด์เนม',
-            columnLines: true,
-            //  autoScore: true,
-            region: 'center',
-            store: me.gridStore,
-            selModel: Ext.create('Ext.selection.CheckboxModel'),
-            columns: [
-            { text: 'รหัส', dataIndex: 'Id', width: 250, sortable: false, align: 'center' },
-            { text: 'ยี่ห้อ', dataIndex: 'Name', width: 250, sortable: false, align: 'center' }//,
-            //{ text: 'จำนวนนับ', dataIndex: 'unit', width: 250, sortable: false, align: 'center' },
-            ],
+                xtype: 'grid',
+                id: me.prefix + 'grid',
+                title: 'รายการ แบรนด์เนม',
+                columnLines: true,
+                //  autoScore: true,
+                region: 'center',
+                store: me.gridStore,
+                selModel: Ext.create('Ext.selection.CheckboxModel'),
+                columns: [
+                    { text: 'รหัส', dataIndex: 'Id', width: 250, sortable: false, align: 'center' },
+                    { text: 'ยี่ห้อ', dataIndex: 'Name', width: 250, sortable: false, align: 'center' }//,
+                    //{ text: 'จำนวนนับ', dataIndex: 'unit', width: 250, sortable: false, align: 'center' },
+                ],
 
-            bbar: Ext.create('Ext.PagingToolbar', {
-            id: me.prefix + 'PagingToolbar',
-            store: me.gridStore
-            , displayInfo: true
-            , displayMsg: 'แสดงรายการยี่ห้อ {0} - {1} of {2}'
-            , emptyMsg: "ไม่มียี่ห้อที่ต้องการ",
-            }),
-            viewConfig: {
-            listeners: {
-            itemdblclick: me.popUpEditItem,
-            //    itemclick: me.manageRedeployBtn
-            }
-            }, //end view config
-
-            dockedItems: [{
-            xtype: 'toolbar',
-            items: [{
-            iconCls: 'icon-edit',
-            text: 'ปรับปรุง',
-            tooltip: 'ปรับปรุงญี่ห้อ',
-            disabled: false,
-            handler: function (btn, evt) {
-            var gridpanel = btn.up().up();
-            var recordSelected = gridpanel.getSelectionModel().getSelection();
-            if (recordSelected.length == 1) {
-                me.popUpEditItem(gridpanel, recordSelected[0], btn);
-            }
-            } //end handler
-            },
-            {
-                    iconCls: 'icon-delete',
-                    text: 'Delete',
-                    tooltip: 'ลบ',
-                    disabled: false,
-                    handler: function (btn, evt) {
-                        var gridpanel = btn.up().up();
-                        var recordsSelected = gridpanel.getSelectionModel().getSelection();
-
-                        if (recordsSelected.length) {
-                            Ext.MessageBox.confirm('Confirm', 'คุณต้องาการที่จะจบ ยี่ห้อ?', function (cbtn, bool) {
-                                if (cbtn == 'yes')    //                            
-                                    me.deleteBrand(gridpanel, recordsSelected, 'Delete');   //    
-                            });
-                        }
+                bbar: Ext.create('Ext.PagingToolbar', {
+                    id: me.prefix + 'PagingToolbar',
+                    store: me.gridStore
+                    , displayInfo: true
+                    , displayMsg: 'แสดงรายการยี่ห้อ {0} - {1} of {2}'
+                    , emptyMsg: "ไม่มียี่ห้อที่ต้องการ"
+                }),
+                viewConfig: {
+                    listeners: {
+                        itemdblclick: me.popUpEditItem,
+                    //    itemclick: me.manageRedeployBtn
                     }
-                },
-            '->'
-            , {
-            iconCls: 'icon-add',
-            text: 'เพิ่มยี่ห้อ  ',
-            handler: function (btn, evt) {
-            Ext.MessageBox.show({
-            msg: 'Please wait generate items...', width: 300, closable: false
-            });
-            //create new poppu
-            var quickConfWindow = new EditBrandWindow(
-            {
-                listeners: {
-                                close: function (panel, eOpts) {
-                                if (panel.intend === 'save-success') {
-                                    console.log('insave success');
-                                    me.search(window.gridBrandData,me.username);
-                                }
+                }, //end view config
+
+                dockedItems: [{
+                    xtype: 'toolbar',
+                    items: [{
+                        iconCls: 'icon-edit',
+                        text: 'ปรับปรุง',
+                        tooltip: 'ปรับปรุงญี่ห้อ',
+                        disabled: false,
+                        handler: function (btn, evt) {
+                            var gridpanel = btn.up().up();
+                            var recordSelected = gridpanel.getSelectionModel().getSelection();
+                            if (recordSelected.length == 1) {
+                                me.popUpEditItem(gridpanel, recordSelected[0], btn);
                             }
-            },
-            animateTarget: btn
-            }
-            );
+                        } //end handler
+                    },
+                    {
+                        iconCls: 'icon-delete',
+                        text: 'Delete',
+                        tooltip: 'ลบ',
+                        disabled: false,
+                        handler: function (btn, evt) {
+                            var gridpanel = btn.up().up();
+                            var recordsSelected = gridpanel.getSelectionModel().getSelection();
 
-            quickConfWindow.create();
-            // quickConfWindow.saveService = window.SaveQuickDeploymentAct;
-            Ext.MessageBox.hide();
-            quickConfWindow.show();
+                            if (recordsSelected.length) {
+                                Ext.MessageBox.confirm('Confirm', 'คุณต้องาการที่จะจบ ยี่ห้อ?', function (cbtn, bool) {
+                                    if (cbtn == 'yes')    //                            
+                                        me.deleteBrand(gridpanel, recordsSelected, 'Delete');   //    
+                                });
+                            }
+                        }
+                     },
+                     '->', 
+                     {
+                        iconCls: 'icon-add',
+                        text: 'เพิ่มยี่ห้อ  ',
+                        handler: function (btn, evt) {
+                            Ext.MessageBox.show({
+                                msg: 'Please wait generate items...', width: 300, closable: false
+                            });
+                            //create new poppu
+                            var quickConfWindow = new EditBrandWindow(
+                            {
+                                listeners: {
+                                close: function (panel, eOpts) {
+                                    if (panel.intend === 'save-success') {
+                                        console.log('insave success');
+                                        me.search(window.gridBrandData,me.username);
+                                    }
+                                }
+                            },
+                            animateTarget: btn
+                            });
+                            quickConfWindow.create();
+                            // quickConfWindow.saveService = window.SaveQuickDeploymentAct;
+                            Ext.MessageBox.hide();
+                            quickConfWindow.show();
 
-            } // end handler
-            }] // end items
-            }]//end dockedItems
+                        } // end handler
+                    }] // end items
+                }]//end dockedItems
             }//end grid
             
             ]//end item
