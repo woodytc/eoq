@@ -65,6 +65,15 @@
     window.read_saleItemMaterialURL = '@Url.Action("SaleItemMaterialList","Home")';
     window.search_saleItemURL = '@Url.Action("SearchSaleItemList","Home")'; 
     
+
+    //common purchaseorder
+    window.purchease_catelogyURL = '@Url.Action("SaleItemList","Home")';
+    window.purchease_materialURL = '@Url.Action("SaleItemList","Home")';
+    window.purchease_unitURL = '@Url.Action("SaleItemList","Home")';
+    window.purchease_colorURL = '@Url.Action("SaleItemList","Home")';
+    window.purchease_brandURL = '@Url.Action("SaleItemList","Home")';
+    window.purchease_sizeURL = '@Url.Action("SaleItemList","Home")';
+    
     //create front end view
     var mainProductForm     = new MainProductForm({ id: 'mainProductForm', region: 'north' }),
         purchaseOrderForm   = new PurchaseOrderForm({ id: 'purchaseOrderForm', region: 'north' }),

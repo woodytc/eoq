@@ -10,6 +10,8 @@ namespace Eoq.Mappings.FluentNh.Repository
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+
+    using NHibernate.Linq;
     using Eoq.Domain;
 
     public interface IPurchaseOrderRepository
@@ -87,5 +89,75 @@ namespace Eoq.Mappings.FluentNh.Repository
         }
 
         #endregion
+
+        public List<Brand> BrandCommonList(int id)
+        {
+            using (var session = SessionFactory.OpenSession())
+            {
+                var results = (from x in session.Query<Stock>() 
+                                join y in session.Query<Brand>() on x.BrandId equals y.Id 
+                                where x.BranchId == id
+                               select y).ToList<Brand>();
+                return results;
+            }
+        }
+
+        public List<Sizes> SizeCommonList(int id)
+        {
+            using (var session = SessionFactory.OpenSession())
+            {
+                var result = (from x in session.Query<Stock>() 
+                              join y in session.Query<Sizes>()
+                              on x.SizeId equals y.Id
+                              where x.BrandId == id
+                              select y).ToList<Sizes>();
+                return result;
+                                                               
+            }
+        }
+
+        public List<Color> ColorCommonList(int id)
+        {
+            using (var session = SessionFactory.OpenSession())
+            {
+                var result = (from x in session.Query<Stock>()
+                              join y in session.Query<Color>()
+                              on x.ColorId equals y.Id
+                              where x.BrandId == id
+                              select y).ToList<Color>();
+                return result;                   
+            }
+        }
+
+        public List<Catelogy> CatelogyCommonList(int id)
+        {
+            using (var session = SessionFactory.OpenSession())
+            {
+                var reslult = (from x in session.Query<Stock>()
+                               join y in session.Query<Material>()
+                               on x.MeterialId equals y.MatId
+                               join z in session.Query<Catelogy>()
+                               on y.CatelogyId equals z.Id
+                               where x.BranchId == id
+                               select z).ToList<Catelogy>();
+                return reslult;
+            }
+        }
+
+        public List<Unit> UnitCommonList(int id)
+        {
+            using (var session = SessionFactory.OpenSession())
+            {
+                var result = (from x in session.Query<Stock>()
+                              join y in session.Query<Unit>()
+                              on x.UnitId equals y.ID
+                              where x.BranchId == id
+                              select y).ToList<Unit>();
+                return result;
+            }
+        }
+
     }
+
+    
 }
