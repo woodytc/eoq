@@ -213,6 +213,8 @@ Ext.define('PurchaseOrderForm', {
         listeners: {
             'change': function (field, selectedValue) {
                 //Ext.getCmp('wild_but_very_good_animal').setValue(selectedValue);
+                me.unitStore.getProxy().extraParams.CategoryID = Ext.getCmp('categoriesField').getValue();
+                me.unitStore.getProxy().extraParams.ProductID = Ext.getCmp('productsField').getValue();
                 console.log(Ext.getCmp('categoriesField').getValue())
                 console.log(selectedValue);
                 console.log(field);
@@ -381,6 +383,8 @@ Ext.define('PurchaseOrderForm', {
                             //                            });
 
                             //get product price
+                            me.unitStore.getProxy().extraParams.CategoryID = Ext.getCmp('categoriesField').getValue();
+                            me.unitStore.getProxy().extraParams.ProductID = Ext.getCmp('productsField').getValue();
                             me.getProductPrice(record, function (stock) {
                                 record.set("Price", stock.Price);
                                 record.set("id", stock.Id);
