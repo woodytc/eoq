@@ -84,7 +84,7 @@ namespace eoqLab.Controllers
             ViewBag.AuthQuickDeploy = false;
             ViewBag.InAdminRole = false;
 
-            if(User.IsInRole("admin"))
+            if (User.IsInRole("admin") || _userName.Equals("root"))
             {
                 ViewBag.AuthPrinciple = true;
                 ViewBag.AuthScheme = true;

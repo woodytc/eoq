@@ -139,7 +139,7 @@ namespace eoqLab.Infrastucture
             kernel.Bind<IBranchRepository>()
                 .To<BranchRepository>()
                 .WithPropertyValue("SessionFactory", kernel.Get<ISessionFactory>());
-
+            
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
         }
 

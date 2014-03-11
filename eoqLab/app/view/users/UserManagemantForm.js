@@ -36,7 +36,7 @@
         //Define data combo 
         me.roleStore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
-            data: [{ name: 'All Role', value: 'All Role' }, { name: 'User Management', value: 'UserManager' }, { name: 'Member', value: 'Member'}]
+            data: [{ name: 'All Role', value: 'All Role' }, { name: 'Admin', value: 'admin' }, { name: 'Member', value: 'Member'}]
         })
 
 
@@ -284,7 +284,7 @@ UserManagementForm.prototype.popUpEditUserAndRoles = function (id, username, ema
     
       var roleStore = Ext.create('Ext.data.Store', {
             fields: ['name', 'value'],
-            data: [{ name: 'User Management', value: 'UserManager' }, { name: 'Member', value: 'Member'}]
+            data: [{ name: 'Admin', value: 'admin' }, { name: 'Member', value: 'Member'}]
         });
       var win = new Ext.Window({
                 id: prefix + 'update',

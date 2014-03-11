@@ -113,6 +113,7 @@
     <Compile Include="Repository\StockRepository.cs" />
     <Compile Include="Repository\SizesRepository.cs" />
     <Compile Include="Repository\BrandRepository.cs" />
+    <Compile Include="Repository\CommonTableIdName.cs" />
     <Compile Include="Repository\UnitRepository.cs" />
     <Compile Include="Repository\IEOQRepository.cs" />
     <Compile Include="Repository\UserInBranchsRepository.cs" />

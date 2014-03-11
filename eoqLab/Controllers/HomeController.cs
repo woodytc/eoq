@@ -22,6 +22,8 @@ namespace eoqLab.Controllers
         public IEmployeeMailRepository EmployeeMailRepository { get; set; }
         public ICashierRepository CashierRepository { get; set; }
         public ICashierHeaderRepository CashierHeaderRepository { get; set; }
+        //add by woody
+        public IPurchaseOrderRepository PurchaseOrderRepository { get; set; }
 
         //common
         public IColorRepository ColorRepository { get; set; }
@@ -46,6 +48,7 @@ namespace eoqLab.Controllers
                               , ICashierRepository cashierRepository
                               , ICashierHeaderRepository cashierHeaderRepository
                               , IUserInBranchsRepository userBranch
+                              , IPurchaseOrderRepository purchaseOrderRepository
             )
         {
             EoqRepository = eoqRepository;
@@ -67,6 +70,8 @@ namespace eoqLab.Controllers
             this.StockRepository = stockRepository;
             this.UserBranch = userBranch;
 
+            //add by woody
+            this.PurchaseOrderRepository = purchaseOrderRepository;
         }
 
         public ActionResult Index()
@@ -798,8 +803,10 @@ namespace eoqLab.Controllers
         #region Get Session Value
         public int GetBranchId()
         {
-            var httpSessionStateBase = this.HttpContext.Session;
-            return httpSessionStateBase != null ? int.Parse(httpSessionStateBase["BranchId"].ToString()) : 0;
+            //var httpSessionStateBase = this.HttpContext.Session;
+            //return httpSessionStateBase != null ? int.Parse(httpSessionStateBase["BranchId"].ToString()) : 0;
+            //this.UserBranch.GetByID(_userName);
+            return this.UserBranch.GetByID(User.Identity.Name).BranchID;
         }
         public string GetUserName()
         {
@@ -807,5 +814,71 @@ namespace eoqLab.Controllers
             return httpSessionStateBase != null ? httpSessionStateBase["UserName"].ToString() : "";
         }
         #endregion
+
+        #region Add COMMON LIST BY WOODY
+        
+        //catelogy common
+        public JsonResult GetCatelogyByBranchID()
+        {
+            try
+            {
+                var result =  from x in this.PurchaseOrderRepository.CatelogyCommonList(GetBranchId())
+                              select new
+                              {
+                                  CategoryID = x.Id,
+                                  CategoryName = x.Name
+                              };
+                 return Json(new {data = result, total = result.Count(), error = ""},
+                                JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new {success = false, message = ex.Message},
+                                JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult GetProductByBranchID(int CategoryID)
+        {
+            try
+            {
+                var result = from x in this.PurchaseOrderRepository.MaterialInStockCommonList(GetBranchId(), CategoryID)
+                             select new
+                             {
+                                 ProductID = x.MatId
+                                ,ProductName = x.MetName
+
+                             };
+                return Json(new {data = result, total = result.Count(), error = ""},
+                                JsonRequestBehavior.AllowGet);
+            }catch(Exception ex)
+            {
+                return Json(new {success = false, message = ex.Message},
+                                JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult GetUnitByBranchID(int CategoryID, int ProductID)
+        {
+            try
+            {
+                var result = from x in this.PurchaseOrderRepository.UnitCommonList(GetBranchId(), CategoryID, ProductID)
+                             select new
+                             {
+                                 UnitID = x.ID,
+                                 x.UnitName
+                             };
+                return Json(new { data = result, total = result.Count(), error = "" },
+                                JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message },
+                                JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+#endregion
+        
     }//end class
 }//end namespace

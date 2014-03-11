@@ -21,6 +21,13 @@ namespace Eoq.Mappings.FluentNh.Repository
         List<PurchaseOrder> GetAll();
         int Update(PurchaseOrder oldPurchaseOrder);
         int CountAll();
+        //add by woody
+        List<Brand> BrandCommonList(int id);
+        List<Sizes> SizeCommonList(int id);
+        List<Color> ColorCommonList(int id);
+        List<Catelogy> CatelogyCommonList(int id);
+        List<Material> MaterialInStockCommonList(int id, int catid);
+        List<Unit> UnitCommonList(int id, int catid, int proid);
     }
     
     public class PurchaseOrderRepository : NhRepository, IPurchaseOrderRepository
@@ -144,16 +151,48 @@ namespace Eoq.Mappings.FluentNh.Repository
             }
         }
 
-        public List<Unit> UnitCommonList(int id)
+        public List<Material> MaterialInStockCommonList(int id, int catid)
         {
             using (var session = SessionFactory.OpenSession())
             {
                 var result = (from x in session.Query<Stock>()
-                              join y in session.Query<Unit>()
-                              on x.UnitId equals y.ID
-                              where x.BranchId == id
-                              select y).ToList<Unit>();
+                              join y in session.Query<Material>()
+                              on x.MeterialId equals y.MatId
+                              join z in session.Query<Catelogy>()
+                              on y.CatelogyId equals z.Id
+                              where z.Id == catid && x.BranchId == id
+                              select y).ToList<Material>();
                 return result;
+                                    
+            }
+        }
+
+        public List<Unit> UnitCommonList(int id,int catid, int proid)
+        {
+            using (var session = SessionFactory.OpenSession())
+            {
+                var check = (from x in session.Query<Catelogy>()
+                             join y in session.Query<Material>()
+                                 on x.Id equals y.CatelogyId
+                             where y.CatelogyId == catid
+                             && y.MatId == proid
+                             select y).ToList<Material>().Count();
+
+                if (check > 0)
+                {
+                    var result = (from x in session.Query<Stock>()
+                                  join y in session.Query<Unit>()
+                                  on x.UnitId equals y.ID
+                                  where x.BranchId == id
+                                  && x.MeterialId == proid
+                                  select y).ToList<Unit>();
+                    return result;
+                }
+                else
+                {
+                    return new List<Unit>();
+                }
+                
             }
         }
 

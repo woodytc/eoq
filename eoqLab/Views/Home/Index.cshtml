@@ -29,7 +29,7 @@
     //Acount control ---------------------------------------------------------------
     var currentUser = '@ViewBag.CurrentUser';
     var CurrentUserRole = '@ViewBag.CurrentUserRole';
-    var actionLogoff = "@Url.Action("Logoff", "Account")";
+    var actionLogoff = '@Url.Action("Logoff", "Account")';
     window.ContentPath = '@Url.Content("~/Content/")';
     
     window.read_mainProductURL = '@Url.Action("ProductsList","Home")';
@@ -53,6 +53,8 @@
     window.read_brand_list = '@Url.Action("BrandList","Home")';
     //sizes combobox
     window.read_size_list = '@Url.Action("SizeList","Home")';
+    
+
     /**Stock URLs**/
     window.read_stockURL = '@Url.Action("StockList","Home")';
     window.create_stockURL = '@Url.Action("SaveStock","Home")';
@@ -67,9 +69,10 @@
     
 
     //common purchaseorder
-    window.purchease_catelogyURL = '@Url.Action("SaleItemList","Home")';
-    window.purchease_materialURL = '@Url.Action("SaleItemList","Home")';
-    window.purchease_unitURL = '@Url.Action("SaleItemList","Home")';
+    window.purchease_catelogyURL = '@Url.Action("GetCatelogyByBranchID","Home")';
+    window.purchease_materialURL = '@Url.Action("GetProductByBranchID","Home")';
+
+    window.purchease_unitURL = '@Url.Action("GetUnitByBranchID","Home")';
     window.purchease_colorURL = '@Url.Action("SaleItemList","Home")';
     window.purchease_brandURL = '@Url.Action("SaleItemList","Home")';
     window.purchease_sizeURL = '@Url.Action("SaleItemList","Home")';

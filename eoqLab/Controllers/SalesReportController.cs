@@ -102,7 +102,7 @@ namespace eoqLab.Controllers
                                      SaleItemId = material.MatId,
                                      MaterialName = material.MetName,
                                      Amount = int.Parse(cashierMaterial.Amount),
-                                     Price = cashierMaterial.TotalPrice
+                                     Price = stock.Price
                                  }).ToList<SaleItemReport>();
 
             return saleItemDetail;

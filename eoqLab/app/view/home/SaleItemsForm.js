@@ -47,48 +47,6 @@
 
         me.todate = new Date();
 
-        //grid buttons
-        //var headerButtons = {
-        //    dock: 'top',
-        //    xtype: 'toolbar',
-        //    items: [{
-        //        xtype: 'datefield',
-        //        fieldLabel: 'วันที่ทำรายการ ',
-        //        cls: 'x-border-box, x-border-box',
-        //        id: 'datepicker',
-        //        maxValue: new Date(),
-        //        value: me.todate,
-        //        renderer: Ext.util.Format.dateRenderer('d/m/Y'),
-        //        padding: 5,
-        //        layout: 'form',
-        //        width: 230,
-        //        labelWidth: 130,
-        //        margins: '0 0 0 10',
-        //        listeners: {
-        //            select: function (combo, value) {
-        //                me.todate = value;
-        //            }
-        //        }
-        //    }, {
-        //        iconCls: 'icon-find',
-        //        text: 'ค้นหา',
-        //        id: me.prefix + 'search',
-        //        itemId: 'search',
-        //        scope: me,
-        //        handler: me.onSearchClick
-        //    }, {
-        //        iconCls: 'icon-reload',
-        //        id: me.prefix + 'clear',
-        //        text: 'ล้าง',
-        //        handler: function (btn, evt) {
-        //            Ext.getCmp('datepicker').setValue(new Date());
-        //            me.grid.store.clearData();
-        //            me.grid.view.refresh();
-        //        } // end handler
-        //    }]
-
-        //};
-
         //grid components
         me.grid = Ext.create('Ext.grid.Panel', {
             xtype: 'grid',
