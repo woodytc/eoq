@@ -209,6 +209,26 @@ namespace eoqLab.Controllers
             return null;
         }
 
+        public JsonResult GetProductPriceForStock(int CatID)
+        {
+            try
+            {
+                var result = from x in this.MaterialRepository.GetProductByCatID(CatID)
+                     select new
+                             {
+                                 ProductID = x.MatId
+                                ,ProductName = x.MetName
+
+                             };
+                return Json(new { data = result, total = result.Count() },
+                                JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         //get categories list
         [HttpGet]
         public JsonResult CategoriesList()
@@ -878,6 +898,71 @@ namespace eoqLab.Controllers
             }
             
         }
+
+        public JsonResult GetColorByBranchID(int ProductID, int UnitID)
+        {
+            try
+            {
+                var result = from x in this.PurchaseOrderRepository.ColorCommonList(GetBranchId(), ProductID, UnitID)
+                             select new
+                             {
+                                 ColorID = x.Id,
+                                 ColorName = x.Name
+                             }; 
+                return Json(new { data = result, total = result.Count(), error = "" },
+                                JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message },
+                                JsonRequestBehavior.AllowGet);
+            }
+             
+        }
+
+        public JsonResult GetBrandByBranchID(int ProductID, int UnitID, int ColorID)
+        {
+            try
+            {
+                var result = from x in this.PurchaseOrderRepository.BrandCommonList(GetBranchId(),ProductID,UnitID,ColorID)
+                             select new
+                             {
+                                 BrandID = x.Id,
+                                 BrandName = x.Name
+                             };
+
+                return Json(new { data = result, total = result.Count(), error = "" },
+                                JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message },
+                                JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public JsonResult GetSizeByBranchID(int ProductID, int UnitID, int ColorID, int brandID)
+        {
+            try
+            {
+                var result = from x in this.PurchaseOrderRepository.SizeCommonList(GetBranchId(), ProductID, UnitID, ColorID,brandID)
+                             select new
+                             {
+                                 SizeID = x.Id,
+                                 SizeName = x.Name
+                             };
+
+                return Json(new { data = result, total = result.Count(), error = "" },
+                                JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message },
+                                JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
 #endregion
         
     }//end class

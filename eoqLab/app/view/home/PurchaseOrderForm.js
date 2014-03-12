@@ -124,7 +124,7 @@ Ext.define('PurchaseOrderForm', {
                 me.grid.store.clearData();
                 me.grid.view.refresh();
                 //disable print button
-                Ext.getCmp('Print').setDisabled(true);
+                //Ext.getCmp('Print').setDisabled(true);
                 Ext.getCmp('save').setDisabled(true);
                 Ext.getCmp('cancel').setDisabled(true);
             }
@@ -169,7 +169,7 @@ Ext.define('PurchaseOrderForm', {
     //Colors List data
     var colorProxy = proxyOptions;
     colorProxy.api = {
-        read: window.read_colors_list
+        read: window.purchease_colorURL
     };
 
     me.colorStore = Ext.create('Ext.data.Store', {
@@ -180,7 +180,7 @@ Ext.define('PurchaseOrderForm', {
     //Brands List data
     var brandProxy = proxyOptions;
     brandProxy.api = {
-        read: window.read_brand_list
+        read: window.purchease_brandURL
     };
 
     me.brandStore = Ext.create('Ext.data.Store', {
@@ -191,7 +191,7 @@ Ext.define('PurchaseOrderForm', {
     //Size List data
     var sizeProxy = proxyOptions;
     sizeProxy.api = {
-        read: window.read_size_list
+        read: window.purchease_sizeURL
     };
 
     me.sizeStore = Ext.create('Ext.data.Store', {
@@ -213,11 +213,11 @@ Ext.define('PurchaseOrderForm', {
         listeners: {
             'change': function (field, selectedValue) {
                 //Ext.getCmp('wild_but_very_good_animal').setValue(selectedValue);
-                me.unitStore.getProxy().extraParams.CategoryID = Ext.getCmp('categoriesField').getValue();
-                me.unitStore.getProxy().extraParams.ProductID = Ext.getCmp('productsField').getValue();
-                console.log(Ext.getCmp('categoriesField').getValue())
-                console.log(selectedValue);
-                console.log(field);
+                if (selectedValue > 0) {
+                    me.unitStore.getProxy().extraParams.CategoryID = Ext.getCmp('categoriesField').getValue();
+                    me.unitStore.getProxy().extraParams.ProductID = Ext.getCmp('productsField').getValue();
+                    me.unitStore.load();
+                }
             }
         }
 
@@ -231,7 +231,16 @@ Ext.define('PurchaseOrderForm', {
         valueField: 'CategoryID',
         store: me.categoryStore,
         allowBlank: false,
-        editable: false
+        editable: false,
+        listeners: {
+            'change': function (field, selectedValue) {
+                //Ext.getCmp('wild_but_very_good_animal').setValue(selectedValue);
+                if (selectedValue > 0) {
+                    me.productStore.getProxy().extraParams.CategoryID = selectedValue;
+                    me.productStore.load();
+                }
+            }
+        }
     }, unitsField = {
         xtype: 'combobox',
         typeAhead: true,
@@ -242,7 +251,16 @@ Ext.define('PurchaseOrderForm', {
         valueField: 'UnitID',
         store: me.unitStore,
         allowBlank: false,
-        editable: false
+        editable: false,
+        listeners: {
+            'change': function (field, selectedValue) {
+                if (selectedValue > 0) {
+                    me.colorStore.getProxy().extraParams.ProductID = Ext.getCmp('productsField').getValue();
+                    me.colorStore.getProxy().extraParams.UnitID = selectedValue;
+                    me.colorStore.load();
+                }
+            }
+        }
     }, colorsField = {
         id: prefix + 'ColorID',
         xtype: 'combobox',
@@ -253,7 +271,18 @@ Ext.define('PurchaseOrderForm', {
         valueField: 'ColorID',
         store: me.colorStore,
         allowBlank: false,
-        editable: false
+        editable: false,
+        listeners: {
+            'change': function (field, selectedValue) {
+                //me.colorStore.getProxy().extraParams.CategoryID = Ext.getCmp('categoriesField').getValue();
+                if (selectedValue > 0) {
+                    me.brandStore.getProxy().extraParams.ProductID = Ext.getCmp('productsField').getValue();
+                    me.brandStore.getProxy().extraParams.UnitID = Ext.getCmp('unitField').getValue();
+                    me.brandStore.getProxy().extraParams.ColorID = selectedValue;
+                    me.brandStore.load();
+                }
+            }
+        }
     }, brandsField = {
         id: 'BrandField',
         xtype: 'combobox',
@@ -264,7 +293,18 @@ Ext.define('PurchaseOrderForm', {
         valueField: 'BrandID',
         store: me.brandStore,
         allowBlank: false,
-        editable: false
+        editable: false,
+        listeners: {
+            'change': function (field, selectedValue) {
+                if (selectedValue > 0) {
+                    me.sizeStore.getProxy().extraParams.ProductID = Ext.getCmp('productsField').getValue();
+                    me.sizeStore.getProxy().extraParams.UnitID = Ext.getCmp('unitField').getValue();
+                    me.sizeStore.getProxy().extraParams.ColorID = Ext.getCmp(prefix + 'ColorID').getValue();
+                    me.sizeStore.getProxy().extraParams.BrandID = selectedValue;
+                    me.sizeStore.load();
+                }
+            }
+        }
     }, sizeField = {
         id: 'SizeField',
         xtype: 'combobox',
@@ -307,7 +347,7 @@ Ext.define('PurchaseOrderForm', {
                     case "ProductName":
                         {
                             //refresh pruduct data
-                            me.productStore.load();
+                            //me.productStore.load();
                             break;
                         }
                 }
@@ -369,22 +409,18 @@ Ext.define('PurchaseOrderForm', {
                         }
                     case "UnitName":
                         {
-                            console.log("in unitname");
-                            //                            if (typeof context.value == "number") {
-                            //                                //set category id on store
-                            //                                record.set("UnitID", context.value);
-                            //                            }
-                            //                            //set category name on store 
-                            //                            me.unitStore.each(function (rec) {
-                            //                                if (rec.get("UnitID") == context.value) {
-                            //                                    var unitName = rec.get("UnitName");
-                            //                                    record.set("UnitName", unitName);
-                            //                                }
-                            //                            });
 
-                            //get product price
-                            me.unitStore.getProxy().extraParams.CategoryID = Ext.getCmp('categoriesField').getValue();
-                            me.unitStore.getProxy().extraParams.ProductID = Ext.getCmp('productsField').getValue();
+                            if (typeof context.value == "number") {
+                                //set category id on store
+                                record.set("UnitID", context.value);
+                            }
+                            //set category name on store 
+                            me.unitStore.each(function (rec) {
+                                if (rec.get("UnitID") == context.value) {
+                                    var unitName = rec.get("UnitName");
+                                    record.set("UnitName", unitName);
+                                }
+                            });
                             me.getProductPrice(record, function (stock) {
                                 record.set("Price", stock.Price);
                                 record.set("id", stock.Id);
@@ -685,7 +721,7 @@ onSync: function () {
     });
 
     //enable print button
-    Ext.getCmp('Print').setDisabled(false);
+    //Ext.getCmp('Print').setDisabled(false);
 
 },
 onPrint: function () {

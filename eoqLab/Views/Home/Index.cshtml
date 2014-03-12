@@ -53,7 +53,8 @@
     window.read_brand_list = '@Url.Action("BrandList","Home")';
     //sizes combobox
     window.read_size_list = '@Url.Action("SizeList","Home")';
-    
+
+    window.product_list_stock = '@Url.Action("GetProductPriceForStock","Home")';
 
     /**Stock URLs**/
     window.read_stockURL = '@Url.Action("StockList","Home")';
@@ -73,9 +74,9 @@
     window.purchease_materialURL = '@Url.Action("GetProductByBranchID","Home")';
 
     window.purchease_unitURL = '@Url.Action("GetUnitByBranchID","Home")';
-    window.purchease_colorURL = '@Url.Action("SaleItemList","Home")';
-    window.purchease_brandURL = '@Url.Action("SaleItemList","Home")';
-    window.purchease_sizeURL = '@Url.Action("SaleItemList","Home")';
+    window.purchease_colorURL = '@Url.Action("GetColorByBranchID","Home")';
+    window.purchease_brandURL = '@Url.Action("GetBrandByBranchID","Home")';
+    window.purchease_sizeURL = '@Url.Action("GetSizeByBranchID","Home")';
     
     //create front end view
     var mainProductForm     = new MainProductForm({ id: 'mainProductForm', region: 'north' }),

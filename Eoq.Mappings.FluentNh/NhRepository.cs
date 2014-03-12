@@ -20,6 +20,10 @@ namespace Eoq.Mappings.FluentNh
     /// </summary>
     public class NhRepository
     {
+        public NhRepository()
+        {
+            HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
+        }
         private ISessionFactory _sessionFactory = null;
         public static string NHibernateGeneratedSQL { get; set; }
         public static int QueryCounter { get; set; }

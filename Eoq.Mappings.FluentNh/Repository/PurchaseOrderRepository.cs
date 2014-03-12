@@ -22,9 +22,9 @@ namespace Eoq.Mappings.FluentNh.Repository
         int Update(PurchaseOrder oldPurchaseOrder);
         int CountAll();
         //add by woody
-        List<Brand> BrandCommonList(int id);
-        List<Sizes> SizeCommonList(int id);
-        List<Color> ColorCommonList(int id);
+        List<Brand> BrandCommonList(int id, int materialid, int unitid, int colorid);
+        List<Sizes> SizeCommonList(int id, int materialid, int unitid, int colorid, int brandid);
+        List<Color> ColorCommonList(int id, int meterailID, int unitID);
         List<Catelogy> CatelogyCommonList(int id);
         List<Material> MaterialInStockCommonList(int id, int catid);
         List<Unit> UnitCommonList(int id, int catid, int proid);
@@ -97,40 +97,49 @@ namespace Eoq.Mappings.FluentNh.Repository
 
         #endregion
 
-        public List<Brand> BrandCommonList(int id)
+        public List<Brand> BrandCommonList(int id, int materialid, int unitid, int colorid)
         {
             using (var session = SessionFactory.OpenSession())
             {
                 var results = (from x in session.Query<Stock>() 
                                 join y in session.Query<Brand>() on x.BrandId equals y.Id 
                                 where x.BranchId == id
+                                && x.MeterialId == materialid
+                                && x.UnitId == unitid
+                                && x.ColorId == colorid
                                select y).ToList<Brand>();
                 return results;
             }
         }
 
-        public List<Sizes> SizeCommonList(int id)
+        public List<Sizes> SizeCommonList(int id, int materialid, int unitid, int colorid,int brandid)
         {
             using (var session = SessionFactory.OpenSession())
             {
                 var result = (from x in session.Query<Stock>() 
                               join y in session.Query<Sizes>()
                               on x.SizeId equals y.Id
-                              where x.BrandId == id
+                              where x.BranchId == id
+                              && x.MeterialId == materialid
+                              && x.UnitId == unitid
+                              && x.ColorId == colorid
+                              && x.BrandId == brandid
                               select y).ToList<Sizes>();
                 return result;
                                                                
             }
         }
 
-        public List<Color> ColorCommonList(int id)
+        public List<Color> ColorCommonList(int id,int meterailID, int unitID)
         {
             using (var session = SessionFactory.OpenSession())
             {
                 var result = (from x in session.Query<Stock>()
                               join y in session.Query<Color>()
                               on x.ColorId equals y.Id
-                              where x.BrandId == id
+                              where x.BranchId == id
+                              && x.MeterialId == meterailID
+                              && x.UnitId == unitID
                               select y).ToList<Color>();
                 return result;                   
             }

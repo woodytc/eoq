@@ -37,7 +37,7 @@
         //Products List data
         var productProxy = proxyOptions;
         productProxy.api = {
-            read: window.read_products_list
+            read: window.product_list_stock
         };
 
         me.productStore = Ext.create('Ext.data.Store', {
@@ -138,7 +138,9 @@
             listeners: {
                 // public event change - when selection1 dropdown is changed
                 change: function (field, newValue, oldValue) {
-                    me.productStore.getProxy().extraParams.CategoryId = newValue;
+
+                    me.productStore.getProxy().extraParams.CatID = newValue;
+                    me.productStore.load();
                 }
             }
         }, unitsField = {
@@ -271,7 +273,7 @@
                             //url from
                             url: window.create_stockURL,
                             timeout: 999999,
-                            params:{
+                            params: {
                                 ProductID: Ext.getCmp(me.prefix + 'ProductID').getValue(),
                                 CategoryID: Ext.getCmp(prefix + 'CategoryID').getValue(),
                                 ColorID: Ext.getCmp(prefix + 'ColorID').getValue(),
@@ -313,7 +315,7 @@
         }); // end Ext.apply
         eoq.view.home.StockWindow.superclass.initComponent.apply(me, arguments);
     } // end initComponent
-});                                                                        // end Ext.define('StockWindow
+});                                                                          // end Ext.define('StockWindow
 
 
 eoq.view.home.StockWindow.prototype.create = function () {

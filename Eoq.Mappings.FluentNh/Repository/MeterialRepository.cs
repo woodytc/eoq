@@ -24,6 +24,7 @@ namespace Eoq.Mappings.FluentNh.Repository
         int CountAll();
         void Delete(Material material);
         List<MaterialCat> SelectGridMeterial(string name);
+        List<Material> GetProductByCatID(int CatID);
     }
     
     public class MaterialRepository : NhRepository, IMaterialRepository
@@ -99,7 +100,15 @@ namespace Eoq.Mappings.FluentNh.Repository
             }
         }
 
-        #endregion
+        public List<Material> GetProductByCatID(int CatID)
+        {
+            using (var session = SessionFactory.OpenSession())
+            {
+                return (from x in session.Query<Material>() where x.CatelogyId == CatID select x).ToList<Material>();
+            }
+        }
+
+#endregion
 
         public List<MaterialCat> SelectGridMeterial(string name)
         {
