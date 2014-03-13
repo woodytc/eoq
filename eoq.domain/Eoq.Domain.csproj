@@ -79,7 +79,6 @@
     <Compile Include="Domain\CashierHeader.cs" />
     <Compile Include="Domain\Color.cs" />
     <Compile Include="Domain\Catelogy.cs" />
-    <Compile Include="Domain\EVINAuditorAgentStatus.cs" />
     <Compile Include="Domain\MaterialCat.cs" />
     <Compile Include="Domain\Sizes.cs" />
     <Compile Include="Domain\Stock.cs" />

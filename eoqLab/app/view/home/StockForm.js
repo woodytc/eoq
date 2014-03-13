@@ -87,8 +87,6 @@ Ext.define('StockForm', {
                                 if (panel.intend === 'save-success') {
                                     console.log('insave success');
                                     me.search(window.read_stockURL, "fuck");
-                                    panel.window.destroy();
-                                    
                                 }
                             }
                         },

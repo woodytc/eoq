@@ -823,10 +823,10 @@ namespace eoqLab.Controllers
         #region Get Session Value
         public int GetBranchId()
         {
-            //var httpSessionStateBase = this.HttpContext.Session;
-            //return httpSessionStateBase != null ? int.Parse(httpSessionStateBase["BranchId"].ToString()) : 0;
+            var httpSessionStateBase = this.HttpContext.Session;
+            return httpSessionStateBase != null ? int.Parse(httpSessionStateBase["BranchId"].ToString()) : 0;
             //this.UserBranch.GetByID(_userName);
-            return this.UserBranch.GetByID(User.Identity.Name).BranchID;
+            //return this.UserBranch.GetByID(User.Identity.Name).BranchID;
         }
         public string GetUserName()
         {
