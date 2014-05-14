@@ -137,7 +137,7 @@
             store: me.gridStore
             , displayInfo: true
             , displayMsg: 'Displaying User and Roles Order {0} - {1} of {2}'
-            , emptyMsg: "No User and Roles Order to display",
+            , emptyMsg: "No User and Roles Order to display"
             }),
             viewConfig: {
             listeners: {
